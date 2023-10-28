@@ -1,0 +1,111 @@
+.registration-container {
+  max-width: 800px; /* Increased max-width for better spacing */
+  margin: 40px auto; /* Added margin for spacing from the top and bottom */
+  padding: 40px; /* Increased padding for better spacing */
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: transparent;
+}
+
+h2 {
+  text-align: center;
+  color: black;
+}
+
+form {
+  display: grid;
+  gap: 20px; /* Increased gap for better spacing */
+  grid-template-columns: 1fr 1fr; /* Divide the form into two equal columns */
+}
+
+.label-container {
+  display: flex;
+  align-items: center;
+}
+
+.label-container > label {
+  flex: 1;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.input-container > input,
+.input-container > textarea,
+.input-container > select {
+  flex: 1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Added margin for better spacing */
+}
+
+button[type='submit'] {
+  background-color: yellow;
+  color: black;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+button[type='submit']:hover {
+  background-color: black;
+  color: white;
+}
+
+/* Add styles for input fields when focused */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: blue;
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+}
+
+/* Add styles for input fields when hovered */
+input:hover,
+textarea:hover,
+select:hover {
+  border-color: lightblue;
+}
+
+/* Add a gray border to the input zone */
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='password'],
+textarea,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid lightgray; /* Gray border */
+  transition: border-color 0.3s ease;
+}
+
+.hideCursor{
+  cursor: none
+}
+
+input[type='text']:hover,
+input[type='email']:hover,
+input[type='tel']:hover,
+input[type='password']:hover,
+textarea:hover,
+select:hover {
+  border-color: darkgray; /* Darker border color on hover */
+}
+
+input[type='text']:focus,
+input[type='email']:focus,
+input[type='tel']:focus,
+input[type='password']:focus,
+textarea:focus,
+select:focus {
+  border-color: blue; /* Border color when focused */
+  padding: 8px; /* Added padding to ensure the cursor stays inside the input text zone */
+}
