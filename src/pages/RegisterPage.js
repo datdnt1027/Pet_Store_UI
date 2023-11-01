@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
+import endpoints from '../config/apiConfig'
+import axios from 'axios';
 import '../components/css/RegistrationForm.css';
 
 const RegistrationForm = () => {
     const [customer, setCustomer] = useState({
-        customerCode: '',
-        avatar: '',
-        customerName: '',
-        emailAddress: '',
-        contactNumber: '',
-        completeAddress: '',
-        username: '',
+        firstName: '',
+        lastName: '', 
+        email: '',
         password: '',
-        status: '1',
-        userId: '',
+        confirmPassword: ''
     });
 
     const handleChange = (e) => {
@@ -23,11 +20,31 @@ const RegistrationForm = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        console.error("Handle Submit");
         e.preventDefault();
-        // Perform form submission or validation here
-        console.log(customer);
-    };
+        if(customer.password !== customer.confirmPassword) {
+            // show error
+            return; 
+        }
+        try {
+          // Call API using Axios
+          const response = await axios.post(endpoints.REGISTER, JSON.stringify(customer), { rejectUnauthorized: false })
+
+    
+          if(response.status === 200) {
+            // registration successful
+            console.log('Registration successful');  
+          } else {
+            // registration failed 
+            throw new Error('Registration failed');
+          }
+    
+        } catch (error) {
+          console.error(error);
+        }
+    
+      };
 
     return (
         <div className="registration-container">
@@ -37,59 +54,36 @@ const RegistrationForm = () => {
                 <div className="input-container">
                     <input
                         type="text"
-                        id="customerName"
-                        name="customerName"
-                        value={customer.customerName}
+                        id="firstName"
+                        name="firstName"
+                        value={customer.firstName}
                         onChange={handleChange}
                         required
-                        placeholder= "Họ và tên"
-                    />
-                </div>
-                <div className="input-container">
-                    
-                    <input
-                        type="email"
-                        id="emailAddress"
-                        name="emailAddress"
-                        value={customer.emailAddress}
-                        onChange={handleChange}
-                        required
-                        placeholder= "Email"
-                    />
-                </div>
-                <div className="input-container">
-                    
-                    <input
-                        type="tel"
-                        id="contactNumber"
-                        name="contactNumber"
-                        value={customer.contactNumber}
-                        onChange={handleChange}
-                        required
-                        placeholder= "Số điện thoại"
-                    />
-                </div>
-                <div className="input-container">
-                    
-                    <textarea
-                        id="completeAddress"
-                        name="completeAddress"
-                        value={customer.completeAddress}
-                        onChange={handleChange}
-                        required
-                        placeholder= "Địa chỉ"
+                        placeholder= "FIRST NAME"
                     />
                 </div>
                 <div className="input-container">
                     
                     <input
                         type="text"
-                        id="username"
-                        name="username"
-                        value={customer.username}
+                        id="lastName"
+                        name="lastName"
+                        value={customer.lastName}
                         onChange={handleChange}
                         required
-                        placeholder= "Tài khoản"
+                        placeholder= "LASTNAME"
+                    />
+                </div>
+                <div className="input-container">
+                    
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={customer.email}
+                        onChange={handleChange}
+                        required
+                        placeholder= "EMAIL"
                     />
                 </div>
                 <div className="input-container">
@@ -102,6 +96,18 @@ const RegistrationForm = () => {
                         onChange={handleChange}
                         required
                         placeholder= "Mật khẩu"
+                    />
+                </div>
+                <div className="input-container">
+                    
+                    <input
+                        type="confirmPassword"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={customer.confirmPassword}
+                        onChange={handleChange}
+                        required
+                        placeholder= "Xac nhan Mật khẩu"
                     />
                 </div>
                 <div className="button-container">
