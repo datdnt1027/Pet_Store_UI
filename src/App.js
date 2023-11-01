@@ -8,7 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/LoginPage';
 
-
+import PasswordResetForm from './pages/PasswordResetPage';
 
 const App = () => {
 
@@ -22,6 +22,7 @@ const App = () => {
           <Route path="/contact" />
           <Route path="/signup" element={<RegistrationForm />}/>
           <Route path="/login" element={<Login />}/>
+          <Route path="/passwordreset" element={<PasswordResetForm />}/>
           <Route path="/detail/:id" element={<ProductDetailPage />} />
         </Routes>
       </Layout>
