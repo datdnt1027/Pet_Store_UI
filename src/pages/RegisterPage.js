@@ -28,20 +28,18 @@ const RegistrationForm = () => {
             return; 
         }
         try {
-          // Call API using Axios
-          const response = await axios.post(endpoints.REGISTER, JSON.stringify(customer), { rejectUnauthorized: false })
-
+            // Call the API using Axios
+            const response = await axios.post(endpoints.REGISTER, customer);
     
-          if(response.status === 200) {
-            // registration successful
-            console.log('Registration successful');  
-          } else {
-            // registration failed 
-            throw new Error('Registration failed');
-          }
-    
+            if (response.status === 200) {
+                // Registration successful
+                console.log('Registration successful');
+            } else {
+                // Registration failed
+                throw new Error('Registration failed');
+            }
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
     
       };
