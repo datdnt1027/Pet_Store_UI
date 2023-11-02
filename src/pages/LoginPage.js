@@ -7,14 +7,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   let navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [lemail, setEmail] = useState('');
+  const [lpassword, setPassword] = useState('');
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
+    const payload = {
+      email: lemail
+    }
     try {
       // Call API using Axios
-      const response = await axios.post(endpoints.FORGOT, JSON.stringify(email));
+      const response = await axios.post(endpoints.FORGOT, payload);
 
       if(response.status === 200) {
         // registration successful
@@ -31,10 +34,14 @@ const Login = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const payload = {
+      email: lemail,
+      password: lpassword
+    };
     try {
       // Call API using Axios
-      const response = await axios.post(endpoints.LOGIN, JSON.stringify(email,password));
+      console.log(lemail + " / " + lpassword);
+      const response = await axios.post(endpoints.LOGIN, payload);
 
       if(response.status === 200) {
         // registration successful
@@ -58,7 +65,7 @@ const Login = () => {
           <label>Email:</label>
           <input
             type="email"
-            value={email}
+            value={lemail}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -67,7 +74,7 @@ const Login = () => {
           <label>Password:</label>
           <input
             type="password"
-            value={password}
+            value={lpassword}
             onChange={(e) => setPassword(e.target.value)}
             required
           />

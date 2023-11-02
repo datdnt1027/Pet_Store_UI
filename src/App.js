@@ -7,7 +7,7 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/LoginPage';
-
+import VerifySuccessfulPage from './pages/Verify'
 import PasswordResetForm from './pages/PasswordResetPage';
 
 const App = () => {
@@ -24,6 +24,7 @@ const App = () => {
           <Route path="/login" element={<Login />}/>
           <Route path="/passwordreset" element={<PasswordResetForm />}/>
           <Route path="/detail/:id" element={<ProductDetailPage />} />
+          <Route path="/register/token/:token" element={<VerifySuccessfulPage />} />
         </Routes>
       </Layout>
     </ChakraProvider>
