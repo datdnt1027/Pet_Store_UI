@@ -15,6 +15,10 @@ const Login = () => {
     const payload = {
       email: lemail
     }
+    if(lemail !== lemail) {
+      // show error
+      return; 
+    }
     try {
       // Call API using Axios
       const response = await axios.post(endpoints.FORGOT, payload);
@@ -22,7 +26,7 @@ const Login = () => {
       if(response.status === 200) {
         // registration successful
         console.log('Password forgot successful');  
-        navigate('success');
+        navigate('/passwordreset');
       } else {
         // registration failed 
         throw new Error('Password forgot failed');

@@ -1,4 +1,4 @@
-export const API_URL = 'https://localhost:7206';
+ export const API_URL = 'https://localhost:7206';
 export default {
     REGISTER: API_URL + '/auth/register',
     LOGIN: API_URL + '/auth/login',

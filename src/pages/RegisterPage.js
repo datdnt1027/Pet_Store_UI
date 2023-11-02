@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
 import '../components/css/RegistrationForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
     const [customer, setCustomer] = useState({
@@ -11,6 +12,8 @@ const RegistrationForm = () => {
         password: '',
         confirmPassword: ''
     });
+
+    let navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,6 +38,8 @@ const RegistrationForm = () => {
           if(response.status === 200) {
             // registration successful
             console.log('Registration successful');  
+            navigate('/login');
+
           } else {
             // registration failed 
             throw new Error('Registration failed');

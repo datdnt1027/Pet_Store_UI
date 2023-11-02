@@ -1,8 +1,27 @@
 .product-list-container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 }
+.category-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
+.category-title {
+  margin: 0;
+}
+
+.swiper-button-prev {
+  color: black;
+}
+
+.swiper-button-next {
+  color: black;
+}
+.mySwiper {
+  flex-grow: 1; /* Take remaining space */
+}
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Adjust the number of columns as needed */
@@ -12,10 +31,10 @@
 }
 
 .product-item {
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column;  
   justify-content: space-between;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
