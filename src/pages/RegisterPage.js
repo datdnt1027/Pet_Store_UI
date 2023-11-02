@@ -29,7 +29,7 @@ const RegistrationForm = () => {
         }
         try {
           // Call API using Axios
-          const response = await axios.post(endpoints.REGISTER, JSON.stringify(customer), { rejectUnauthorized: false })
+          const response = await axios.post(endpoints.REGISTER, customer)
 
     
           if(response.status === 200) {
