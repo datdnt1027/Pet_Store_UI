@@ -31,9 +31,8 @@ const RegistrationForm = () => {
             return; 
         }
         try {
-          // Call API using Axios
-          const response = await axios.post(endpoints.REGISTER, customer)
-
+            // Call the API using Axios
+            const response = await axios.post(endpoints.REGISTER, customer);
     
           if(response.status === 200) {
             // registration successful
@@ -46,7 +45,7 @@ const RegistrationForm = () => {
           }
     
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
     
       };
