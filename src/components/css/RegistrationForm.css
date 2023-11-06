@@ -8,15 +8,15 @@
   color: transparent;
 }
 
-h2 {
+.h2 {
   text-align: center;
   color: black;
 }
-input, 
-textarea {
+.input, 
+.textarea {
   color: black;
 }
-form {
+.form {
   display: grid;
   gap: 20px; /* Increased gap for better spacing */
   grid-template-columns: 1fr 1fr; /* Divide the form into two equal columns */
@@ -48,7 +48,7 @@ form {
   margin-top: 20px; /* Added margin for better spacing */
 }
 
-button[type='submit'] {
+.button[type='submit'] {
   background-color: yellow;
   color: black;
   padding: 10px;
@@ -56,34 +56,34 @@ button[type='submit'] {
   cursor: pointer;
 }
 
-button[type='submit']:hover {
+.button[type='submit']:hover {
   background-color: black;
   color: white;
 }
 
 /* Add styles for input fields when focused */
-input:focus,
-textarea:focus,
-select:focus {
+.input:focus,
+.textarea:focus,
+.select:focus {
   outline: none;
   border-color: blue;
   box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
 }
 
 /* Add styles for input fields when hovered */
-input:hover,
-textarea:hover,
-select:hover {
+.input:hover,
+.textarea:hover,
+.select:hover {
   border-color: lightblue;
 }
 
 /* Add a gray border to the input zone */
-input[type='text'],
-input[type='email'],
-input[type='tel'],
-input[type='password'],
-textarea,
-select {
+.input[type='text'],
+.input[type='email'],
+.input[type='tel'],
+.input[type='password'],
+.textarea,
+.select {
   width: 100%;
   padding: 8px;
   border: 1px solid lightgray; /* Gray border */
@@ -94,12 +94,12 @@ select {
   cursor: none
 }
 
-input[type='text']:hover,
-input[type='email']:hover,
-input[type='tel']:hover,
-input[type='password']:hover,
-textarea:hover,
-select:hover {
+.input[type='text']:hover,
+.input[type='email']:hover,
+.input[type='tel']:hover,
+.input[type='password']:hover,
+.textarea:hover,
+.select:hover {
   border-color: darkgray; /* Darker border color on hover */
 }
 

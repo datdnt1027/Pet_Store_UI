@@ -1,46 +1,104 @@
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: black;
-  }
+.all{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.login-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url(../../../public/can_you_generate_for_me_cute_a_dog_and_cat_background_with_4k_resolution\,_the_theme_is_black_white_and_yellow.jpeg) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.login-form{
+  width: 420px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, .2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+  color: white;
+  padding: 40px 30px;
+}
+.login-form h1{
+  font-size: 36px;
+  text-align: center;
+  color: white;
+  border-radius: 10px;
   
-  .login-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border: 1px solid white;
-    border-radius: 5px;
-    background-color: white;
-  }
-  
-  h2 {
-    color: black;
-    margin-bottom: 20px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-  }
-  
-  label {
-    color: black;
-    margin-bottom: 5px;
-  }
-  
-  input {
-    padding: 5px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: yellow;
-    color: black;
-    cursor: pointer;
-  }
+}
+.login-form .form-group{
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+.form-group input{
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid white;
+  border-radius: 40px;
+  font: 16px;
+  color: white;
+  padding: 20px 45px 20px 20px;
+
+}
+.form-group input::placeholder{
+  color: white;
+}
+.login-form .remember{
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.6px;
+  margin: -15px 0px 15px;
+}
+.remember label input{
+  accent-color: white;
+  margin-right: 3px;
+  float: left;
+}
+.remember-wrapper{
+  display: flex;
+  align-items: center;
+}
+.remember a{
+  color: white;
+  text-decoration: none;
+  float: right;
+  margin-left: 10px;
+  text-align: right;
+}
+.remember a:hover{
+  text-decoration: underline;
+}
+.login-form .btn{
+  width: 100%;
+  height: 45px;
+  background-color: white;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, alph.1a);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+}
+.login-form .register-link{
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+.register-link p a{
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+.register-link p a:hover{
+  text-decoration: underline;
+}
