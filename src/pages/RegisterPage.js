@@ -51,10 +51,12 @@ const RegistrationForm = () => {
       };
 
     return (
+        <div className='all'>
         <div className="registration-container">
-            <h2>Registration Form</h2>
-            <form onSubmit={handleSubmit}>
-                
+            
+            <form className='register-form' onSubmit={handleSubmit}>
+            <h1>Registration</h1>
+            <div className='row-input-container'>
                 <div className="input-container">
                     <input
                         type="text"
@@ -77,6 +79,7 @@ const RegistrationForm = () => {
                         required
                         placeholder= "LASTNAME"
                     />
+                </div>
                 </div>
                 <div className="input-container">
                     
@@ -119,6 +122,7 @@ const RegistrationForm = () => {
                 </div>
             </form >
         </div >
+        </div>
     );
 };
 

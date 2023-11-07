@@ -1,114 +1,67 @@
+.all{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 .registration-container {
-  max-width: 800px; /* Increased max-width for better spacing */
-  margin: 40px auto; /* Added margin for spacing from the top and bottom */
-  padding: 40px; /* Increased padding for better spacing */
-  background-color: white;
-  border: 1px solid black;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url(../../../public/can_you_generate_for_me_cute_a_dog_and_cat_background_with_4k_resolution\,_the_theme_is_black_white_and_yellow.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
-.h2 {
+.registration-container h1 {
+  font-size: 36px;
   text-align: center;
   color: black;
 }
-.input, 
-.textarea {
+
+.register-form {
+  width: 500px;
+  background: white;
+  border: 2px solid rgba(255, 255, 255, .2);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, .2);
   color: black;
-}
-.form {
-  display: grid;
-  gap: 20px; /* Increased gap for better spacing */
-  grid-template-columns: 1fr 1fr; /* Divide the form into two equal columns */
+  padding: 40px 30px;
 }
 
-.label-container {
-  display: flex;
-  align-items: center;
-}
-
-.label-container > label {
-  flex: 1;
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
-}
-
-.input-container > input,
-.input-container > textarea,
-.input-container > select {
-  flex: 1;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px; /* Added margin for better spacing */
-}
-
-.button[type='submit'] {
-  background-color: yellow;
-  color: black;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.button[type='submit']:hover {
-  background-color: black;
-  color: white;
-}
-
-/* Add styles for input fields when focused */
-.input:focus,
-.textarea:focus,
-.select:focus {
-  outline: none;
-  border-color: blue;
-  box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
-}
-
-/* Add styles for input fields when hovered */
-.input:hover,
-.textarea:hover,
-.select:hover {
-  border-color: lightblue;
-}
-
-/* Add a gray border to the input zone */
-.input[type='text'],
-.input[type='email'],
-.input[type='tel'],
-.input[type='password'],
-.textarea,
-.select {
+.register-form .input-container{
+  position: relative;
   width: 100%;
-  padding: 8px;
-  border: 1px solid lightgray; /* Gray border */
-  transition: border-color 0.3s ease;
+  height: 50px;
+  margin: 30px 0;
 }
+.register-form input{
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid black;
+  border-radius: 40px;
+  font: 16px;
+  color: black;
+  padding: 20px 45px 20px 20px;
 
-.hideCursor{
-  cursor: none
 }
-
-.input[type='text']:hover,
-.input[type='email']:hover,
-.input[type='tel']:hover,
-.input[type='password']:hover,
-.textarea:hover,
-.select:hover {
-  border-color: darkgray; /* Darker border color on hover */
+.register-form input::placeholder{
+  color: black;
 }
-
-input[type='text']:focus,
-input[type='email']:focus,
-input[type='tel']:focus,
-input[type='password']:focus,
-textarea:focus,
-select:focus {
-  border-color: blue; /* Border color when focused */
-  padding: 8px; /* Added padding to ensure the cursor stays inside the input text zone */
+.register-form button{
+  width: 100%;
+  height: 45px;
+  background-color: yellow;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, alph.1a);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
 }
