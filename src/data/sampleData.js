@@ -1,6 +1,7 @@
 const sampleData = [
   {
     pet_product_id: 1,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'ABC123',
     product_name: 'Pet Food',
     product_detail: 'High-quality pet food for all breeds.',
@@ -15,6 +16,7 @@ const sampleData = [
   },
   {
     pet_product_id: 2,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'DEF456',
     product_name: 'Pet Toy',
     product_detail: 'Interactive toy for pets to play with.',
@@ -29,6 +31,7 @@ const sampleData = [
   },
   {
     pet_product_id: 3,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'GHI789',
     product_name: 'Pet Bed',
     product_detail: 'Comfortable bed for pets to rest.',
@@ -43,6 +46,7 @@ const sampleData = [
   },
   {
     pet_product_id: 4,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'JKL012',
     product_name: 'Pet Shampoo',
     product_detail: 'Gentle shampoo for pets with sensitive skin.',
@@ -57,6 +61,7 @@ const sampleData = [
   },
   {
     pet_product_id: 5,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'MNO345',
     product_name: 'Pet Collar',
     product_detail: 'Adjustable collar with a cute design.',
@@ -71,6 +76,7 @@ const sampleData = [
   },
   {
     pet_product_id: 6,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'PQR678',
     product_name: 'Pet Leash',
     product_detail: 'Durable leash for walking pets.',
@@ -85,6 +91,7 @@ const sampleData = [
   },
   {
     pet_product_id: 7,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'STU901',
     product_name: 'Pet Carrier',
     product_detail: 'Convenient carrier for transporting pets.',
@@ -99,6 +106,7 @@ const sampleData = [
   },
   {
     pet_product_id: 8,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'VWX234',
     product_name: 'Pet Treats',
     product_detail: 'Delicious treats for rewarding pets.',
@@ -113,6 +121,7 @@ const sampleData = [
   },
   {
     pet_product_id: 9,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'YZA567',
     product_name: 'Pet Brush',
     product_detail: 'Grooming brush for maintaining pet  coat.',
@@ -127,6 +136,7 @@ const sampleData = [
   },
   {
     pet_product_id: 10,
+    image: 'https://th.bing.com/th/id/R.96bb03e81755ae457d9a5552cfa9e92a?rik=CqfJqQOnTdBw6A&pid=ImgRaw&r=0',
     product_code: 'BCD890',
     product_name: 'Pet Dental Chews',
     product_detail: 'Chews for promoting dental health in pets.',

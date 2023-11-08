@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from '../components/ProductList';
 import sampleData from '../data/sampleData';
+import CateSwiper from '../components/CateSwiper';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Layout from '../components/Layout';
@@ -24,7 +25,12 @@ const HomePage = () => {
   const [products, setProducts] = useState(sampleData);
   return (
     <div>
-      <ProductList products={products} numberOfItemsToShow={4} />
+      
+      <CateSwiper/>
+      <br/>
+      <br/>
+      <br/>
+      <ProductList products={products} numberOfItemsToShow={5} />
     </div>
   );
 };

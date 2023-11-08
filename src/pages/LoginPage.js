@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../components/css/LoginForm.css'; // CSS file for styling
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
@@ -9,20 +9,25 @@ const Login = () => {
   let navigate = useNavigate();
   const [lemail, setEmail] = useState('');
   const [lpassword, setPassword] = useState('');
-
+  const [rememberMe, setRememberMe] = useState(false);
+  
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     const payload = {
       email: lemail
     }
+    if (lemail !== lemail) {
+      // show error
+      return;
+    }
     try {
       // Call API using Axios
       const response = await axios.post(endpoints.FORGOT, payload);
 
-      if(response.status === 200) {
+      if (response.status === 200) {
         // registration successful
-        console.log('Password forgot successful');  
-        navigate('success');
+        console.log('Password forgot successful');
+        navigate('/passwordreset');
       } else {
         // registration failed 
         throw new Error('Password forgot failed');
@@ -43,9 +48,9 @@ const Login = () => {
       console.log(lemail + " / " + lpassword);
       const response = await axios.post(endpoints.LOGIN, payload);
 
-      if(response.status === 200) {
+      if (response.status === 200) {
         // registration successful
-        console.log('Login successful');  
+        console.log('Login successful');
         navigate('success');
       } else {
         // registration failed 
@@ -55,35 +60,64 @@ const Login = () => {
     } catch (error) {
       console.error(error);
     }
+    if(rememberMe) {
+      localStorage.setItem('emal', lemail);
+      localStorage.setItem('password', lpassword); 
+    }
   };
+  useEffect(() => {
 
+    const storedEmail = localStorage.getItem('email');
+    const storedPassword = localStorage.getItem('password');
+
+    if(storedEmail && storedPassword) {
+      setEmail(storedEmail);  
+      setPassword(storedPassword);
+      setRememberMe(true);
+    }
+
+  }, []);
   return (
+    <div className='all'>
     <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={lemail}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={lpassword}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <a href= "" onClick={handleForgotPassword}>Forgot password</a>
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      <div className="login-form">
+        <form onSubmit={handleSubmit}>
+          <h1>Login</h1>
+          <div className="form-group">
+            <input
+              type="email"
+              value={lemail}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder='Email'
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              value={lpassword}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder='Password'
+            />
+          </div>
+          <div className='remember'>
+            <div className='remember-wrapper'>
+              <label>
+                <input type='checkbox' checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)} />
+              </label>
+              <div>Remember me</div>
+            </div>
+            <a className='forgot' href="" onClick={handleForgotPassword}>Forgot password</a>
+          </div>
+          <button className='btn' type="submit">Login</button>
+          <div className='register-link'>
+            <p>Don't have an account <a href='/signup'>Register</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
     </div>
   );
 };

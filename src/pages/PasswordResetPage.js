@@ -20,13 +20,14 @@ const PasswordResetForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(resetData);
     if (resetData.password !== resetData.confirmPassword) {
       // show error
       return;
     }
     try {
       // Call API using Axios
-      const response = await axios.post(endpoints.PASSWORD_RESET, resetData);
+      const response = await axios.post(endpoints.RESET, resetData);
 
       if (response.status === 200) {
         // password reset successful

@@ -5,7 +5,7 @@ import HomePage from '../pages/HomePage';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [siteBrandText, setSiteBrandText] = useState('MY AWESOME SITE');
+  const [siteBrandText, setSiteBrandText] = useState('PETCAL');
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -16,7 +16,7 @@ function Header() {
       if (window.innerWidth < 420) {
         setSiteBrandText('MAS');
       } else {
-        setSiteBrandText('MY AWESOME SITE');
+        setSiteBrandText('PETCAL');
       }
     };
 
@@ -42,9 +42,13 @@ function Header() {
                 <i className="fas fa-bars me-2"></i> MENU
               </button>
             </div>
+            
             <div className="flex3 text-center" id="siteBrand">
+            <a href='/'>
               {siteBrandText}
+              </a>
             </div>
+            
             <div className="flex2 text-end d-block d-md-none">
               <button className="whiteLink siteLink"><i className="fas fa-search"></i></button>
             </div>

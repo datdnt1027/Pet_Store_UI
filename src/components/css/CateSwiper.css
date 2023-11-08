@@ -1,0 +1,40 @@
+/* CateSwiper.css */
+.swiper {
+    width: 100%;
+    max-width: 1000px; /* Set the max-width to match the .product-list-container */
+    margin: 0 auto;
+    height: 50px;
+  }
+  .mySwiper .slide-content {
+    text-align: center;
+  }
+  
+  .mySwiper .slide-image {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  /* Update the swiper slide styles */
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Set the height to match the swiper container */
+  }
+  
+  /* Update the swiper navigation buttons */
+  .swiper-button-prev {
+    color: blue;
+  }
+  
+  .swiper-button-next {
+    color: green;
+  }
+  
+  /* Optionally, add hover styles for the buttons */
+  .swiper-button-prev:hover,
+  .swiper-button-next:hover {
+    background-color: white;
+  }
