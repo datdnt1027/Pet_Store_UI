@@ -6,7 +6,22 @@ const ProductManagementPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [sortDirection, setSortDirection] = useState('asc');
-
+  const [filterCategoryIds, setFilterCategoryIds] = useState([]);
+  const [filterStatuses, setFilterStatuses] = useState([]);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const handleStatusFilter = (status) => {
+    if (filterStatuses.includes(status)) {
+      setFilterStatuses(filterStatuses.filter((s) => s !== status));
+    } else {
+      setFilterStatuses([...filterStatuses, status]);
+    }
+  };
+  const handleEdit = (productId) => {
+    setSelectedProductId(productId);
+  };
+  const handleClearStatusFilter = () => {
+    setFilterStatuses([]);
+  };
   // Fetch products data (you can replace this with your own API call)
   useEffect(() => {
     fetchProducts();
@@ -23,6 +38,10 @@ const ProductManagementPage = () => {
     // Replace this with your own logic to delete the product
     // You can use the productId to identify the product to be deleted
     console.log('Delete product with ID:', productId);
+    
+    if (selectedProductId === productId) {
+      setSelectedProductId(null);
+    }
   };
 
   const handleSort = (field) => {
@@ -31,12 +50,25 @@ const ProductManagementPage = () => {
     setSortBy(field);
     setSortDirection(direction);
   };
+  const handleCheckAll = () => {
+    setFilterCategoryIds([]); // Clear the filterCategoryIds state to decheck all checkboxes
+  };
+  const handleFilter = (categoryId) => {
+    if (filterCategoryIds.includes(categoryId)) {
+      setFilterCategoryIds(filterCategoryIds.filter((id) => id !== categoryId));
+    } else {
+      setFilterCategoryIds([...filterCategoryIds, categoryId]);
+    }
+  };
 
   const filteredProducts = products.filter((product) => {
     const values = Object.values(product).map((value) => value.toString().toLowerCase());
-    return values.some((value) => value.includes(searchTerm.toLowerCase()));
+    return (
+      values.some((value) => value.includes(searchTerm.toLowerCase())) &&
+      (filterCategoryIds.length === 0 || filterCategoryIds.includes(product.product_category_id)) && (filterStatuses.length === 0 || filterStatuses.includes(product.status))
+    );
   });
-
+  const statuses = [...new Set(products.map((product) => product.status))];
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy) {
       const fieldA = a[sortBy];
@@ -46,6 +78,9 @@ const ProductManagementPage = () => {
     }
     return 0;
   });
+
+  // Get unique category IDs from the products
+  const categoryIds = [...new Set(products.map((product) => product.product_category_id))];
 
   return (
     <div>
@@ -60,6 +95,36 @@ const ProductManagementPage = () => {
         />
       </div>
 
+      <div>
+        <label>Filter by Category ID:</label>
+        <button onClick={handleCheckAll}>Decheck All</button> {/* Add the button */}
+        {categoryIds.map((categoryId) => (
+          <div key={categoryId}>
+            <input
+              type="checkbox"
+              id={`category-${categoryId}`}
+              checked={filterCategoryIds.includes(categoryId)}
+              onChange={() => handleFilter(categoryId)}
+            />
+            <label htmlFor={`category-${categoryId}`}>{categoryId}</label>
+          </div>
+        ))}
+      </div>
+      <div>
+        <label>Filter by Status:</label>
+        <button onClick={handleClearStatusFilter}>Clear</button> {/* Add the button */}
+        {statuses.map((status) => (
+          <div key={status}>
+            <input
+              type="checkbox"
+              id={`status-${status}`}
+              checked={filterStatuses.includes(status)}
+              onChange={() => handleStatusFilter(status)}
+            />
+            <label htmlFor={`status-${status}`}>{status}</label>
+          </div>
+        ))}
+      </div>
       <table>
         <thead>
           <tr>
@@ -70,21 +135,39 @@ const ProductManagementPage = () => {
               Price {sortBy === 'retail_price' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
             </th>
             {/* Add table headers for other properties */}
-            <th>Code</th>
-            <th>Detail</th>
-            <th>Category ID</th>
-            <th>Quantity</th>
-            <th>Vendor Price</th>
-            <th>Discount</th>
-            <th>Vendor ID</th>
-            <th>Status</th>
-            <th>User ID</th>
+            <th onClick={() => handleSort('product_code')}>
+              Code {sortBy === 'product_code' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('product_detail')}>
+              Detail {sortBy === 'product_detail' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('product_category_id')}>
+              Category ID {sortBy === 'product_category_id' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('quantity_on_hand')}>
+              Quantity {sortBy === 'quantity_on_hand' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('vendor_price')}>
+              Vendor Price {sortBy === 'vendor_price' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('discount')}>
+              Discount {sortBy === 'discount' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('vendor_id')}>
+              Vendor ID {sortBy === 'vendor_id' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('status')}>
+              Status {sortBy === 'status' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
+            <th onClick={() => handleSort('user_id')}>
+              User ID {sortBy === 'user_id' &&<span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}
+            </th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {sortedProducts.map((product) => (
-            <tr key={product.pet_product_id}>
+            <tr key={product.id}>
               <td>{product.product_name}</td>
               <td>{product.retail_price}</td>
               {/* Render other properties */}
@@ -98,15 +181,18 @@ const ProductManagementPage = () => {
               <td>{product.status}</td>
               <td>{product.user_id}</td>
               <td>
-                <button onClick={() => handleDelete(product.pet_product_id)}>Delete</button>
-                {/* Add edit button and functionality here */}
+              {selectedProductId === product.id ? (
+    <button>Edit</button>
+  ) : (
+    <div>
+      <button onClick={() => handleEdit(product.id)}>Edit</button>
+    </div>
+  )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      {/* Add add product form and functionality here */}
     </div>
   );
 };
