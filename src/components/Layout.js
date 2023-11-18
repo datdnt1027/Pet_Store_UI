@@ -5,15 +5,15 @@ import Footer from './Footer';
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const hideHeaderOnRoutes = ['/signup']; // Add the paths where you want to hide the header
+  const hideHeaderOnRoutes = ['/admin']; // Add the paths where you want to hide the header
 
   const shouldHideHeader = hideHeaderOnRoutes.includes(location.pathname);
 
   return (
     <div>
-      {<Header />}
+      {!shouldHideHeader &&<Header />}
       <main>{children}</main>
-      <Footer />
+      {!shouldHideHeader &&<Footer />}
     </div>
   );
 };
