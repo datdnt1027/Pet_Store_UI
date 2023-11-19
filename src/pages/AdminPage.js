@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminDashboard from '../components/AdminDashboard';
-import ProductManagementPage from '../components/ProductManagementPage ';
+import ProductManagementPage from '../components/ProductManagementPage';
 import '../components/css/AdminPage.css'
 const AdminPage = () => {
     const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
