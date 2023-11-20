@@ -1,4 +1,4 @@
-const sampleData = [
+const sampleAccount = [
   {
     userId: 1,
     email: 'test123@gmail.com',
@@ -37,4 +37,4 @@ const sampleData = [
   }
 ];
 
-export default sampleData;
+export default sampleAccount;

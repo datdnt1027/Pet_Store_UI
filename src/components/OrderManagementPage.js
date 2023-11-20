@@ -90,7 +90,7 @@ const OrderManagementPage = () => {
     const handleItemsPerPageChange = (event) => {
       setItemsPerPage(parseInt(event.target.value));
     };
-  
+    const orderIds = [...new Set(orders.map((order) => order.orderStatus))];
     return (
         <div id="order-management-container">
         <h1 id="order-management-title">Order Management</h1>
@@ -101,45 +101,42 @@ const OrderManagementPage = () => {
             id="search-input"
             className="search-input"
             placeholder="Search orders..."
-            value=""
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       
         <div className="status-filter">
           <label htmlFor="status-filter">Filter by Status:</label>
-      
-          <div>
-            <input type="checkbox" id="Pending" name="Pending" checked="" />
-            <label htmlFor="Pending">Pending</label>
+          {orderIds.map((orderStatus) => (
+          <div key={orderStatus}>
+            <input
+              type="checkbox"
+              id={`orderStatus-${orderStatus}`}
+              className="orderStatus-checkbox"
+              checked={filterStatuses.includes(orderStatus)}
+              onChange={() => handleStatusFilter(orderStatus)}
+            />
+            <label htmlFor={`category-${orderStatus}`}>{orderStatus}</label>
           </div>
-      
-          <div>
-            <input type="checkbox" id="Processing" name="Processing" checked="" />
-            <label htmlFor="Processing">Processing</label>
-          </div>
-      
-          <div>
-            <input type="checkbox" id="Completed" name="Completed" checked="" />
-            <label htmlFor="Completed">Completed</label>
-          </div>
-      
-          <button id="clear-filter-button">Clear Filter</button>
+        ))}
+          <button id="clear-filter-button" onClick={handleClearStatusFilter}>Clear Filter</button>
         </div>
-      
         <table id="order-table">
           <thead>
             <tr>
-              <th>Order ID</th>
-              <th>Create Date</th>
-              <th>Update Date</th>
-              <th>Customer ID</th>
-              <th>Order Status</th>
-              <th></th>
+              <th onClick={() => handleSort('orderId')}>Order ID {sortBy === 'orderId' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}</th>
+              <th onClick={() => handleSort('create_date')}>Create Date {sortBy === 'create_date' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}   </th>
+              <th onClick={() => handleSort('update_date')}>Update Date {sortBy === 'update_date' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}</th>
+              <th onClick={() => handleSort('customerID')}>Customer ID {sortBy === 'customerID' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}</th>
+              <th onClick={() => handleSort('orderStatus')}>Order Status {sortBy === 'orderStatus' && <span>{sortDirection === 'asc' ? '▲' : '▼'}</span>}</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
           {currentItems.map((product) => (
         <tr key={product.orderId}>
+          <td>{product.orderId}</td>
           <td>{product.create_date}</td>
           <td>{product.update_date}</td>
           <td>{product.customerID}</td>
@@ -147,10 +144,9 @@ const OrderManagementPage = () => {
           <td>
               <div>
                 <button >Edit</button>
-                {isFormOpen && <PopupForm onClose={toggleForm} product={selectedOrder} />}
               </div>
               <div>
-                <button onClick={() => handleDelete(product.orderId)}>Delete</button>
+                <button >Delete</button>
               </div>
           </td>
         </tr>
@@ -159,24 +155,28 @@ const OrderManagementPage = () => {
         </table>
       
         <div className="pagination-container">
-          <div className="pagination-info">
-            Showing 1 to 5 of 10 orders
-          </div>
-          <div className="pagination">
-            <button className="active">1</button>
-            <button>2</button>
-          </div>
+        <div className="pagination">
+        {Array.from({ length: Math.ceil(sortedOrders.length / itemsPerPage) }).map((_, index) => (
+          <button
+            key={index}
+            className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+            onClick={() => paginate(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
           <div className="items-per-page">
             <span>Items per page:</span>
-            <select>
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-            </select>
+            <input
+          type="number"
+          min="1"
+          value={itemsPerPage}
+          onChange={handleItemsPerPageChange}
+          placeholder='1'
+        />
           </div>
         </div>
-      
-        <div id="popup-form"></div>
       </div>
     );
   };

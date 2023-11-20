@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AdminDashboard from '../components/AdminDashboard';
 import ProductManagementPage from '../components/ProductManagementPage';
 import OrderManagementPage from '../components/OrderManagementPage';
+import AccountManagement from '../components/AccountManangement';
 import '../components/css/AdminPage.css'
 const AdminPage = () => {
     const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
@@ -91,7 +92,7 @@ const AdminPage = () => {
             );
           case 'staffs':
             return (
-                <div></div>
+                <div><AccountManagement/></div>
             );
           case 'team':
             return (
@@ -134,7 +135,7 @@ const AdminPage = () => {
         <li className={activeMenuItem === 'staffs' ? 'active' : ''}>
           <a href="#" data-menu="staffs" onClick={() => handleMenuItemClick('staffs')}>
             <i className='bx bxs-message-dots'></i>
-            <span className="text">Quản lý nhân viên</span>
+            <span className="text">Quản lý Account</span>
           </a>
         </li>
       </ul>
