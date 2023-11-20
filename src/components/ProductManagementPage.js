@@ -13,6 +13,7 @@ const ProductManagementPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
@@ -25,7 +26,9 @@ const ProductManagementPage = () => {
     }
   };
   const handleEdit = (productId) => {
-    setSelectedProductId(productId);
+    const product = products.find((product) => product.pet_product_id === productId);
+    setSelectedProduct(product);
+    toggleForm();
   };
   const handleClearStatusFilter = () => {
     setFilterStatuses([]);
@@ -219,6 +222,7 @@ const ProductManagementPage = () => {
           <td>
               <div>
                 <button onClick={() => handleEdit(product.pet_product_id)}>Edit</button>
+                {isFormOpen && <PopupForm onClose={toggleForm} product={selectedProduct} />}
               </div>
               <div>
                 <button onClick={() => handleDelete(product.pet_product_id)}>Delete</button>
