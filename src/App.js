@@ -1,4 +1,5 @@
 import React from 'react';
+import PrivateRoute from './components/PrivateRoute'
 import HomePage from './pages/HomePage';
 import RegistrationForm from './pages/RegisterPage';
 import ReactDOM from 'react-dom';
@@ -26,7 +27,7 @@ const App = () => {
           <Route path="/passwordreset" element={<PasswordResetForm />}/>
           <Route path="/detail/:id" element={<ProductDetailPage />} />
           <Route path="/register/token/:token" element={<VerifySuccessfulPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
         </Routes>
       </Layout>
     </ChakraProvider>
