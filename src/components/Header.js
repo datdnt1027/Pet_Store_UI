@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import './css/Navbar.css';
 import { Route, Router, Routes } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
+import UserNavbar from '../components/UserNavBar'
+
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [siteBrandText, setSiteBrandText] = useState('PETCAL');
-
+  const [user, setUser] = useState(null);
+  function getUserFromStorage(){
+    const suser = sessionStorage.getItem('user');
+    return suser
+  }
+  
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -19,9 +26,10 @@ function Header() {
         setSiteBrandText('PETCAL');
       }
     };
-
+    setUser(getUserFromStorage());
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+    
   }, []);
 
   return (
@@ -52,11 +60,17 @@ function Header() {
             <div className="flex2 text-end d-block d-md-none">
               <button className="whiteLink siteLink"><i className="fas fa-search"></i></button>
             </div>
-            <div className="flex2 text-end d-none d-md-block">
-              <a href="/signup"><button  className="whiteLink siteLink">REGISTER</button></a>
-              <a href="/login"><button className="blackLink siteLink">Login</button></a>
-            </div>
-          </div>
+            {user ? (
+             
+             <UserNavbar user={user} />  
+              ) :(
+                
+                <div className="flex2 text-end d-none d-md-block">
+                <a href="/signup"><button  className="whiteLink siteLink">REGISTER</button></a>
+                <a href="/login"><button className="blackLink siteLink">Login</button></a>
+              </div>
+            )}
+          </div>       
         </div>
 
         <div id="menuDrawer">

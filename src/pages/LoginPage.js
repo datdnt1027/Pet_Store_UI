@@ -51,6 +51,8 @@ const Login = () => {
       if (response.status === 200) {
         // registration successful
         console.log('Login successful');
+        
+        sessionStorage.setItem('user', response);  
         navigate('success');
       } else {
         // registration failed 
