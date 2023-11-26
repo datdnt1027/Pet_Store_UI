@@ -9,7 +9,35 @@ const ProductDetailPage = () => {
   const product = sampleData.find((product) => product.pet_product_id === parseInt(id));
   const [products, setProducts] = useState(sampleData);
   const [imgId, setImgId] = useState(1);
+  const [cartItems, setCartItems] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
+  };
+  const addToCart = () => {
+    const parsedQuantity = parseInt(quantity, 10); // Parse the quantity as an integer
   
+    // Check if the product is already in the cart
+    const productInCart = cartItems.find(item => item.pet_product_id === product.pet_product_id);
+  
+    if (productInCart) {
+      // If the product is already in the cart, update its quantity
+      const updatedCart = cartItems.map(item => {
+        if (item.pet_product_id === product.pet_product_id) {
+          return { ...item, quantity: item.quantity + parsedQuantity };
+        }
+        return item;
+      });
+      setCartItems(updatedCart);
+    } else {
+      // If the product is not in the cart, add it as a new item
+      const newItem = { ...product, quantity: parsedQuantity };
+      setCartItems([...cartItems, newItem]);
+    }
+  
+    // Reset the quantity input to 1
+  };
+
   useEffect(() => {
     const slideImage = () => {
       // update translateX based on imgId
@@ -35,6 +63,17 @@ const ProductDetailPage = () => {
       window.removeEventListener('resize', slideImage);
     };
   }, [imgId]);
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    const savedCartItems = localStorage.getItem('cartItems');
+    if (savedCartItems) {
+      setCartItems(JSON.parse(savedCartItems));
+    }
+  }, []);
 
   if (!product) {
     return <div>Product not found</div>;
@@ -113,8 +152,13 @@ const ProductDetailPage = () => {
           </div>
 
           <div className = "purchase-info">
-            <input type = "number" min = "0" value = "1"/>
-            <button type = "button" className = "btn">
+          <input
+  type="number"
+  min="1"
+  value={quantity}
+  onChange={handleQuantityChange}
+/>
+            <button type = "button" className = "btn"  onClick={addToCart}>
               Add to Cart <i className = "fas fa-shopping-cart"></i>
             </button>
             <button type = "button" className = "btn">Compare</button>

@@ -43,6 +43,7 @@ const ProductList = ({ products, numberOfItemsToShow }) => {
                 <p className="product-description">{product.product_detail}</p>
                 <p className="product-price">Price: ${product.retail_price}</p>
                 <p className="product-quantity">Quantity: {product.quantity_on_hand}</p>
+                
               </div>
             </animated.li>
           </Link>

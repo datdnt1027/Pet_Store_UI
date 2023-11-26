@@ -11,12 +11,14 @@ import Login from './pages/LoginPage';
 import VerifySuccessfulPage from './pages/Verify'
 import PasswordResetForm from './pages/PasswordResetPage';
 import AdminPage from './pages/AdminPage';
+import { CartContext , CartProvider } from './components/CartContext';
 
 const App = () => {
 
   return (
 
     <ChakraProvider>
+      <CartProvider>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -30,6 +32,7 @@ const App = () => {
           <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
         </Routes>
       </Layout>
+      </CartProvider>
     </ChakraProvider>
 
   );
