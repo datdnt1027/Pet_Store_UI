@@ -5,6 +5,7 @@ import CateSwiper from '../components/CateSwiper';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Layout from '../components/Layout';
+import CategoryList from '../components/CateList';
 
 const HomePage = () => {
 
@@ -26,10 +27,11 @@ const HomePage = () => {
   return (
     <div>
       
-      <CateSwiper/>
+      {/* <CateSwiper/> */}
       <br/>
       <br/>
       <br/>
+      <CategoryList/>
       <ProductList products={products} numberOfItemsToShow={5} />
     </div>
   );

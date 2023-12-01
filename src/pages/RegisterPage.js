@@ -33,10 +33,11 @@ const RegistrationForm = () => {
         try {
             // Call the API using Axios
             const response = await axios.post(endpoints.REGISTER, customer);
-    
+            console.log("Thoong tin" + response);
           if(response.status === 200) {
             // registration successful
-            console.log('Registration successful');  
+            console.log('Registration successful');
+            alert("Đằng ký thành công.");
             navigate('/login');
 
           } else {
@@ -46,6 +47,7 @@ const RegistrationForm = () => {
     
         } catch (error) {
             console.error(error);
+            alert("Thông tin đã tồn tại.");
         }
     
       };

@@ -3,10 +3,17 @@ import AdminDashboard from '../components/AdminDashboard';
 import ProductManagementPage from '../components/ProductManagementPage';
 import OrderManagementPage from '../components/OrderManagementPage';
 import AccountManagement from '../components/AccountManangement';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import '../components/css/AdminPage.css'
 const AdminPage = () => {
     const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
     const [sidebarVisible, setSidebarVisible] = useState(true);
+    let navigate = useNavigate();
+    const handleLogout = () => {
+      localStorage.removeItem('user');
+      localStorage.clear()
+      navigate("/");
+    };
     const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
     };
@@ -141,7 +148,7 @@ const AdminPage = () => {
       </ul>
       <ul className="side-menu">
         <li>
-          <a href="#" className="logout">
+          <a href="" onClick={handleLogout} className="logout">
             <i className='bx bxs-log-out-circle'></i>
             <span className="text">Logout</span>
           </a>

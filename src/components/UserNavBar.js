@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -6,13 +7,12 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
 import '../components/css/UserNavBar.css'
-const UserNavbar = ({user}) => {
-    const handleLogout = () => {
-        sessionStorage.removeItem('user');
-
-  // update state
-        user = null;
-    };
+const UserNavbar = ({ onLogout }) => {
+  let navigate = useNavigate();
+  const handleLogout = () => {
+    onLogout(); // Call the logout callback function from the parent component
+    navigate('/');
+  };
   return (
     <div className='html'>
     <div className='body'>

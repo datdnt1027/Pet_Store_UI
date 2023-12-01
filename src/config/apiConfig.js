@@ -4,5 +4,6 @@ export default {
     LOGIN: API_URL + '/auth/login',
     FORGOT: API_URL + '/auth/forgot-password',
     RESET: API_URL + '/auth/reset-password',
-    VERIFY: API_URL + '/auth/verify'
+    VERIFY: API_URL + '/auth/verify',
+    CATE: API_URL + '/collections',
   }

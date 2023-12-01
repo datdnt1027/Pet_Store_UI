@@ -8,28 +8,47 @@ import UserNavbar from '../components/UserNavBar'
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [siteBrandText, setSiteBrandText] = useState('PETCAL');
-  const [user, setUser] = useState(null);
-  function getUserFromStorage(){
-    const suser = sessionStorage.getItem('user');
-    return suser
-  }
-  
+  const [shouldRenderUserNavbar, setShouldRenderUserNavbar] = useState(false);
+
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleStorageChange = () => {
+    const storedUser = localStorage.getItem('user');
+    setShouldRenderUserNavbar(!!storedUser);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.clear();
+    setShouldRenderUserNavbar(false);
+  };
+
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 420) {
-        setSiteBrandText('MAS');
-      } else {
-        setSiteBrandText('PETCAL');
-      }
+    const storedUser = localStorage.getItem('user');
+    setShouldRenderUserNavbar(!!storedUser);
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
     };
-    setUser(getUserFromStorage());
+  }, []);
+
+  const handleResize = () => {
+    if (window.innerWidth < 420) {
+      setSiteBrandText('MAS');
+    } else {
+      setSiteBrandText('PETCAL');
+    }
+  };
+
+  useEffect(() => {
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   return (
@@ -60,9 +79,9 @@ function Header() {
             <div className="flex2 text-end d-block d-md-none">
               <button className="whiteLink siteLink"><i className="fas fa-search"></i></button>
             </div>
-            {user ? (
+            {shouldRenderUserNavbar   ? (
              
-             <UserNavbar user={user} />  
+             <UserNavbar onLogout={handleLogout} />  
               ) :(
                 
                 <div className="flex2 text-end d-none d-md-block">

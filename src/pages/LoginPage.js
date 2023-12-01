@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../components/css/LoginForm.css'; // CSS file for styling
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 
 
 const Login = () => {
@@ -27,6 +27,7 @@ const Login = () => {
       if (response.status === 200) {
         // registration successful
         console.log('Password forgot successful');
+        
         navigate('/passwordreset');
       } else {
         // registration failed 
@@ -50,10 +51,11 @@ const Login = () => {
 
       if (response.status === 200) {
         // registration successful
-        console.log('Login successful');
+        console.log('Login successful' + response.data);
+        alert("Login Successful!");
+        localStorage.setItem('user', JSON.stringify(response.data));  
         
-        sessionStorage.setItem('user', response);  
-        navigate('success');
+        navigate('/');
       } else {
         // registration failed 
         throw new Error('Login failed');

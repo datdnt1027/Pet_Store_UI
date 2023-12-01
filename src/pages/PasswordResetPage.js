@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import endpoints from '../config/apiConfig';
 import axios from 'axios';
-import '../components/css/RegistrationForm.css';
+import '../components/css/PasswordReset.css';
 
 const PasswordResetForm = () => {
+  let navigate = useNavigate();
   const [resetData, setResetData] = useState({
     token: '',
     password: '',
@@ -32,6 +34,8 @@ const PasswordResetForm = () => {
       if (response.status === 200) {
         // password reset successful
         console.log('Password reset successful');
+        alert("Đổi mật khẩu thành công");
+        navigate('/login');
       } else {
         // password reset failed
         throw new Error('Password reset failed');

@@ -1,4 +1,4 @@
-.html {
+.bhtml {
   box-sizing: border-box;
 }
 
@@ -12,9 +12,6 @@
   justify-content: center;
   align-items: flex-start;
   background-color: #ff9800;
-}
-
-* {
   box-sizing: inherit;
 }
 
@@ -23,13 +20,13 @@ img {
   height: auto;
 }
 
-nav {
+.nav {
   background-color: #fff;
   padding: 0 3rem;
   border-radius: 0.625rem;
 }
 
-ul {
+.ul {
   margin: 0;
   padding: 0;
   display: flex;
@@ -37,12 +34,12 @@ ul {
   gap: 3rem;
 }
 
-li {
+.li {
   list-style-type: none;
   position: relative;
   padding: 0.625rem 0 0.5rem;
 }
-li ul {
+.li ul {
   flex-direction: column;
   position: absolute;
   background-color: white;
@@ -59,8 +56,8 @@ li ul {
   display: none;
 }
 
-ul li:hover > ul,
-ul li ul:hover {
+.ul li:hover > ul,
+.ul li ul:hover {
   visibility: visible;
   opacity: 1;
   display: flex;

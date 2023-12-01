@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-
+import { useNavigate, useLocation  } from 'react-router-dom';
 const Sidebar = () => {
   const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
   const [sidebarVisible, setSidebarVisible] = useState(true);
-
+  let navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate("");
+  };
   const handleMenuItemClick = (menuItem) => {
     setActiveMenuItem(menuItem);
     };
@@ -86,7 +90,7 @@ const Sidebar = () => {
       </ul>
       <ul className="side-menu">
         <li>
-          <a href="#" className="logout">
+          <a href="" onClick={handleLogout} className="logout">
             <i className='bx bxs-log-out-circle'></i>
             <span className="text">Logout</span>
           </a>
