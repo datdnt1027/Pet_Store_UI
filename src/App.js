@@ -12,6 +12,8 @@ import VerifySuccessfulPage from './pages/Verify'
 import PasswordResetForm from './pages/PasswordResetPage';
 import AdminPage from './pages/AdminPage';
 import { CartContext , CartProvider } from './components/CartContext';
+import ItemListPage from './pages/ItemListPage';
+import Checkout from './pages/CheckOutPage';
 
 const App = () => {
 
@@ -30,6 +32,8 @@ const App = () => {
           <Route path="/detail/:id" element={<ProductDetailPage />} />
           <Route path="/register/token/:token" element={<VerifySuccessfulPage />} />
           <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
+          <Route path='/category/:categoryId' element = {<ItemListPage/>}/>
+          <Route path='/checkout' element={<Checkout/>} />
         </Routes>
       </Layout>
       </CartProvider>

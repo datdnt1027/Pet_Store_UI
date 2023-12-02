@@ -25,7 +25,8 @@ const UserNavbar = ({ onLogout }) => {
           <span className="material-icons-outlined"><FavoriteBorderIcon/></span>
         </li> 
         <li className='li'>
-          <span className="material-icons-outlined"><ShoppingCartIcon/></span>
+          <a href='/checkout' ><span className="material-icons-outlined"><ShoppingCartIcon/></span>
+          </a>
         </li>
         <li className='li'>
           <img src="images/profile.png" className="profile" />
