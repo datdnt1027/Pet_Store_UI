@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import { Link } from 'react-router-dom';
-
+import '../components/css/CateList.css'
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
 

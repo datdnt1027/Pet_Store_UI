@@ -1,63 +1,112 @@
 .product-list-container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
 }
+
 .category-wrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding: 20px;
+  background-color: #f5f5f5;
+  margin-bottom: 20px;
 }
 
 .category-title {
   margin: 0;
+  text-align: left;
+  font-size: 24px;
+  color: #342E37;
 }
 
-.swiper-button-prev {
-  color: black;
-}
-
+.swiper-button-prev,
 .swiper-button-next {
   color: black;
+  font-size: 24px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
 }
+
 .mySwiper {
-  flex-grow: 1; /* Take remaining space */
+  flex-grow: 1;
+  margin-bottom: 20px;
 }
+
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Adjust the number of columns as needed */
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 20px;
   list-style: none;
   padding: 0;
 }
 
 .product-item {
+  position: relative;
   padding: 10px;
   border-radius: 5px;
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
+  background-color: #eaeaea;
 }
 
 .product-item:hover {
   transform: scale(1.15);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   border: 2px solid #000;
-  background-color: rgba(0, 0, 0, 0.2); /* Add a semi-transparent overlay on hover */
+  background-color: #f5f5f5;
 }
 
 .product-item:hover h3,
 .product-item:hover p {
-  filter: brightness(1.2); /* Make text brighter on hover */
+  filter: brightness(1.2);
+}
+
+.product-item .product-image {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.product-item .product-image img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s;
 }
 
 .product-item:hover .product-image img {
-  transition: transform 0.3s;
-  transform: scale(1.2); /* Zoom the image on hover */
+  transform: scale(1.2);
+}
+.product-item .product-details {
+  padding: 10px;
 }
 
-.product-image img {
-  width: 100%;
-  height: auto;
+.product-item .product-name {
+  margin: 0;
+  font-size: 18px;
+  color: #342E37;
+  font-weight: bold;
+}
+
+.product-item .product-description {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555555;
+}
+
+.product-item .product-price {
+  margin: 0;
+  font-size: 16px;
+  color: #342E37;
+}
+
+.product-item .product-quantity {
+  margin: 0;
+  font-size: 14px;
+  color: #555555;
 }

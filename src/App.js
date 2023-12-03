@@ -14,6 +14,7 @@ import AdminPage from './pages/AdminPage';
 import { CartContext , CartProvider } from './components/CartContext';
 import ItemListPage from './pages/ItemListPage';
 import Checkout from './pages/CheckOutPage';
+import UpdateProfile from './pages/UpdateProfile';
 
 const App = () => {
 
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
           <Route path='/category/:categoryId' element = {<ItemListPage/>}/>
           <Route path='/checkout' element={<Checkout/>} />
+          <Route path='/profile' element={<UpdateProfile/>} />
         </Routes>
       </Layout>
       </CartProvider>

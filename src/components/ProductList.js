@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTransition, animated } from 'react-spring';
 import './css/ProductList.css';
-import { Route, Router, Routes } from 'react-router-dom';
 import ProductDetailPage from '../pages/ProductDetailPage';
 
 const ProductList = ({ products, numberOfItemsToShow }) => {
@@ -23,9 +22,9 @@ const ProductList = ({ products, numberOfItemsToShow }) => {
   const visibleProducts = products.slice(startIndex, startIndex + numberOfItemsToShow);
 
   const transitions = useTransition(visibleProducts, {
-    from: { opacity: 0, transform: 'translateX(100%)' },
-    enter: { opacity: 1, transform: 'translateX(0%)' },
-    
+    from: { opacity: 0, transform: 'translateY(50px)' },
+    enter: { opacity: 1, transform: 'translateY(0px)' },
+    config: { tension: 300, friction: 20 },
   });
 
   return (
@@ -43,7 +42,6 @@ const ProductList = ({ products, numberOfItemsToShow }) => {
                 <p className="product-description">{product.product_detail}</p>
                 <p className="product-price">Price: ${product.retail_price}</p>
                 <p className="product-quantity">Quantity: {product.quantity_on_hand}</p>
-                
               </div>
             </animated.li>
           </Link>
@@ -57,7 +55,6 @@ const ProductList = ({ products, numberOfItemsToShow }) => {
           Next
         </button>
       </div>
-      
     </div>
   );
 };

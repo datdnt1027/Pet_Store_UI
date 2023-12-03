@@ -1,8 +1,8 @@
-.bhtml {
+.bbhtml {
   box-sizing: border-box;
 }
 
-.bbody {
+.bbbody {
   margin: 0;
   padding: 20% 0;
   overflow-x: hidden;
@@ -25,7 +25,20 @@ img {
   padding: 0 3rem;
   border-radius: 0.625rem;
 }
+.cart-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background-color: white;
+  border: 1px solid gray;
+  padding: 10px;
+  display: none; /* Hide the cart dropdown by default */
+}
 
+.cart-dropdown.show {
+  display: block; /* Show the cart dropdown when the 'show' class is added */
+}
 .ul {
   margin: 0;
   padding: 0;
