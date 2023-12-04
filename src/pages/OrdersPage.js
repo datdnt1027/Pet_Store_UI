@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import '../components/css/OrdersPage.css'
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,51 +111,51 @@ const OrdersPage = () => {
 
   return (
     <div>
-      <h1>Orders Page</h1>
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search by date or status"
-          value={searchQuery}
-          onChange={handleSearchInputChange}
-        />
-        <select value={sortOption} onChange={handleSortOptionChange}>
-          <option value="">Sort by</option>
-          <option value="dateAsc">Date (Oldest to Newest)</option>
-          <option value="dateDesc">Date (Newest to Oldest)</option>
-        </select>
+      <h1 className="orders-page">Orders Page</h1>
+<div className="search-container">
+  <input
+    type="text"
+    placeholder="Search by date or status"
+    value={searchQuery}
+    onChange={handleSearchInputChange}
+  />
+  <select value={sortOption} onChange={handleSortOptionChange}>
+    <option value="">Sort by</option>
+    <option value="dateAsc">Date (Oldest to Newest)</option>
+    <option value="dateDesc">Date (Newest to Oldest)</option>
+  </select>
+</div>
+<div className="order-list">
+  {visibleOrdersData.map(order => (
+    <div key={order.id} className="order-item">
+      <div className="order-item-header">
+        <h2>{order.date}</h2>
+        <span>Status: {order.status}</span>
       </div>
-      <div className="order-list">
-        {visibleOrdersData.map(order => (
-          <div key={order.id} className="order-item">
-            <div className="order-item-header">
-              <h2>{order.date}</h2>
-              <span>Status: {order.status}</span>
-            </div>
-            <div className="order-item-summary">
-              <p>Quantity: {calculateOrderSummary(order.items).quantity}</p>
-              <p>Total: {calculateOrderSummary(order.items).total}</p>
-            </div>
-            <div className="order-item-details">
-              <p>Shipping Address: {order.shippingAddress}</p>
-              {/* Display individual order items */}
-              {order.items.map(item => (
-                <div key={item.id}>
-                  <p>{item.name}</p>
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Price: {item.price}</p>
-                </div>
-              ))}
-            </div>
+      <div className="order-item-summary">
+        <p>Quantity: {calculateOrderSummary(order.items).quantity}</p>
+        <p>Total: {calculateOrderSummary(order.items).total}</p>
+      </div>
+      <div className="order-item-details">
+      <p class="shipping-address">Shipping Address: {order.shippingAddress}</p>
+        {/* Display individual order items */}
+        {order.items.map(item => (
+          <div key={item.id}>
+            <p>{item.name}</p>
+            <p>Quantity: {item.quantity}</p>
+            <p>Price: {item.price}</p>
           </div>
         ))}
       </div>
-      {hasMoreOrders && !showAllOrders && (
-        <button onClick={handleSeeMore}>See More</button>
-      )}
-      {showAllOrders && (
-        <button onClick={handleSeeLess}>See Less</button>
-      )}
+    </div>
+  ))}
+</div>
+{hasMoreOrders && !showAllOrders && (
+  <button className='see-more-button' onClick={handleSeeMore}>See More</button>
+)}
+{showAllOrders && (
+  <button onClick={handleSeeLess}>See Less</button>
+)}
     </div>
   );
 };
