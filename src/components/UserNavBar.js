@@ -64,7 +64,8 @@ const UserNavbar = ({ onLogout }) => {
                 </li> */}
                 <li className="sub-item">  
                   <span className="material-icons-outlined"><ReceiptIcon/></span>
-                  <p>My Orders</p> 
+                  <a href='/orders'><p>My Orders</p> 
+                  </a>
                 </li>
                 <li className="sub-item">
                   <span className="material-icons-outlined"><PersonIcon/></span>  

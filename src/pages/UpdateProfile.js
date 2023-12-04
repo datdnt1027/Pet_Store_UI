@@ -25,7 +25,31 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <div className="profile-avatar-container">
+      {editMode ? (
+        <>
+          <form>
+    {Object.entries(profile).map(([key, value]) => (
+      <div key={key}>
+        <label>{key}</label>
+        <input 
+          type="text"
+          value={value}
+          onChange={(e) => {
+            // update profile state
+          }} 
+        />
+      </div>
+    ))}
+
+    <button type="button" onClick={handleSave}>
+      Save
+    </button>
+  </form>
+          <button onClick={handleSave}>Save</button>
+        </>  
+      ) : (
+        <>
+          <div className="profile-avatar-container">
         {profile.avatar ? (
           <img className="profile-avatar" src={URL.createObjectURL(profile.avatar)} alt="Avatar" />
         ) : (
@@ -60,6 +84,11 @@ function Profile() {
           <span className="profile-value">{profile.address}</span>
         </div>
       </div>
+          
+          <button className="edit-button" button onClick={handleEdit}>Edit</button> 
+        </>
+      )}
+      
     </div>
   );
 }
