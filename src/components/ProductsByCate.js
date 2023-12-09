@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { useTransition, animated } from 'react-spring';
 import './css/ProductList.css';
 
-const ProductList = ({ products }) => {
+const ProductByCate = ({ products, cateName }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [numberOfItemsToShow, setNumberOfItemsToShow] = useState(10);
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortBy, setSortBy] = useState('name');
-  console.log(products);
+
   const handlePrevious = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -55,8 +55,8 @@ const ProductList = ({ products }) => {
   const sortProducts = (products) => {
     if (sortBy === 'name') {
       return products.sort((a, b) => {
-        const nameA = a.productName.toUpperCase();
-        const nameB = b.productName.toUpperCase();
+        const nameA = a.productName ? a.productName.toUpperCase() : '';
+        const nameB = b.productName ? b.productName.toUpperCase() : '';
         if (nameA < nameB) {
           return sortOrder === 'asc' ? -1 : 1;
         }
@@ -67,8 +67,8 @@ const ProductList = ({ products }) => {
       });
     } else if (sortBy === 'price') {
       return products.sort((a, b) => {
-        const priceA = parseFloat(a.productPrice);
-        const priceB = parseFloat(b.productPrice);
+        const priceA = a.productPrice ? parseFloat(a.productPrice) : 0;
+        const priceB = b.productPrice ? parseFloat(b.productPrice) : 0;
         if (priceA < priceB) {
           return sortOrder === 'asc' ? -1 : 1;
         }
@@ -85,7 +85,7 @@ const ProductList = ({ products }) => {
 
   return (
     <div className="product-list-container">
-      <h1 className="product-list-title">Products</h1>
+      <h1 className="product-list-title">{cateName} Products</h1>
       
       <div className="items-per-page">
         <label htmlFor="numberOfItems">Items per page: </label>
@@ -149,4 +149,4 @@ const ProductList = ({ products }) => {
   );
 };
 
-export default ProductList;
+export default ProductByCate;

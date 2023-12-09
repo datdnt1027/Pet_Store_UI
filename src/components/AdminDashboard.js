@@ -1,7 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import CategoryChart from '../components/CategoryChart'
+import axios from 'axios';
+import apiConfig from '../config/apiConfig';
 
 const AdminDashboard = () => {
+  const [categories, setCategories] = useState([]);
 
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(apiConfig.CATE);
+      console.log('Fetched');
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories', error);
+    }
+  };
   return (
     <div>
         
@@ -52,45 +68,11 @@ const AdminDashboard = () => {
                 <div className="table-data">
                   <div className="order">
                     <div className="head">
-                      <h3>Đơn gần đây</h3>
+                      <h3>Summary</h3>
                       <i className='bx bx-search'></i>
                       <i className='bx bx-filter'></i>
                     </div>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Tên người dùng</th>
-                          <th>Ngày</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <img src='https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?rs=1&pid=ImgDetMain' alt="User" />
-                            <span className="user-name">John Doe</span>
-                          </td>
-                          <td>2023-11-15</td>
-                          <td>Completed</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src='https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?rs=1&pid=ImgDetMain' alt="User" />
-                            <span className="user-name">Jane Smith</span>
-                          </td>
-                          <td>2023-11-14</td>
-                          <td>Processing</td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img src='https://th.bing.com/th/id/OIP.QjynegEfQVPq5kIEuX9fWQHaFj?rs=1&pid=ImgDetMain' alt="User" />
-                            <span className="user-name">Mike Johnson</span>
-                          </td>
-                          <td>2023-11-13</td>
-                          <td>Cancelled</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <CategoryChart data={categories} />
                   </div>
                 </div>
               

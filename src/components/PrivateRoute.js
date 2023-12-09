@@ -1,23 +1,28 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Redirect } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
 
-const PrivateRoute = ({children}) => {
+const PrivateRoute = ({ children }) => {
   const storedUser = localStorage.getItem('user');
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
-    //console.log(useAuth());
-    const auth = user;
-    console.log(auth);
-    //console.log("TK: "+auth);
-    const navigate = useNavigate();
+  const auth = user;
+  const navigate = useNavigate();
+  const [shouldRender, setShouldRender] = useState(false);
 
-    useEffect(() => {
-    if(!auth) {
-        console.log("Khong co tai khoan")
-        navigate("/login");
+  useEffect(() => {
+    if (!auth) {
+      navigate("/login");
+    } else {
+      setShouldRender(true);
     }
-   },[auth])
-   return auth ? children : null;
+  }, [auth]);
+
+  if (!shouldRender) {
+    return null;
   }
-  export default PrivateRoute;
+
+  return children;
+}
+
+export default PrivateRoute;

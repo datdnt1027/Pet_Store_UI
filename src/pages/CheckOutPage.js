@@ -1,110 +1,102 @@
+import React, { useEffect, useState } from 'react';
 import '../components/css/CheckOut.css';
-function Checkout() {
-    return (
-        <div className="checkout-container">
-          <div className="cart-items-container">
-            <h1 className="title">Checkout</h1>
-            <CartItems />
-          </div>
-    
-          <div className="form">
-            <CheckoutForm />
-            <button className="place-order-button">Place Order</button>
-          </div>
-        </div>
-      );
-    
-  }
-  
-  function CartItems() {
+import apiConfig from '../config/apiConfig';
+import axios from 'axios';
 
-    const items = [
-      {
-        id: 1,
-        name: 'Product 1', 
-        price: 29.99,
-        image: '/product1.jpg'
-      },
-      {
-        id: 2,  
-        name: 'Product 2',
-        price: 49.99, 
-        image: '/product2.jpg'
-      },
-      {
-        id: 3,
-        name: 'Product 3',
-        price: 19.99,
-        image: '/product3.jpg' 
-      },
-      {
-        id: 4,
-        name: 'Product 4',
-        price: 12.99,
-        image: '/product4.jpg'
-      },
-      {
-        id: 5,  
-        name: 'Product 5',
-        price: 24.99,
-        image: '/product5.jpg'
+function Checkout() {
+  const [products, setProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+  const authToken = JSON.parse(authTokenString).token;
+  console.log(authToken) // Replace with your actual auth token
+  const headers = {
+    Authorization: `Bearer ${authToken}`,
+    'Content-Type': 'application/json'
+  };
+  useEffect(() => {
+    // Define an async function to fetch the data
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiConfig.ADD_TO_CART,{headers});
+        const { products, totalPrice } = response.data;
+        setProducts(products);
+        setTotalPrice(totalPrice);
+        console.log(totalPrice);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsLoading(false);
       }
-    ];
-  
-    return (
+    };
+
+    fetchData();
+  }, []);
+  const handlePlaceOrder = async () => {
+    const orderData = {
+      redirectUrl: "http://localhost:3000/order/payment/momo/"
+    };
+    const orderDataJson = JSON.stringify(orderData);
+    try {
+      console.log("Check " + apiConfig.PLACE_ORDER);
+      const response = await axios.post(apiConfig.PLACE_ORDER, orderDataJson, { headers });
+      // Handle successful order placement
+      console.log(response.data);
+      const { payUrl } = response.data;
+      window.location.href = payUrl;
+    } catch (error) {
+      // Handle error in placing the order
+      console.error('Error placing order:', error);
+    }
+  };
+  return (
+    <div className="checkout-container">
       <div className="cart-items-container">
-  
-        <h2 className="cart-title">Cart Items</h2>
-  
-        {items.map(item => (
-          <div className="item-container" key={item.id}>
-  
-            <img className="item-image" src={item.image}/>
-  
-            <div className="item-details">
-  
-              <p className="item-name">{item.name}</p>
-  
-              <p className="item-price">${item.price}</p>
-  
-            </div>
-  
-          </div>  
-        ))}
-  
+        <h1 className="title">Checkout</h1>
+        <CartItems products={products} />
       </div>
-    );
-  }
-  
-  
-  
-  function CheckoutForm() {
-  
-    return (
-  
-      <form className="form">
-  
-        <h2 className="form-title">Checkout Form</h2>
-  
-  
-        
-  
-        <label className="form-label">
-  
-          Name
-  
-          <input className="name-input" type="text" />
-  
-        </label>
-  
-        
-  
-        // other fields
-  
-      </form>
-  
-    );
-  
-  }
-  
-  export default Checkout;
+
+      <div className="form">
+        <CheckoutForm totalPrice={totalPrice} />
+        <button className="place-order-button" onClick={handlePlaceOrder}>Place Order</button>
+      </div>
+    </div>
+  );
+}
+
+function CartItems({ products }) {
+  console.log(products)
+  return (
+    <div className="cart-items-container">
+      <h2 className="cart-title">Cart Items</h2>
+      {products && products.length > 0 ? (
+        products.map((product, index) => (
+          <div className="item-container" key={index}>
+            <img className="item-image" src={`data:image/png;base64, ${product.imageData}`} alt={product.productName} />
+            <div className="item-details">
+              <p className="item-name">{product.productName}</p>
+              <p className="item-price">${product.productPrice}</p>
+              <p className="item-quantity">{product.quantity}</p>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No products found</p>
+      )}
+    </div>
+  );
+}
+
+function CheckoutForm({ totalPrice }) {
+  return (
+    <form className="form">
+      <h2 className="form-title">Checkout</h2>
+      <label className="form-label">
+        <p className="item-price">Total: ${totalPrice}</p>
+      </label>
+      {/* Other fields */}
+    </form>
+  );
+}
+
+export default Checkout;

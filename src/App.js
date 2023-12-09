@@ -16,6 +16,7 @@ import ItemListPage from './pages/ItemListPage';
 import Checkout from './pages/CheckOutPage';
 import UpdateProfile from './pages/UpdateProfile';
 import Orders from './pages/OrdersPage';
+import FailedPaymentPage from './pages/FailedPaymentPage'
 
 const App = () => {
 
@@ -35,9 +36,10 @@ const App = () => {
           <Route path="/register/token/:token" element={<VerifySuccessfulPage />} />
           <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
           <Route path='/category/:categoryId' element = {<ItemListPage/>}/>
-          <Route path='/checkout' element={<Checkout/>} />
-          <Route path='/profile' element={<UpdateProfile/>} />
-          <Route path='/orders' element={<Orders/>} />
+          <Route path='/checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
+          <Route path='/profile' element={<PrivateRoute><UpdateProfile/></PrivateRoute>} />
+          <Route path='/orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
+          <Route path='/order/payment/momo/*' element={<PrivateRoute><FailedPaymentPage/></PrivateRoute>} />
         </Routes>
       </Layout>
       </CartProvider>

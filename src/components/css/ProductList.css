@@ -1,7 +1,7 @@
 .product-list-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 100%;
+  max-width: 1200px; /* Độ rộng tối đa của danh sách sản phẩm */
+  margin: 0 auto; 
 }
 
 .category-wrapper {
@@ -42,9 +42,25 @@
   list-style: none;
   padding: 0;
 }
+/* Trong file CSS */
+.items-per-page {
+  margin-bottom: 20px;
+}
 
+.items-per-page label {
+  font-weight: bold;
+}
+
+.items-per-page input {
+  width: 50px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 .product-item {
   position: relative;
+  width: auto; /* Độ rộng của mỗi mục */
+  height: auto;
   padding: 10px;
   border-radius: 5px;
   display: flex;
@@ -109,4 +125,63 @@
   margin: 0;
   font-size: 14px;
   color: #555555;
+}
+.pagination-buttons {
+  display: flex;
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  align-items: center;
+}
+
+.page-numbers-container {
+  display: flex;
+}
+.sort-options {
+  margin-bottom: 10px;
+}
+
+.sort-options label {
+  margin-right: 5px;
+}
+
+.filter-options {
+  margin-bottom: 10px;
+}
+
+.filter-options label {
+  margin-right: 5px;
+}
+.page-number {
+  margin: 0 5px;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.product-list-title {
+  text-align: center; /* Căn giữa theo chiều ngang */
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+.page-number.active {
+  background-color: #333;
+  color: #fff;
+}
+
+.page-number:hover {
+  background-color: #eee;
+  color: #333;
+}
+
+.pagination-buttons button {
+  margin: 0 5px;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-buttons button:hover {
+  background-color: #eee;
+  color: #333;
 }
