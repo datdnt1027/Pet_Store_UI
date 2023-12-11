@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Box, Button } from '@chakra-ui/react';
 import '../components/css/CheckOut.css';
 import apiConfig from '../config/apiConfig';
 import axios from 'axios';
@@ -18,7 +19,7 @@ function Checkout() {
     // Define an async function to fetch the data
     const fetchData = async () => {
       try {
-        const response = await axios.get(apiConfig.ADD_TO_CART,{headers});
+        const response = await axios.get(apiConfig.ADD_TO_CART, { headers });
         const { products, totalPrice } = response.data;
         setProducts(products);
         setTotalPrice(totalPrice);
@@ -34,11 +35,11 @@ function Checkout() {
   }, []);
   const handlePlaceOrder = async () => {
     const orderData = {
-      redirectUrl: "http://localhost:3000/order/payment/momo/"
+      redirectUrl: 'http://localhost:3000/order/payment/momo/'
     };
     const orderDataJson = JSON.stringify(orderData);
     try {
-      console.log("Check " + apiConfig.PLACE_ORDER);
+      console.log('Check ' + apiConfig.PLACE_ORDER);
       const response = await axios.post(apiConfig.PLACE_ORDER, orderDataJson, { headers });
       // Handle successful order placement
       console.log(response.data);
@@ -50,40 +51,40 @@ function Checkout() {
     }
   };
   return (
-    <div className="checkout-container">
-      <div className="cart-items-container">
+    <Box className="checkout-container">
+      <Box className="cart-items-container">
         <h1 className="title">Checkout</h1>
         <CartItems products={products} />
-      </div>
+      </Box>
 
-      <div className="form">
+      <Box className="form">
         <CheckoutForm totalPrice={totalPrice} />
-        <button className="place-order-button" onClick={handlePlaceOrder}>Place Order</button>
-      </div>
-    </div>
+        <Button className="place-order-button" onClick={handlePlaceOrder}>Place Order</Button>
+      </Box>
+    </Box>
   );
 }
 
 function CartItems({ products }) {
-  console.log(products)
+  console.log(products);
   return (
-    <div className="cart-items-container">
+    <Box className="cart-items-container">
       <h2 className="cart-title">Cart Items</h2>
       {products && products.length > 0 ? (
         products.map((product, index) => (
-          <div className="item-container" key={index}>
+          <Box className="item-container" key={index}>
             <img className="item-image" src={`data:image/png;base64, ${product.imageData}`} alt={product.productName} />
-            <div className="item-details">
+            <Box className="item-details">
               <p className="item-name">{product.productName}</p>
               <p className="item-price">${product.productPrice}</p>
               <p className="item-quantity">{product.quantity}</p>
-            </div>
-          </div>
+            </Box>
+          </Box>
         ))
       ) : (
         <p>No products found</p>
       )}
-    </div>
+    </Box>
   );
 }
 

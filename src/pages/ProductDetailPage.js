@@ -8,13 +8,13 @@ import ProductList from '../components/ProductList';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
-  
+
   const [product, setProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [imgId, setImgId] = useState(1);
   const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState(1);
-
+  const [authToken, setAuthToken] = useState(null);
 
   const data = {
     productId: id,
@@ -26,12 +26,21 @@ const ProductDetailPage = () => {
   const handleQuantityChange = (event) => {
     setQuantity(event.target.value);
   };
+  useEffect(() => {
+    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
 
+    if (authTokenString) {
+      const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
+      setAuthToken(authToken);
+    } else {
+      setAuthToken(null);
+    }
+  }, []);
   const addToCart = async () => {
     const parsedQuantity = parseInt(quantity, 10); // Parse the quantity as an integer
     const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
-const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
-console.log(authToken);
+    const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
+    console.log(authToken);
     // Set the headers with the authentication token
     const headers = {
       Authorization: `Bearer ${authToken}`
@@ -41,9 +50,9 @@ console.log(authToken);
       await axios.post(apiConfig.ADD_TO_CART, {
         productId: product.productId,
         quantity: parsedQuantity
-      },{headers});
-  
-     alert('Product added to cart successfully.');
+      }, { headers });
+
+      alert('Product added to cart successfully.');
     } catch (error) {
       console.error('Error adding product to cart:', error);
     }
@@ -57,7 +66,7 @@ console.log(authToken);
         const response = await axios.post(`${apiConfig.DETAIL}`, {
           productId: id
         });
-        console.log("Gett"+response.data);
+        console.log("Gett" + response.data);
         ////
         setProduct(response.data);
         console.log("fetttt");
@@ -129,19 +138,27 @@ console.log(authToken);
                 <h2>Product Details</h2>
                 <p>{product.productDetail}</p>
               </div>
-              <div className="product-quantity">
+             
+              {
+                authToken ? (
+                  <div>
+                     <div className="product-quantity">
                 <label htmlFor="quantity">Quantity:</label>
                 <input
                   type="number"
                   id="quantity"
                   min="1"
-                  
+
                   onChange={handleQuantityChange}
                 />
               </div>
-              <button className="add-to-cart" onClick={addToCart}>
-                Add to Cart
-              </button>
+                  <button className="add-to-cart" onClick={addToCart}>
+                    Add to Cart
+                  </button>
+                  </div>
+                ) : null
+              }
+
             </div>
           </div>
         </div>

@@ -110,52 +110,67 @@ const OrdersPage = () => {
   const hasMoreOrders = sortedOrders.length > visibleOrders;
 
   return (
-    <div>
-      <h1 className="orders-page">Orders Page</h1>
-<div className="search-container">
-  <input
-    type="text"
-    placeholder="Search by date or status"
-    value={searchQuery}
-    onChange={handleSearchInputChange}
-  />
-  <select value={sortOption} onChange={handleSortOptionChange}>
-    <option value="">Sort by</option>
-    <option value="dateAsc">Date (Oldest to Newest)</option>
-    <option value="dateDesc">Date (Newest to Oldest)</option>
-  </select>
-</div>
-<div className="order-list">
-  {visibleOrdersData.map(order => (
-    <div key={order.id} className="order-item">
-      <div className="order-item-header">
-        <h2>{order.date}</h2>
-        <span>Status: {order.status}</span>
+    <div className="orders-page-container">
+      <h1 className="orders-page-heading">Orders Page</h1>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search by date or status"
+          value={searchQuery}
+          onChange={handleSearchInputChange}
+        />
+        <select value={sortOption} onChange={handleSortOptionChange}>
+          <option value="">Sort by</option>
+          <option value="dateAsc">Date (Oldest to Newest)</option>
+          <option value="dateDesc">Date (Newest to Oldest)</option>
+        </select>
       </div>
-      <div className="order-item-summary">
-        <p>Quantity: {calculateOrderSummary(order.items).quantity}</p>
-        <p>Total: {calculateOrderSummary(order.items).total}</p>
-      </div>
-      <div className="order-item-details">
-      <p class="shipping-address">Shipping Address: {order.shippingAddress}</p>
-        {/* Display individual order items */}
-        {order.items.map(item => (
-          <div key={item.id}>
-            <p>{item.name}</p>
-            <p>Quantity: {item.quantity}</p>
-            <p>Price: {item.price}</p>
+      <div className="order-list">
+        {visibleOrdersData.map(order => (
+          <div key={order.id} className="order-item">
+            <div className="order-item-header">
+              <h2 className="order-date">{order.date}</h2>
+              <span className={`order-status ${order.status.toLowerCase()}`}>{order.status}</span>
+            </div>
+            <div className="order-item-details">
+              <div className="order-summary">
+                <p className="summary-label">Quantity:</p>
+                <p className="summary-value">{calculateOrderSummary(order.items).quantity}</p>
+                <p className="summary-label">Total:</p>
+                <p className="summary-value">${calculateOrderSummary(order.items).total.toFixed(2)}</p>
+              </div>
+              <div className="shipping-details">
+                <h3 className="shipping-address-heading">Shipping Address:</h3>
+                <p className="shipping-address-value">{order.shippingAddress}</p>
+              </div>
+              <div className="order-items-list">
+                <h3 className="order-items-heading">Order Items:</h3>
+                {order.items.map(item => (
+                  <div key={item.id} className="order-item-details-item">
+                    <p className="item-name">{item.name}</p>
+                    <div className="item-details">
+                      <p className="item-details-label">Quantity:</p>
+                      <p className="item-details-value">{item.quantity}</p>
+                      <p className="item-details-label">Price:</p>
+                      <p className="item-details-value">${item.price.toFixed(2)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ))}
       </div>
-    </div>
-  ))}
-</div>
-{hasMoreOrders && !showAllOrders && (
-  <button className='see-more-button' onClick={handleSeeMore}>See More</button>
-)}
-{showAllOrders && (
-  <button onClick={handleSeeLess}>See Less</button>
-)}
+      {hasMoreOrders && !showAllOrders && (
+        <button className="see-more-button" onClick={handleSeeMore}>
+          See More
+        </button>
+      )}
+      {showAllOrders && (
+        <button className="see-less-button" onClick={handleSeeLess}>
+          See Less
+        </button>
+      )}
     </div>
   );
 };

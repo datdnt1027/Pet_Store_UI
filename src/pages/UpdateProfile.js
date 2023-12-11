@@ -10,7 +10,6 @@ function Profile() {
     contact: '+1-234-567-8910',
     address: '123 Main St, Boston MA 02110',
   };
-  const [avatarFile, setAvatarFile] = useState(null);
   const [profile, setProfile] = useState(sampleProfile);
   const [editMode, setEditMode] = useState(false);
 
@@ -23,36 +22,10 @@ function Profile() {
   };
 
   return (
-    <div className="profile-container">
-      {editMode ? (
-        <>
-          <form className="profile-form">
-          <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setAvatarFile(e.target.files[0])}
-            />
-            {Object.entries(profile).map(([key, value]) => (
-              <div key={key}>
-                <label>{key}</label>
-                <input
-                  type="text"
-                  value={value}
-                  onChange={(e) => {
-                    // update profile state
-                  }}
-                />
-              </div>
-            ))}
-            
-            <button type="button" onClick={handleSave}>
-              Save
-            </button>
-          </form>
-        </>
-      ) : (
-        <>
-          <div className="profile-avatar-container">
+    <div className='page-container'>
+      <div className="profile-container">
+        <div className="profile-details">
+        <div className="profile-avatar-container">
             {/* Render your avatar component here */}
             <img
               className="profile-avatar"
@@ -60,38 +33,119 @@ function Profile() {
               alt="Avatar"
             />
           </div>
-          <div className="profile-details">
-            <div className="profile-field">
-              <label className="profile-label">First Name:</label>
+          <div className="profile-field">
+            <label className="profile-label">First Name:</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={profile.firstName}
+                onChange={(e) => {
+                  const updatedProfile = { ...profile };
+                  updatedProfile.firstName = e.target.value;
+                  setProfile(updatedProfile);
+                }}
+                style={{ width: '500px' }}
+              />
+            ) : (
               <span className="profile-value">{profile.firstName}</span>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Last Name:</label>
-              <span className="profile-value">{profile.lastName}</span>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Email:</label>
-              <span className="profile-value">{profile.email}</span>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Date of Birth:</label>
-              <span className="profile-value">{profile.dob}</span>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Contact:</label>
-              <span className="profile-value">{profile.contact}</span>
-            </div>
-            <div className="profile-field">
-              <label className="profile-label">Address:</label>
-              <span className="profile-value">{profile.address}</span>
-            </div>
+            )}
           </div>
-
-          <button className="edit-button" button onClick={handleEdit}>
+          <div className="profile-field">
+            <label className="profile-label">Last Name:</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={profile.lastName}
+                onChange={(e) => {
+                  const updatedProfile = { ...profile };
+                  updatedProfile.lastName = e.target.value;
+                  setProfile(updatedProfile);
+                }}
+                style={{ width: '500px' }}
+              />
+            ) : (
+              <span className="profile-value">{profile.lastName}</span>
+            )}
+          </div>
+          <div className="profile-field">
+            <label className="profile-label">Email:</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={profile.email}
+                onChange={(e) => {
+                  const updatedProfile = { ...profile };
+                  updatedProfile.email = e.target.value;
+                  setProfile(updatedProfile);
+                }}
+                style={{ width: '500px' }}
+              />
+            ) : (
+              <span className="profile-value">{profile.email}</span>
+            )}
+          </div>
+          <div className="profile-field">
+            <label className="profile-label">Date of Birth:</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={profile.dob}
+                onChange={(e) => {
+                  const updatedProfile = { ...profile };
+                  updatedProfile.dob = e.target.value;
+                  setProfile(updatedProfile);
+                }}
+                style={{ width: '500px' }}
+              />
+            ) : (
+              <span className="profile-value">{profile.dob}</span>
+            )}
+          </div>
+          <div className="profile-field">
+            <label className="profile-label">Contact:</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={profile.contact}
+                onChange={(e) => {
+                  const updatedProfile = { ...profile };
+                  updatedProfile.contact = e.target.value;
+                  setProfile(updatedProfile);
+                }}
+                style={{ width: '500px' }}
+              />
+            ) : (
+              <span className="profile-value">{profile.contact}</span>
+            )}
+          </div>
+          <div className="profile-field">
+            <label className="profile-label">Address:</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={profile.address}
+                onChange={(e) => {
+                  const updatedProfile = { ...profile };
+                  updatedProfile.address = e.target.value;
+                  setProfile(updatedProfile);
+                }}
+                style={{ width: '500px' }}
+              />
+            ) : (
+              <span className="profile-value">{profile.address}</span>
+            )}
+          </div>
+        </div>
+        {editMode ? (
+          <button className="edit-button" onClick={handleSave}>
+            Save
+          </button>
+        ) : (
+          <button className="edit-button" onClick={handleEdit}>
             Edit
           </button>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }
