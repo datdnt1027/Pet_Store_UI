@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../components/css/UserProfile.css';
+import axios from 'axios';
+import apiConfig from '../config/apiConfig';
 
 function Profile() {
   const sampleProfile = {
@@ -12,15 +14,81 @@ function Profile() {
   };
   const [profile, setProfile] = useState(sampleProfile);
   const [editMode, setEditMode] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [avatar, setAvatar] = useState(profile.avatar);
 
   const handleEdit = () => {
     setEditMode(true);
   };
 
-  const handleSave = () => {
-    setEditMode(false);
+  const handleSave = async () => {
+    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+    const authToken = JSON.parse(authTokenString).token;
+    console.log(profile);
+
+    try {
+      await axios.patch(apiConfig.USER_PROFILE_UPDATE, profile, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      alert('Thành công');
+      setEditMode(false);
+    } catch (error) {
+      console.error('Error saving profile data:', error);
+    }
+    
+  };
+  const handleAvatarButtonClick = () => {
+    document.getElementById('avatar-input').click();
+  };
+  function removeBase64Prefix(base64Image) {
+    // Split the base64 string at the comma
+    const parts = base64Image.split(',');
+  
+    // Take the second part of the split result
+    const imageWithoutPrefix = parts[1];
+  
+    return imageWithoutPrefix;
+  }
+  const handleFileInputChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setAvatar(reader.result);
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
+  useEffect(() => {
+    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+    const authToken = JSON.parse(authTokenString).token;
+    console.log(authToken);
+    // Fetch data from the API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(apiConfig.USER_PROFILE, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className='page-container'>
       <div className="profile-container">
@@ -29,9 +97,15 @@ function Profile() {
             {/* Render your avatar component here */}
             <img
               className="profile-avatar"
-              src={profile.avatar}
+              src={avatar}
               alt="Avatar"
             />
+              <button
+                className="upload-avatar-button"
+                onClick={handleAvatarButtonClick}
+              >
+                Change Avatar
+              </button>
           </div>
           <div className="profile-field">
             <label className="profile-label">First Name:</label>
@@ -85,20 +159,20 @@ function Profile() {
             )}
           </div>
           <div className="profile-field">
-            <label className="profile-label">Date of Birth:</label>
+            <label className="profile-label">Giới tính:</label>
             {editMode ? (
               <input
                 type="text"
-                value={profile.dob}
+                value={profile.sex}
                 onChange={(e) => {
                   const updatedProfile = { ...profile };
-                  updatedProfile.dob = e.target.value;
+                  updatedProfile.sex = e.target.value;
                   setProfile(updatedProfile);
                 }}
                 style={{ width: '500px' }}
               />
             ) : (
-              <span className="profile-value">{profile.dob}</span>
+              <span className="profile-value">{profile.sex}</span>
             )}
           </div>
           <div className="profile-field">
@@ -106,16 +180,16 @@ function Profile() {
             {editMode ? (
               <input
                 type="text"
-                value={profile.contact}
+                value={profile.phoneNumber}
                 onChange={(e) => {
                   const updatedProfile = { ...profile };
-                  updatedProfile.contact = e.target.value;
+                  updatedProfile.phoneNumber = e.target.value;
                   setProfile(updatedProfile);
                 }}
                 style={{ width: '500px' }}
               />
             ) : (
-              <span className="profile-value">{profile.contact}</span>
+              <span className="profile-value">{profile.phoneNumber}</span>
             )}
           </div>
           <div className="profile-field">
@@ -146,6 +220,13 @@ function Profile() {
           </button>
         )}
       </div>
+        <input
+          id="avatar-input"
+          type="file"
+          accept="image/*"
+          onChange={handleFileInputChange}
+          style={{ display: 'none' }}
+        />
     </div>
   );
 }

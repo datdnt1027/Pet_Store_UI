@@ -9,5 +9,7 @@ export default {
     DETAIL: API_URL + '/collections/product',
     ADD_TO_CART: API_URL +'/order/customer',
     PLACE_ORDER: API_URL + '/order/payment/momo',
-    CREATE_PRODUCT: API_URL + '/admin/product'
+    CREATE_PRODUCT: API_URL + '/admin/product',
+    USER_PROFILE: API_URL + '/user/profile',
+    USER_PROFILE_UPDATE: API_URL + '/user/update_profile'
   }
