@@ -50,6 +50,7 @@ img {
 .li {
   list-style-type: none;
   position: relative;
+  align-items: center;
   padding: 0.625rem 0 0.5rem;
 }
 .li ul {
@@ -89,9 +90,14 @@ img {
 
 
 .profile {
-  height: 3rem;
-  width: auto;
+  height: 2.4rem;
+  width: 2.4rem;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  border-radius: 50%;
   cursor: pointer;
+  margin-right: 1rem;
 }
 
 .sub-item {
@@ -105,6 +111,7 @@ img {
 
 .sub-item:hover {
   background-color: rgba(232, 232, 232, 0.4);
+  right: -3rem;
 }
 
 .sub-item:hover .material-icons-outlined {
@@ -124,4 +131,11 @@ img {
   font-weight: 500;
   margin: 0.4rem 0;
   flex: 1;
+}
+.li:hover ul {
+  display: flex;
+  opacity: 1;
+  right: -4.5rem; /* Increase the distance to keep the drop menu open */
+  top: 3.5rem; /* Adjust the vertical position */
+  gap: 0; /* Remove unnecessary gap */
 }

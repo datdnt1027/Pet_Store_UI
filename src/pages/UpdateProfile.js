@@ -4,6 +4,17 @@ import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 
 function Profile() {
+
+  const genderOptions = [
+    {
+      label: 'Male',
+      value: 1
+    },
+    {  
+      label: 'Female',
+      value: 2
+    }
+  ]
   const sampleProfile = {
     firstName: 'Jane',
     lastName: 'Doe',
@@ -24,10 +35,16 @@ function Profile() {
   const handleSave = async () => {
     const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
     const authToken = JSON.parse(authTokenString).token;
-    console.log(profile);
-
+    
+    const uava= removeBase64Prefix(avatar)
+    console.log(uava);
+    const updatedProfile = {
+      ...profile,
+      uava
+    };
+    console.log(updatedProfile);
     try {
-      await axios.patch(apiConfig.USER_PROFILE_UPDATE, profile, {
+      await axios.patch(apiConfig.USER_PROFILE_UPDATE, updatedProfile, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
@@ -52,19 +69,51 @@ function Profile() {
   
     return imageWithoutPrefix;
   }
-  const handleFileInputChange = (event) => {
+
+
+
+  const handleFileInputChange = async (event) => {
+
+    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+    const authToken = JSON.parse(authTokenString).token;
+
     const file = event.target.files[0];
     const reader = new FileReader();
 
+    
+
     reader.onloadend = () => {
+      
       setAvatar(reader.result);
+      console.log("PRe"+reader.result);
+      const updatedAvatar = removeBase64Prefix(reader.result);
+      console.log(updatedAvatar);
+      const updatedProfile = {
+        ...profile,
+        avatar: updatedAvatar,
+      };
+      console.log(updatedProfile);
+      setProfile(updatedProfile);
+      //console.log("REal "+profile);
     };
-
-    if (file) {
-      reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+    try {
+      await axios.patch(apiConfig.USER_PROFILE_UPDATE, profile, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      alert('Thành công');
+      setEditMode(false);
+    } catch (error) {
+      console.error('Error saving profile data:', profile);
     }
-  };
 
+  };
+  const handleSexChange = (e) => {
+    setProfile({...profile, sex: e.target.value});
+  }
   useEffect(() => {
     const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
     const authToken = JSON.parse(authTokenString).token;
@@ -78,6 +127,7 @@ function Profile() {
           },
         });
         setProfile(response.data);
+        setAvatar(response.data.avatar);
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
@@ -141,39 +191,25 @@ function Profile() {
               <span className="profile-value">{profile.lastName}</span>
             )}
           </div>
-          <div className="profile-field">
-            <label className="profile-label">Email:</label>
-            {editMode ? (
-              <input
-                type="text"
-                value={profile.email}
-                onChange={(e) => {
-                  const updatedProfile = { ...profile };
-                  updatedProfile.email = e.target.value;
-                  setProfile(updatedProfile);
-                }}
-                style={{ width: '500px' }}
-              />
-            ) : (
-              <span className="profile-value">{profile.email}</span>
-            )}
-          </div>
+          
           <div className="profile-field">
             <label className="profile-label">Giới tính:</label>
             {editMode ? (
-              <input
-                type="text"
-                value={profile.sex}
-                onChange={(e) => {
-                  const updatedProfile = { ...profile };
-                  updatedProfile.sex = e.target.value;
-                  setProfile(updatedProfile);
-                }}
-                style={{ width: '500px' }}
-              />
-            ) : (
-              <span className="profile-value">{profile.sex}</span>
-            )}
+    <select
+      value={profile.sex} 
+      onChange={handleSexChange}
+    >
+      {genderOptions.map(option => (
+        <option key={option.value} value={option.value}>
+          {option.label}   
+        </option>  
+      ))}
+    </select>
+  ) : (
+    <span>
+      {profile.sex === 1 ? 'Male' : 'Female'}
+    </span>
+  )}
           </div>
           <div className="profile-field">
             <label className="profile-label">Contact:</label>

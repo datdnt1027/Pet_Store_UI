@@ -17,6 +17,8 @@ import Checkout from './pages/CheckOutPage';
 import UpdateProfile from './pages/UpdateProfile';
 import Orders from './pages/OrdersPage';
 import FailedPaymentPage from './pages/FailedPaymentPage'
+import AdminProfilePage from './components/AdminProfile';
+import AdminLogin from './pages/AdminLoginPage';
 
 const App = () => {
 
@@ -35,10 +37,12 @@ const App = () => {
           <Route path="/detail/:id" element={<ProductDetailPage />} />
           <Route path="/register/token/:token" element={<VerifySuccessfulPage />} />
           <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
+          <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path='/category/:categoryId' element = {<ItemListPage/>}/>
           <Route path='/checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
           <Route path='/profile' element={<PrivateRoute><UpdateProfile/></PrivateRoute>} />
           <Route path='/orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
+          <Route path='/admin/profile' element={<PrivateRoute><AdminProfilePage/></PrivateRoute>} />
           <Route path='/order/payment/momo/*' element={<PrivateRoute><FailedPaymentPage/></PrivateRoute>} />
         </Routes>
       </Layout>
