@@ -87,26 +87,21 @@ function Profile() {
 
     const file = event.target.files[0];
     const reader = new FileReader();
-    var updatedProfile;
-    
+    var updatedAvatar;
 
     reader.onloadend = () => {
       
       setAvatar(reader.result);
       //console.log("PRe"+reader.result);
-      const updatedAvatar = removeBase64Prefix(reader.result);
+      updatedAvatar = removeBase64Prefix(reader.result);
       console.log(updatedAvatar);
-      updatedProfile = {
-        
-        avatar: updatedAvatar,
-      };
-      console.log(updatedProfile);
+
       //setProfile(updatedProfile);
       //console.log("REal "+profile);
     };
     reader.readAsDataURL(file);
     try {
-      await axios.patch(apiConfig.USER_PROFILE_UPDATE, updatedProfile, {
+      await axios.patch(apiConfig.USER_PROFILE_UPDATE, updatedAvatar, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',

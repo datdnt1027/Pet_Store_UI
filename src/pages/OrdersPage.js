@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import '../components/css/OrdersPage.css'
+import { Box, Button, Input, Select, Text } from '@chakra-ui/react';
+import '../components/css/OrdersPage.css';
+
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -9,55 +11,39 @@ const OrdersPage = () => {
   const sampleOrders = [
     {
       id: 1,
-      date: '2023-12-01',
+      date: '2021-12-01',
+      status: 'Completed',
+      shippingAddress: '123 Main St, Anytown, USA',
       items: [
-        { id: 1, name: 'Item 1', quantity: 2, price: 10.99 },
-        { id: 2, name: 'Item 2', quantity: 1, price: 19.99 }
-      ],
-      shippingAddress: '123 Main St, City, State',
-      status: 'Delivered'
+        {
+          id: 1,
+          name: 'Product A',
+          quantity: 2,
+          price: 9.99
+        },
+        {
+          id: 2,
+          name: 'Product B',
+          quantity: 1,
+          price: 14.99
+        }
+      ]
     },
     {
       id: 2,
-      date: '2023-11-28',
+      date: '2021-11-25',
+      status: 'Pending',
+      shippingAddress: '456 Elm St, Othertown, USA',
       items: [
-        { id: 3, name: 'Item 3', quantity: 3, price: 9.99 },
-        { id: 4, name: 'Item 4', quantity: 2, price: 14.99 }
-      ],
-      shippingAddress: '456 Elm St, City, State',
-      status: 'Shipped'
+        {
+          id: 3,
+          name: 'Product C',
+          quantity: 3,
+          price: 7.99
+        }
+      ]
     },
-    {
-        id: 4,
-        date: '2023-11-23',
-        status: 'Pending',
-        shippingAddress: '321 Pine St, San Francisco, CA',
-        items: [
-          { id: 9, name: 'Product I', quantity: 2, price: 10 },
-          { id: 10, name: 'Product J', quantity: 1, price: 15 },
-        ],
-      },
-      {
-        id: 5,
-        date: '2023-11-20',
-        status: 'Shipped',
-        shippingAddress: '654 Cedar St, Seattle, WA',
-        items: [
-          { id: 11, name: 'Product K', quantity: 3, price: 12 },
-          { id: 12, name: 'Product L', quantity: 1, price: 20 },
-        ],
-      },
-      {
-        id: 6,
-        date: '2023-11-18',
-        status: 'Delivered',
-        shippingAddress: '987 Maple St, Miami, FL',
-        items: [
-          { id: 13, name: 'Product M', quantity: 2, price: 8 },
-          { id: 14, name: 'Product N', quantity: 4, price: 18 },
-          { id: 15, name: 'Product O', quantity: 3, price: 10 },
-        ],
-      },
+    // Add more sample orders as needed
   ];
 
   useEffect(() => {
@@ -74,13 +60,16 @@ const OrdersPage = () => {
       console.error('Error fetching orders:', error);
     }
   };
+
   const handleSeeMore = () => {
     setVisibleOrders(prevVisibleOrders => prevVisibleOrders + 3);
   };
+
   const handleSeeLess = () => {
     setVisibleOrders(3);
     setShowAllOrders(false);
   };
+
   const calculateOrderSummary = (items) => {
     if (!items || items.length === 0) {
       return { quantity: 0, total: 0 };
@@ -90,6 +79,7 @@ const OrdersPage = () => {
     const total = items.reduce((acc, item) => acc + item.quantity * item.price, 0);
     return { quantity, total };
   };
+
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -97,81 +87,107 @@ const OrdersPage = () => {
   const filteredOrders = orders.filter(order =>
     order.date.includes(searchQuery) || order.status.includes(searchQuery)
   );
+
   const handleSortOptionChange = (event) => {
     setSortOption(event.target.value);
   };
+
   let sortedOrders = filteredOrders;
+
   if (sortOption === 'dateAsc') {
     sortedOrders = filteredOrders.slice().sort((a, b) => a.date.localeCompare(b.date));
   } else if (sortOption === 'dateDesc') {
     sortedOrders = filteredOrders.slice().sort((a, b) => b.date.localeCompare(a.date));
   }
+
   const visibleOrdersData = showAllOrders ? sortedOrders : sortedOrders.slice(0, visibleOrders);
   const hasMoreOrders = sortedOrders.length > visibleOrders;
 
   return (
-    <div className="orders-page-container">
-      <h1 className="orders-page-heading">Orders Page</h1>
-      <div className="search-container">
-        <input
+    <Box className="orders-page-container">
+      <Text className="orders-page-heading" as="h1">
+        Orders Page
+      </Text>
+      <Box className="search-container">
+        <Input
           type="text"
           placeholder="Search by date or status"
           value={searchQuery}
           onChange={handleSearchInputChange}
         />
-        <select value={sortOption} onChange={handleSortOptionChange}>
+        <Select value={sortOption} onChange={handleSortOptionChange}>
           <option value="">Sort by</option>
           <option value="dateAsc">Date (Oldest to Newest)</option>
           <option value="dateDesc">Date (Newest to Oldest)</option>
-        </select>
-      </div>
-      <div className="order-list">
+        </Select>
+      </Box>
+      <Box className="order-list">
         {visibleOrdersData.map(order => (
-          <div key={order.id} className="order-item">
-            <div className="order-item-header">
-              <h2 className="order-date">{order.date}</h2>
-              <span className={`order-status ${order.status.toLowerCase()}`}>{order.status}</span>
-            </div>
-            <div className="order-item-details">
-              <div className="order-summary">
-                <p className="summary-label">Quantity:</p>
-                <p className="summary-value">{calculateOrderSummary(order.items).quantity}</p>
-                <p className="summary-label">Total:</p>
-                <p className="summary-value">${calculateOrderSummary(order.items).total.toFixed(2)}</p>
-              </div>
-              <div className="shipping-details">
-                <h3 className="shipping-address-heading">Shipping Address:</h3>
-                <p className="shipping-address-value">{order.shippingAddress}</p>
-              </div>
-              <div className="order-items-list">
-                <h3 className="order-items-heading">Order Items:</h3>
+          <Box key={order.id} className="order-item">
+            <Box className="order-item-header">
+              <Text className="order-date" as="h2">
+                {order.date}
+              </Text>
+              <Text className={`order-status ${order.status.toLowerCase()}`} as="span">
+                {order.status}
+              </Text>
+            </Box>
+            <Box className="order-item-details">
+              <Box className="order-summary">
+                <Text className="summary-label" as="p">
+                  Quantity:
+                </Text>
+                <Text className="summary-value" as="p">
+                  {calculateOrderSummary(order.items).quantity}
+                </Text>
+                <Text className="summary-label" as="p">
+                  Total:
+                </Text>
+                <Text className="summary-value" as="p">
+                  ${calculateOrderSummary(order.items).total.toFixed(2)}
+                </Text>
+              </Box>
+              <Box className="shipping-details">
+                <Text className="shipping-address-heading" as="h3">
+                  Shipping Address:
+                </Text>
+                <Text className="shipping-address-value" as="p">
+                  {order.shippingAddress}
+                </Text>
+              </Box>
+              <Box className="order-items-list">
+                <Text className="order-items-heading" as="h3">
+                  Order Items:
+                </Text>
                 {order.items.map(item => (
-                  <div key={item.id} className="order-item-details-item">
-                    <p className="item-name">{item.name}</p>
-                    <div className="item-details">
-                      <p className="item-details-label">Quantity:</p>
-                      <p className="item-details-value">{item.quantity}</p>
-                      <p className="item-details-label">Price:</p>
-                      <p className="item-details-value">${item.price.toFixed(2)}</p>
-                    </div>
-                  </div>
+                  <Box key={item.id} className="order-item-details">
+                    <Text className="item-name" as="p">
+                      {item.name}
+                    </Text>
+                    <Text className="item-quantity" as="p">
+                      Quantity: {item.quantity}
+                    </Text>
+                    <Text className="item-price" as="p">
+                      Price: ${item.price.toFixed(2)}
+                    </Text>
+                  </Box>
                 ))}
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
         ))}
-      </div>
+      </Box>
       {hasMoreOrders && !showAllOrders && (
-        <button className="see-more-button" onClick={handleSeeMore}>
+        <Button className="see-more-button" onClick={handleSeeMore}>
           See More
-        </button>
+        </Button>
       )}
       {showAllOrders && (
-        <button className="see-less-button" onClick={handleSeeLess}>
+        <Button className="see-less-button" onClick={handleSeeLess}>
           See Less
-        </button>
+        </Button>
       )}
-    </div>
+    </Box>
   );
 };
 

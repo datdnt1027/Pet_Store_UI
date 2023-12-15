@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button } from '@chakra-ui/react';
+import { Box, Button, Heading, Image, Text, IconButton, Flex } from '@chakra-ui/react';
+import { CloseIcon, AddIcon, MinusIcon } from '@chakra-ui/icons';
 import '../components/css/CheckOut.css';
 import apiConfig from '../config/apiConfig';
 import axios from 'axios';
@@ -10,20 +11,21 @@ function Checkout() {
   const [isLoading, setIsLoading] = useState(true);
   const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
   const authToken = JSON.parse(authTokenString).token;
-  console.log(authToken) // Replace with your actual auth token
+  console.log(authToken); // Replace with your actual auth token
   const headers = {
     Authorization: `Bearer ${authToken}`,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   };
+
   useEffect(() => {
     // Define an async function to fetch the data
     const fetchData = async () => {
       try {
         const response = await axios.get(apiConfig.ADD_TO_CART, { headers });
-        const { products, totalPrice } = response.data;
-        setProducts(products);
+        const { orders, totalPrice } = response.data;
+        setProducts(orders); // Update the state with fetched orders
         setTotalPrice(totalPrice);
-        console.log(totalPrice);
+        console.log(orders);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -33,9 +35,22 @@ function Checkout() {
 
     fetchData();
   }, []);
+
+  const handleQuantityChange = (index, newQuantity) => {
+    const updatedProducts = [...products];
+    updatedProducts[index].quantity = newQuantity;
+    setProducts(updatedProducts);
+  };
+
+  const handleDelete = (index) => {
+    const updatedProducts = [...products];
+    updatedProducts.splice(index, 1);
+    setProducts(updatedProducts);
+  };
+
   const handlePlaceOrder = async () => {
     const orderData = {
-      redirectUrl: 'http://localhost:3000/order/payment/momo/'
+      redirectUrl: 'http://localhost:3000/order/payment/momo/',
     };
     const orderDataJson = JSON.stringify(orderData);
     try {
@@ -50,39 +65,82 @@ function Checkout() {
       console.error('Error placing order:', error);
     }
   };
+
   return (
-    <Box className="checkout-container">
+    <Box className="checkout-container" >
       <Box className="cart-items-container">
-        <h1 className="title">Checkout</h1>
-        <CartItems products={products} />
+        <Heading as="h1" size="xl" mb={4}>
+          Checkout
+        </Heading>
+        <CartItems products={products} handleQuantityChange={handleQuantityChange} handleDelete={handleDelete} />
       </Box>
 
       <Box className="form">
         <CheckoutForm totalPrice={totalPrice} />
-        <Button className="place-order-button" onClick={handlePlaceOrder}>Place Order</Button>
+        <Button
+          className="place-order-button"
+          onClick={handlePlaceOrder}
+          size="lg"
+          mt={4}
+          w="100%"
+        >
+          Place Order
+        </Button>
       </Box>
     </Box>
   );
 }
 
-function CartItems({ products }) {
+function CartItems({ products, handleQuantityChange, handleDelete }) {
   console.log(products);
   return (
     <Box className="cart-items-container">
-      <h2 className="cart-title">Cart Items</h2>
+      <Heading as="h2" size="lg" mb={4}>
+        Cart Items
+      </Heading>
       {products && products.length > 0 ? (
         products.map((product, index) => (
-          <Box className="item-container" key={index}>
-            <img className="item-image" src={`data:image/png;base64, ${product.imageData}`} alt={product.productName} />
-            <Box className="item-details">
-              <p className="item-name">{product.productName}</p>
-              <p className="item-price">${product.productPrice}</p>
-              <p className="item-quantity">{product.quantity}</p>
+          <Flex key={index} alignItems="center" mb={4}>
+            <Image src={`data:image/png;base64, ${product.imageData}`} alt={product.productName} boxSize={100} mr={4} />
+            <Box flex="1">
+              <Text fontSize="xl" fontWeight="bold" mb={2} >
+                {product.productName}
+              </Text>
+              <Text fontSize="lg" mb={2} >
+                Price: ${product.productPrice}
+              </Text>
+              <Flex alignItems="center">
+                <IconButton
+                  icon={<MinusIcon />}
+                  aria-label="Decrease Quantity"
+                  onClick={() => handleQuantityChange(index, product.quantity - 1)}
+                  mr={2}
+                  isDisabled={product.quantity === 1}
+                />
+                <Text fontSize="lg" mr={2} >
+                  Quantity: {product.quantity}
+                </Text>
+                <IconButton
+                  icon={<AddIcon />}
+                  aria-label="Increase Quantity"
+                  onClick={() => handleQuantityChange(index, product.quantity + 1)}
+                  mr={2}
+                  
+                />
+                <IconButton
+                  icon={<CloseIcon />}
+                  aria-label="Delete"
+                  onClick={() => handleDelete(index)}
+                  colorScheme="red"
+                />
+              </Flex>
             </Box>
-          </Box>
+          </Flex>
         ))
       ) : (
-        <p>No products found</p>
+        <Text fontSize="lg" >
+          No products found
+        </Text>
       )}
     </Box>
   );
@@ -90,13 +148,15 @@ function CartItems({ products }) {
 
 function CheckoutForm({ totalPrice }) {
   return (
-    <form className="form">
-      <h2 className="form-title">Checkout</h2>
-      <label className="form-label">
-        <p className="item-price">Total: ${totalPrice}</p>
-      </label>
+    <Box as="form" className="form">
+      <Heading as="h2" size="lg" mb={4}>
+        Checkout
+      </Heading>
+      <Text fontSize="xl" fontWeight="bold" mb={4} >
+        Total: ${totalPrice}
+      </Text>
       {/* Other fields */}
-    </form>
+    </Box>
   );
 }
 
