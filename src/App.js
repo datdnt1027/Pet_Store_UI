@@ -19,6 +19,7 @@ import Orders from './pages/OrdersPage';
 import FailedPaymentPage from './pages/FailedPaymentPage'
 import AdminProfilePage from './components/AdminProfile';
 import AdminLogin from './pages/AdminLoginPage';
+import AdminRoute from './components/AdminRoute'
 
 const App = () => {
 
@@ -36,13 +37,13 @@ const App = () => {
           <Route path="/passwordreset" element={<PasswordResetForm />}/>
           <Route path="/detail/:id" element={<ProductDetailPage />} />
           <Route path="/register/token/:token" element={<VerifySuccessfulPage />} />
-          <Route path="/admin" element={<PrivateRoute><AdminPage /></PrivateRoute>} />
-          <Route path="/adminlogin" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path='/category/:categoryId' element = {<ItemListPage/>}/>
           <Route path='/checkout' element={<PrivateRoute><Checkout/></PrivateRoute>} />
           <Route path='/profile' element={<PrivateRoute><UpdateProfile/></PrivateRoute>} />
           <Route path='/orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
-          <Route path='/admin/profile' element={<PrivateRoute><AdminProfilePage/></PrivateRoute>} />
+          <Route path='/admin/profile' element={<AdminRoute><AdminProfilePage/></AdminRoute>} />
           <Route path='/order/payment/momo/*' element={<PrivateRoute><FailedPaymentPage/></PrivateRoute>} />
         </Routes>
       </Layout>

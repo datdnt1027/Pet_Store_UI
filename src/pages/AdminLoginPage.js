@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import apiConfig from '../config/apiConfig';
 import { useNavigate, useLocation  } from 'react-router-dom';
 import axios from 'axios';
@@ -18,7 +18,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const toast = useToast();
-
+  const [error, setError] = useState();
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -36,13 +36,37 @@ const AdminLogin = () => {
         duration: 3000,
         isClosable: true,
       });
+      sessionStorage.setItem('admin',JSON.stringify(response.data));
       navigate('/admin');
     } catch (error) {
-      // Handle login error
+      let message = "Something went wrong. Please try again.";
+
+      if(error.response) {
+        message = `Error ${error.response.status}: ${error.response.data.message}`; 
+      }
+  
+      toast({
+        title: 'Login Failed',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+  
       console.error(error);
+  
     }
   };
-
+  useEffect(() => {
+    if(!error) return;
+  
+    const timer = setTimeout(() => {
+      setError(null);
+    }, 5000);
+  
+    return () => clearTimeout(timer);
+  
+  }, [error]) 
   return (
     <Box
       display="flex"

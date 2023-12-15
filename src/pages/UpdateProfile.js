@@ -8,11 +8,11 @@ function Profile() {
   const genderOptions = [
     {
       label: 'Male',
-      value: 1
+      value: "1"
     },
     {  
       label: 'Female',
-      value: 2
+      value: "2"
     }
   ]
   const sampleProfile = {
@@ -36,11 +36,11 @@ function Profile() {
     const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
     const authToken = JSON.parse(authTokenString).token;
     
-    const uava= removeBase64Prefix(avatar)
-    console.log(uava);
+    const uava= removeBase64PrefixW(avatar)
+    console.log("UAVA"+uava);
     const updatedProfile = {
       ...profile,
-      uava
+      avatar: uava,
     };
     console.log(updatedProfile);
     try {
@@ -60,6 +60,15 @@ function Profile() {
   const handleAvatarButtonClick = () => {
     document.getElementById('avatar-input').click();
   };
+  function removeBase64PrefixW(base64Image) {
+    // Split the base64 string at the comma
+    const parts = base64Image.split(', ');
+  
+    // Take the second part of the split result
+    const imageWithoutPrefix = parts[1];
+  
+    return imageWithoutPrefix;
+  }
   function removeBase64Prefix(base64Image) {
     // Split the base64 string at the comma
     const parts = base64Image.split(',');
@@ -71,7 +80,6 @@ function Profile() {
   }
 
 
-
   const handleFileInputChange = async (event) => {
 
     const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
@@ -79,26 +87,26 @@ function Profile() {
 
     const file = event.target.files[0];
     const reader = new FileReader();
-
+    var updatedProfile;
     
 
     reader.onloadend = () => {
       
       setAvatar(reader.result);
-      console.log("PRe"+reader.result);
+      //console.log("PRe"+reader.result);
       const updatedAvatar = removeBase64Prefix(reader.result);
       console.log(updatedAvatar);
-      const updatedProfile = {
-        ...profile,
+      updatedProfile = {
+        
         avatar: updatedAvatar,
       };
       console.log(updatedProfile);
-      setProfile(updatedProfile);
+      //setProfile(updatedProfile);
       //console.log("REal "+profile);
     };
     reader.readAsDataURL(file);
     try {
-      await axios.patch(apiConfig.USER_PROFILE_UPDATE, profile, {
+      await axios.patch(apiConfig.USER_PROFILE_UPDATE, updatedProfile, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',
@@ -207,7 +215,7 @@ function Profile() {
     </select>
   ) : (
     <span>
-      {profile.sex === 1 ? 'Male' : 'Female'}
+      {profile.sex === "1" ? 'Male' : 'Female'}
     </span>
   )}
           </div>

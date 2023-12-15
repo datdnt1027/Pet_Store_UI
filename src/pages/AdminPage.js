@@ -14,7 +14,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState();
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('admin');
     localStorage.clear()
     navigate("/");
   };
@@ -117,7 +117,7 @@ const AdminPage = () => {
     setSidebarVisible(!sidebarVisible);
   };
   useEffect(() => {
-    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+    const authTokenString = sessionStorage.getItem('admin'); // Retrieve the token from localStorage
     const authToken = JSON.parse(authTokenString).token;
     console.log(authToken);
     // Fetch data from the API
