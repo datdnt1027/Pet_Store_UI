@@ -7,6 +7,12 @@ const PrivateRoute = ({ children }) => {
   const storedUser = localStorage.getItem('user');
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
   const auth = user;
+
+  const storedAdmin = sessionStorage.getItem('admin');
+  const [admin, setAdmin] = useState(storedUser ? JSON.parse(storedUser) : null);
+  const auth2 = user;
+
+
   const navigate = useNavigate();
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -14,6 +20,7 @@ const PrivateRoute = ({ children }) => {
     if (!auth) {
       navigate("/login");
     } else {
+      sessionStorage.removeItem('admin');
       setShouldRender(true);
     }
   }, [auth]);

@@ -7,6 +7,11 @@ const AdminRoute = ({ children }) => {
   const storedUser = sessionStorage.getItem('admin');
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
   const auth = user;
+
+  const stored = localStorage.getItem('user');
+  const [u, setU] = useState(storedUser ? JSON.parse(storedUser) : null);
+  const auth2 = user;
+
   const navigate = useNavigate();
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -14,6 +19,7 @@ const AdminRoute = ({ children }) => {
     if (!auth) {
       navigate("/admin/login");
     } else {
+      localStorage.removeItem('user');
       setShouldRender(true);
     }
   }, [auth]);

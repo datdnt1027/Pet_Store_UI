@@ -12,6 +12,7 @@ export default {
     CREATE_PRODUCT: API_URL + '/admin/product',
     USER_PROFILE: API_URL + '/user/profile',
     USER_PROFILE_UPDATE: API_URL + '/user/update_profile',
+    ADMIN_PROFILE_UPDATE: API_URL + '/admin/update_profile',
     GET_ADMIN: API_URL + '/admin/profile',
     LOGIN_ADMIN : API_URL + '/admin/login'
   }

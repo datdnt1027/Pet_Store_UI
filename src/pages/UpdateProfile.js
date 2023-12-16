@@ -23,10 +23,10 @@ function Profile() {
     contact: '+1-234-567-8910',
     address: '123 Main St, Boston MA 02110',
   };
-  const [profile, setProfile] = useState(sampleProfile);
+  const [profile, setProfile] = useState();
   const [editMode, setEditMode] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [avatar, setAvatar] = useState(profile.avatar);
+  const [avatar, setAvatar] = useState();
 
   const handleEdit = () => {
     setEditMode(true);
@@ -37,7 +37,7 @@ function Profile() {
     const authToken = JSON.parse(authTokenString).token;
     
     const uava= removeBase64PrefixW(avatar)
-    console.log("UAVA"+uava);
+    console.log("save Run"+uava);
     const updatedProfile = {
       ...profile,
       avatar: uava,
@@ -81,38 +81,42 @@ function Profile() {
 
 
   const handleFileInputChange = async (event) => {
-
     const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
     const authToken = JSON.parse(authTokenString).token;
-
-    const file = event.target.files[0];
+  
+    var file = event.target.files[0];
+  
     const reader = new FileReader();
-    var updatedAvatar;
-
-    reader.onloadend = () => {
-      
+  
+    reader.onloadend = async () => {
       setAvatar(reader.result);
-      //console.log("PRe"+reader.result);
-      updatedAvatar = removeBase64Prefix(reader.result);
-      console.log(updatedAvatar);
-
-      //setProfile(updatedProfile);
-      //console.log("REal "+profile);
-    };
-    reader.readAsDataURL(file);
-    try {
-      await axios.patch(apiConfig.USER_PROFILE_UPDATE, updatedAvatar, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
+      console.log("Avatar state:", reader.result);
+  
+      var updatedAvatar = removeBase64Prefix(reader.result);
+      console.log("Pre" + updatedAvatar);
+  
+      var updatedProfile = JSON.stringify({
+        avatar: updatedAvatar
       });
-      alert('Thành công');
-      setEditMode(false);
-    } catch (error) {
-      console.error('Error saving profile data:', profile);
-    }
-
+      console.log("after" + updatedProfile);
+  
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          },
+        };
+  
+        const response = await axios.patch(apiConfig.USER_PROFILE_UPDATE, updatedProfile, config);
+        alert('Thành công');
+        setEditMode(false);
+      } catch (error) {
+        console.error('Error saving profile data:', updatedProfile);
+      }
+    };
+  
+    reader.readAsDataURL(file);
   };
   const handleSexChange = (e) => {
     setProfile({...profile, sex: e.target.value});

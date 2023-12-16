@@ -129,8 +129,14 @@ const AdminPage = () => {
           },
         });
         setProfile(response.data);
-        setAvatar(response.data.avatar);
         console.log(response.data.avatar);
+        if (response.data.avatar) {
+          setAvatar(response.data.avatar);
+        } else {
+          setAvatar('../../public/admin.jpg'); // Set a default image path when avatar is null
+        }
+        console.log(avatar);
+        console.log(response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           console.error('Unauthorized. Logging out...');
@@ -193,7 +199,7 @@ const AdminPage = () => {
         <nav>
           {/* Navigation content */}
           <i className='bx bx-menu'></i>
-          <a href="#" className="nav-link">Categories</a>
+          
           <form action="#">
             <div className="form-input">
               <input type="search" placeholder="Search..." />
