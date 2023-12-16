@@ -20,7 +20,7 @@ const CreateForm = ({ onClose }) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         const base64String = reader.result.split(',')[1];
         setBase64Image(base64String);
         setPreviewImage(reader.result);
@@ -33,7 +33,7 @@ const CreateForm = ({ onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    
+    console.log(base64Image);
     try {
 
       
@@ -44,7 +44,7 @@ const CreateForm = ({ onClose }) => {
         productDetail: document.getElementById('product_detail').value,
         productQuantity: parseInt(document.getElementById('quantity_on_hand').value),
         productPrice: parseFloat(document.getElementById('vendor_price').value),
-        imageData: removeBase64Prefix(base64Image),
+        imageData: base64Image,
       };
       const payload = JSON.stringify(formData);
       console.log(payload)

@@ -14,5 +14,6 @@ export default {
     USER_PROFILE_UPDATE: API_URL + '/user/update_profile',
     ADMIN_PROFILE_UPDATE: API_URL + '/admin/update_profile',
     GET_ADMIN: API_URL + '/admin/profile',
-    LOGIN_ADMIN : API_URL + '/admin/login'
+    LOGIN_ADMIN : API_URL + '/admin/login',
+    SEARCH_USER : API_URL + '/admin/find_user',
   }

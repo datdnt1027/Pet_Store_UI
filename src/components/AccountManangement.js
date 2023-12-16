@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import apiConfig from '../config/apiConfig';
+import axios from 'axios';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 const AccountManagement = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -8,53 +11,50 @@ const AccountManagement = () => {
     setSearchInput(event.target.value);
   };
 
-  const handleSearch = () => {
-    // Perform the search (e.g., make an API call to fetch customer information)
-    // Replace the following code with your actual implementation
-    // You can use any method to fetch customer information (e.g., Axios, fetch)
+  const handleEmailSearch = async () => {
+    try {
+      // Get your authentication token from sessionStorage
+      const authTokenString = sessionStorage.getItem('admin');
+      const authToken = JSON.parse(authTokenString).token;
 
-    // Example customer information
-    const customerData = [
-      {
-        userId: '123',
-        email: 'example1@example.com',
-        create_date: '2021-01-01',
-        update_date: '2021-02-01',
-        birth: '1990-01-01',
-        contact: '1234567890',
-        address: '123 Street, City',
-        avatar: 'https://example.com/avatar1.png',
-        firstName: 'John',
-        lastName: 'Doe',
-      },
-      {
-        userId: '456',
-        email: 'example2@example.com',
-        create_date: '2021-03-01',
-        update_date: '2021-04-01',
-        birth: '1995-01-01',
-        contact: '9876543210',
-        address: '456 Street, City',
-        avatar: 'https://example.com/avatar2.png',
-        firstName: 'Jane',
-        lastName: 'Smith',
-      },
-      // Add more customer data as needed
-    ];
+      // Make an HTTP POST request to search for the user by email
+      const response = await axios.post(apiConfig.SEARCH_USER, {
+        email: searchInput,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-    // Filter the customer data based on the search input
-    const filteredData = customerData.filter(
-      (customer) =>
-        customer.userId === searchInput ||
-        customer.email === searchInput ||
-        customer.contact === searchInput ||
-        customer.address === searchInput ||
-        customer.firstName === searchInput ||
-        customer.lastName === searchInput
-    );
+      // Update the customer information state with the search results
+      setCustomerInfo(response.data);
+    } catch (error) {
+      console.error('Error searching for user by email:', error);
+    }
+  };
 
-    // Update the customer information state
-    setCustomerInfo(filteredData);
+  const handlePhoneSearch = async () => {
+    try {
+      // Get your authentication token from sessionStorage
+      const authTokenString = sessionStorage.getItem('admin');
+      const authToken = JSON.parse(authTokenString).token;
+
+      // Make an HTTP POST request to search for the user by phone number
+      const response = await axios.post(apiConfig.SEARCH_USER, {
+        phoneNumber: searchInput,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Update the customer information state with the search results
+      setCustomerInfo(response.data);
+    } catch (error) {
+      console.error('Error searching for user by phone number:', error);
+    }
   };
 
   return (
@@ -65,43 +65,45 @@ const AccountManagement = () => {
         onChange={handleSearchInputChange}
         placeholder="Enter user name, email, contact, address, first name, or last name"
       />
-      <button onClick={handleSearch}>Search</button>
+      <button onClick={handleEmailSearch}>Search by Email</button>
+      <button onClick={handlePhoneSearch}>Search by Phone</button>
 
       {customerInfo.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>userId</th>
-              <th>email</th>
-              <th>create_date</th>
-              <th>update_date</th>
-              <th>birth</th>
-              <th>contact</th>
-              <th>address</th>
-              <th>avatar</th>
-              <th>firstName</th>
-              <th>lastName</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>userId</Th>
+              <Th>email</Th>
+              <Th>create_date</Th>
+              <Th>update_date</Th>
+              <Th>birth</Th>
+              <Th>contact</Th>
+              <Th>address</Th>
+              <Th>avatar</Th>
+              <Th>firstName</Th>
+              <Th>lastName</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {customerInfo.map((customer) => (
-              <tr key={customer.userId}>
-                <td>{customer.userId}</td>
-                <td>{customer.email}</td>
-                <td>{customer.create_date}</td>
-                <td>{customer.update_date}</td>
-                <td>{customer.birth}</td>
-                <td>{customer.contact}</td>
-                <td>{customer.address}</td>
-                <td>
+              <Tr key={customer.userId}>
+                <Td>{customer.userId}</Td>
+                <Td>{customer.email}</Td>
+                <Td>{customer.create_date}</Td>
+                <Td>{customer.update_date}</Td>
+                <Td>{customer.birth}</Td>
+                <Td>{customer.contact}</Td>
+                <Td>{customer.address}</Td>
+                <Td>
                   <img src={customer.avatar} alt="Avatar" />
-                </td>
-                <td>{customer.firstName}</td>
-                <td>{customer.lastName}</td>
-              </tr>
+                </Td>
+                <Td>{customer.firstName}</Td>
+                <Td>{customer.lastName}</Td>
+              </Tr>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
+
       )}
     </div>
   );
