@@ -7,6 +7,7 @@ import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../components/css/AdminPage.css'
+import AdminProfilePage from '../components/AdminProfile';
 const AdminPage = () => {
   const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -105,9 +106,9 @@ const AdminPage = () => {
         return (
           <div><AccountManagement /></div>
         );
-      case 'team':
+      case 'profile':
         return (
-          <div></div>
+          <div><AdminProfilePage/></div>
         );
       default:
         return null;
@@ -174,7 +175,7 @@ const AdminPage = () => {
           <li className={activeMenuItem === 'accounts' ? 'active' : ''}>
             <a href="#" data-menu="accounts" onClick={() => handleMenuItemClick('accounts')}>
               <i className='bx bxs-doughnut-chart'></i>
-              <span className="text">Quản lý tài khoản</span>
+              <span className="text">Quản lý Đơn Hàng</span>
             </a>
           </li>
           <li className={activeMenuItem === 'staffs' ? 'active' : ''}>
@@ -183,8 +184,17 @@ const AdminPage = () => {
               <span className="text">Quản lý Account</span>
             </a>
           </li>
+
+          
         </ul>
         <ul className="side-menu">
+          
+          <li className={activeMenuItem === 'profile' ? 'active' : ''}>
+            <a href="#" data-menu="profile" onClick={() => handleMenuItemClick('profile')}>
+              <i className='bx bxs-message-dots'></i>
+              <span className="text">Quản lý Profile</span>
+            </a>
+          </li>
           <li>
             <a href="" onClick={handleLogout} className="logout">
               <i className='bx bxs-log-out-circle'></i>
