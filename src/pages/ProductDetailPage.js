@@ -5,10 +5,19 @@ import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import sampleDetail from '../data/sampleDetail';
 import ProductList from '../components/ProductList';
-
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Heading,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 const ProductDetailPage = () => {
   const { id } = useParams();
-
+  const toast = useToast();
   const [product, setProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [imgId, setImgId] = useState(1);
@@ -52,9 +61,27 @@ const ProductDetailPage = () => {
         quantity: parsedQuantity
       }, { headers });
 
-      alert('Product added to cart successfully.');
+      toast({
+        title: 'Cart Item',
+        description: 'You have added.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (error) {
-      console.error('Error adding product to cart:', error);
+      let message = "Something went wrong. Please try again.";
+
+      if(error.response) {
+        message = `Error ${error.response.status}: ${error.response.data.message}`; 
+      }
+  
+      toast({
+        title: 'Add Failed',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -148,7 +175,7 @@ const ProductDetailPage = () => {
                   type="number"
                   id="quantity"
                   min="1"
-
+                  value={quantity} 
                   onChange={handleQuantityChange}
                 />
               </div>

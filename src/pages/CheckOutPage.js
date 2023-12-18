@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Heading, Image, Text, IconButton, Flex } from '@chakra-ui/react';
 import { CloseIcon, AddIcon, MinusIcon } from '@chakra-ui/icons';
 import '../components/css/CheckOut.css';
+import {
+  useToast,
+} from '@chakra-ui/react';
 import apiConfig from '../config/apiConfig';
 import axios from 'axios';
 
 function Checkout() {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
   const authToken = JSON.parse(authTokenString).token;
@@ -25,27 +29,130 @@ function Checkout() {
         const { orders, totalPrice } = response.data;
         setProducts(orders); // Update the state with fetched orders
         setTotalPrice(totalPrice);
-        console.log(orders);
+        console.log("Sanr phaamr"+products);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        let message = "Something went wrong. Please try again.";
+
+      if(error.response) {
+        message = `Error ${error.response.status}: ${error.response.data.message}`; 
+      }
+  
+      toast({
+        title: 'Load Failed',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
         setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
+  const calculateTotal = () => {
+    //console.log(products);
+    let total = 0;
 
-  const handleQuantityChange = (index, newQuantity) => {
+    if(products)
+    {
+    products.forEach(i => {
+      console.log("Total"+i.product.productPrice);
+      total += i.quantity * i.product.productPrice; 
+    });
+  }
+    setTotalPrice(total);
+  }
+  
+  useEffect(() => {
+    // fetch data
+  
+    calculateTotal();
+  
+  }, []);
+
+  const handleQuantityChange = async (index, newQuantity) => {
     const updatedProducts = [...products];
     updatedProducts[index].quantity = newQuantity;
+    const parsedQuantity = newQuantity.toString();
     setProducts(updatedProducts);
-  };
+    const payload = {
+      "orderProductId": products[index].orderProductId, 
+      "quantity": parsedQuantity
+    };
+    //console.log(payload);
+    try {
+      // Call API to update quantity
+      const response = await axios.post(apiConfig.UPDATE_CART, JSON.stringify(payload), {
+        headers
+      });
+      // Handle success
+      calculateTotal();
+      console.log("Quantity updated successfully");
+  
+    } catch (error) {
+  
+      // Handle error
+      let message = "Something went wrong. Please try again.";
 
-  const handleDelete = (index) => {
+      if(error.response) {
+        message = `Error ${error}`; 
+      }
+  
+      toast({
+        title: 'Update Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+  
+    }
+  };
+  useEffect(() => {
+    calculateTotal();
+  }, [products, totalPrice])
+  const handleDelete = async (index) => {
+    const id = products[index].orderProductId;
     const updatedProducts = [...products];
+    console.log(updatedProducts);
     updatedProducts.splice(index, 1);
+    
     setProducts(updatedProducts);
+
+    calculateTotal(); 
+  
+    console.log(updatedProducts);
+    
+    //console.log(apiConfig.DELETE_CART+id);
+    try {
+      // Call API to update quantity
+      const response = await axios.delete(apiConfig.DELETE_CART+id, {
+        headers
+      });
+      calculateTotal();
+      // Handle success
+      console.log("Quantity updated successfully");
+  
+    } catch (error) {
+  
+      // Handle error
+      let message = "Something went wrong. Please try again.";
+
+      if(error.response) {
+        message = `Error ${error}`; 
+      }
+  
+      toast({
+        title: 'Update Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+  
+    }
   };
 
   const handlePlaceOrder = async () => {
@@ -54,10 +161,10 @@ function Checkout() {
     };
     const orderDataJson = JSON.stringify(orderData);
     try {
-      console.log('Check ' + apiConfig.PLACE_ORDER);
+      //console.log('Check ' + apiConfig.PLACE_ORDER);
       const response = await axios.post(apiConfig.PLACE_ORDER, orderDataJson, { headers });
       // Handle successful order placement
-      console.log(response.data);
+      //console.log(response.data);
       const { payUrl } = response.data;
       window.location.href = payUrl;
     } catch (error) {
@@ -92,38 +199,38 @@ function Checkout() {
 }
 
 function CartItems({ products, handleQuantityChange, handleDelete }) {
-  console.log(products);
+  //console.log(products);
   return (
     <Box className="cart-items-container">
       <Heading as="h2" size="lg" mb={4}>
         Cart Items
       </Heading>
       {products && products.length > 0 ? (
-        products.map((product, index) => (
+        products.map((i, index) => (
           <Flex key={index} alignItems="center" mb={4}>
-            <Image src={`data:image/png;base64, ${product.imageData}`} alt={product.productName} boxSize={100} mr={4} />
+            <Image src={`${i.product.imageData}`} alt={i.product.productName} boxSize={100} mr={4} />
             <Box flex="1">
               <Text fontSize="xl" fontWeight="bold" mb={2} >
-                {product.productName}
+                {i.product.productName}
               </Text>
               <Text fontSize="lg" mb={2} >
-                Price: ${product.productPrice}
+                Price: ${i.product.productPrice}
               </Text>
               <Flex alignItems="center">
                 <IconButton
                   icon={<MinusIcon />}
                   aria-label="Decrease Quantity"
-                  onClick={() => handleQuantityChange(index, product.quantity - 1)}
+                  onClick={() => handleQuantityChange(index, i.quantity - 1)}
                   mr={2}
-                  isDisabled={product.quantity === 1}
+                  isDisabled={i.quantity === 1}
                 />
                 <Text fontSize="lg" mr={2} >
-                  Quantity: {product.quantity}
+                  Quantity: {i.quantity}
                 </Text>
                 <IconButton
                   icon={<AddIcon />}
                   aria-label="Increase Quantity"
-                  onClick={() => handleQuantityChange(index, product.quantity + 1)}
+                  onClick={() => handleQuantityChange(index, i.quantity + 1)}
                   mr={2}
                   
                 />

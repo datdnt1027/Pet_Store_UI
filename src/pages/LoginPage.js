@@ -2,11 +2,22 @@ import React, { useState, useEffect } from 'react';
 import '../components/css/LoginForm.css'; // CSS file for styling
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Heading,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 import { useNavigate, useLocation  } from 'react-router-dom';
 
 
 const Login = () => {
   let navigate = useNavigate();
+  const toast = useToast();
   const [lemail, setEmail] = useState('');
   const [lpassword, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -51,8 +62,13 @@ const Login = () => {
 
       if (response.status === 200) {
         // registration successful
-        console.log('Login successful' + response.data);
-        alert("Login Successful!");
+        toast({
+          title: 'Login Successful',
+          description: 'You have successfully logged in.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
         localStorage.setItem('user', JSON.stringify(response.data));  
         
         navigate('/');
@@ -62,7 +78,19 @@ const Login = () => {
       }
 
     } catch (error) {
-      console.error(error);
+      let message = "Something went wrong. Please try again.";
+
+      if(error.response) {
+        message = `Error ${error.response.status}: ${error.response.data.message}`; 
+      }
+  
+      toast({
+        title: 'Login Failed',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
     if(rememberMe) {
       localStorage.setItem('emal', lemail);

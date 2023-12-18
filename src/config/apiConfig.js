@@ -8,6 +8,8 @@ export default {
     CATE: API_URL + '/collections',
     DETAIL: API_URL + '/collections/product',
     ADD_TO_CART: API_URL +'/order/customer',
+    UPDATE_CART: API_URL + '/order/quantity/customer',
+    DELETE_CART: API_URL + '/order/delete/',
     PLACE_ORDER: API_URL + '/order/payment/momo',
     CREATE_PRODUCT: API_URL + '/admin/product',
     USER_PROFILE: API_URL + '/user/profile',
