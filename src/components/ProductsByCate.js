@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Box, Heading, Select, Input, Button, Grid, GridItem } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useTransition, animated } from 'react-spring';
 import './css/ProductList.css';
@@ -84,12 +85,14 @@ const ProductByCate = ({ products, cateName }) => {
   const sortedProducts = sortProducts(products);
 
   return (
-    <div className="product-list-container">
-      <h1 className="product-list-title">{cateName} Products</h1>
+    <Box className="product-list-container" p={4}>
+      <Heading as="h1" size="xl" mb={4}>
+        {cateName} Products
+      </Heading>
       
-      <div className="items-per-page">
+      <Box mb={4}>
         <label htmlFor="numberOfItems">Items per page: </label>
-        <input
+        <Input
           type="number"
           id="numberOfItems"
           min="1"
@@ -97,55 +100,71 @@ const ProductByCate = ({ products, cateName }) => {
           onChange={handleNumberOfItemsChange}
           className="items-per-page-input"
         />
-      </div>
+      </Box>
 
-      <div className="sort-options">
+      <Box mb={4}>
         <label htmlFor="sortBy">Sort by: </label>
-        <select id="sortBy" value={sortBy} onChange={handleSortByChange}>
+        <Select id="sortBy" value={sortBy} onChange={handleSortByChange}>
           <option value="name">Name</option>
           <option value="price">Price</option>
-        </select>
+        </Select>
         <label htmlFor="sortOrder">Sort order: </label>
-        <select id="sortOrder" value={sortOrder} onChange={handleSortOrderChange}>
+        <Select id="sortOrder" value={sortOrder} onChange={handleSortOrderChange}>
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
-        </select>
-      </div>
+        </Select>
+      </Box>
 
-      <ul className="product-grid">
+      <Grid templateColumns="repeat(3, 1fr)" gap={4}>
         {transitions((styles, product) => (
-          <Link to={`/detail/${product.productId}`} key={product.productId} className="product-item-link">
-            <animated.li style={styles} className="product-item">
-              <div className="product-image">
-                <img src={product.imageData} alt={product.productName} />
-              </div>
-              <div className="product-details">
-                <h3 className="product-name">{product.productName}</h3>
-                <p className="product-price">${product.productPrice}</p>
-              </div>
-            </animated.li>
-          </Link>
+          <GridItem key={product.productId}>
+            <Link to={`/detail/${product.productId}`} className="product-item-link">
+              <animated.div style={styles} className="product-item">
+                <Box className="product-image">
+                  <img src={product.imageData} alt={product.productName} />
+                </Box>
+                <Box className="product-details">
+                  <Heading as="h3" size="md" mb={2} className="product-name">
+                    {product.productName}
+                  </Heading>
+                  <p className="product-price">${product.productPrice}</p>
+                </Box>
+              </animated.div>
+            </Link>
+          </GridItem>
         ))}
-      </ul>
+      </Grid>
 
-      <div className="pagination">
-        <button className="pagination-button" onClick={handlePrevious} disabled={currentPage === 0}>
+      <Box className="pagination" mt={4}>
+        <Button
+          className="pagination-button"
+          onClick={handlePrevious}
+          disabled={currentPage === 0}
+          mr={2}
+        >
           Previous
-        </button>
+        </Button>
         {pageNumbers.map((pageNumber) => (
-          <button
-            className={`pagination-button ${pageNumber === currentPage + 1 ? 'active' : ''}`}
+          <Button
             key={pageNumber}
+            className={`pagination-button ${pageNumber === currentPage + 1 ? 'active' : ''}`}
             onClick={() => setCurrentPage(pageNumber - 1)}
+            variant="outline"
+            size="sm"
           >
             {pageNumber}
-          </button>
+          </Button>
         ))}
-        <button className="pagination-button" onClick={handleNext} disabled={currentPage === totalPages - 1}>
+        <Button
+          className="pagination-button"
+          onClick={handleNext}
+          disabled={currentPage === totalPages - 1}
+          ml={2}
+        >
           Next
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

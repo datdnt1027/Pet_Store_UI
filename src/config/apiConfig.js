@@ -6,6 +6,7 @@ export default {
     RESET: API_URL + '/auth/reset-password',
     VERIFY: API_URL + '/auth/verify',
     CATE: API_URL + '/collections',
+    GET_BY_CATE: API_URL + '/collections/category',
     DETAIL: API_URL + '/collections/product',
     ADD_TO_CART: API_URL +'/order/customer',
     UPDATE_CART: API_URL + '/order/quantity/customer',
