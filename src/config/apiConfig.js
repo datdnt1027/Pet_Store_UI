@@ -13,10 +13,12 @@ export default {
     DELETE_CART: API_URL + '/order/delete/',
     PLACE_ORDER: API_URL + '/order/payment/momo',
     CREATE_PRODUCT: API_URL + '/admin/product',
-    USER_PROFILE: API_URL + '/user/profile',
-    USER_PROFILE_UPDATE: API_URL + '/user/update_profile',
+    LOCK_USER: API_URL + '/admin/customer/status',
+    USER_PROFILE: API_URL + '/customer/profile',
+    USER_PROFILE_UPDATE: API_URL + '/customer/update_profile',
     ADMIN_PROFILE_UPDATE: API_URL + '/admin/update_profile',
     GET_ADMIN: API_URL + '/admin/profile',
     LOGIN_ADMIN : API_URL + '/admin/login',
-    SEARCH_USER : API_URL + '/admin/find_user',
+    SEARCH_USER : API_URL + '/admin/find_customer',
+    USER_ORDER : API_URL + '/customer/orders'
   }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
+import { Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import apiConfig from '../config/apiConfig';
 import axios from 'axios';
 
@@ -12,45 +12,44 @@ const AccountManagement = () => {
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
-  const handleLock = async () => {
 
-    // Toggle locked state
-    setIsLocked(prev => !prev);
-  
+  const handleLock = async () => {
+    setIsLocked(prev => !prev); // Toggle locked state
+    
+    const payload = {
+      customerId: customerInfo.customerId,
+      status: isLocked ? "0" : "1"
+    };
+
+    console.log(payload);
+
     try {
-  
-      // Get auth token
       const authTokenString = sessionStorage.getItem('admin');
       const authToken = JSON.parse(authTokenString).token;
-  
-      // API endpoint
-      const url = `${apiConfig.LOCK_USER}/${customerInfo.id}`; 
-  
-      // Make request
-      const response = await axios.post(url, {}, {
+
+      const response = await axios.patch(apiConfig.LOCK_USER, payload, {
         headers: {
           Authorization: `Bearer ${authToken}`  
         }
       });
-  
-      // Handle success
+
       console.log('User locked/unlocked successfully');
-  
+      
+      // Update the customer information state with the updated lock status
+      setCustomerInfo(prevCustomerInfo => ({
+        ...prevCustomerInfo,
+        status: isLocked ? "False" : "True"
+      }));
     } catch (error) {
-  
-      // Handle error
       console.error('Error locking/unlocking user', error);
-  
     }
-  
-  }
+  };
+
   const handleEmailSearch = async () => {
     try {
-      // Get your authentication token from sessionStorage
       const authTokenString = sessionStorage.getItem('admin');
       const authToken = JSON.parse(authTokenString).token;
 
-      // Make an HTTP POST request to search for the user by email
       const response = await axios.post(apiConfig.SEARCH_USER, {
         email: searchInput,
       }, {
@@ -59,11 +58,8 @@ const AccountManagement = () => {
           'Content-Type': 'application/json',
         },
       });
-      console.log(response.data);
-      // Update the customer information state with the search results
-      
+
       setCustomerInfo(response.data);
-      console.log(customerInfo.length);
     } catch (error) {
       console.error('Error searching for user by email:', error);
     }
@@ -71,11 +67,9 @@ const AccountManagement = () => {
 
   const handlePhoneSearch = async () => {
     try {
-      // Get your authentication token from sessionStorage
       const authTokenString = sessionStorage.getItem('admin');
       const authToken = JSON.parse(authTokenString).token;
 
-      // Make an HTTP POST request to search for the user by phone number
       const response = await axios.post(apiConfig.SEARCH_USER, {
         phoneNumber: searchInput,
       }, {
@@ -85,10 +79,9 @@ const AccountManagement = () => {
         },
       });
 
-      // Update the customer information state with the search results
       setCustomerInfo(response.data);
     } catch (error) {
-      setError('T')
+      setError('T');
       console.error('Error searching for user by phone number:', error);
     }
   };
@@ -125,7 +118,7 @@ const AccountManagement = () => {
             <Tr key={customerInfo.email}>
               <Td>
                 <Image src={customerInfo.avatar} boxSize={10} borderRadius="full" />
-              </Td>
+             </Td>
               <Td>{customerInfo.address}</Td>
               <Td>{customerInfo.lastName}</Td>
               <Td>{customerInfo.firstName}</Td>
@@ -133,8 +126,11 @@ const AccountManagement = () => {
               <Td>{customerInfo.sex}</Td>
               <Td>{customerInfo.status}</Td>
               <Td>
-                <Button onClick={handleLock} colorScheme={isLocked ? 'red' : 'green'}>
-                  {isLocked ? 'Unlock' : 'Lock'}
+                <Button
+                  onClick={handleLock}
+                  colorScheme={customerInfo.status === "False" ? 'green' : 'red'}
+                >
+                  {customerInfo.status === "False" ? "Unlock" : "Lock"}
                 </Button>
               </Td>
             </Tr>

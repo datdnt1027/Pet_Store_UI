@@ -44,7 +44,7 @@ const App = () => {
           <Route path='/profile' element={<PrivateRoute><UpdateProfile/></PrivateRoute>} />
           <Route path='/orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
           <Route path='/admin/profile' element={<AdminRoute><AdminProfilePage/></AdminRoute>} />
-          <Route path='/order/payment/momo/*' element={<PrivateRoute><FailedPaymentPage/></PrivateRoute>} />
+          <Route path='/order/payment/momo-return' element={<PrivateRoute><FailedPaymentPage/></PrivateRoute>} />
         </Routes>
       </Layout>
       </CartProvider>
