@@ -3,6 +3,7 @@ import AdminDashboard from '../components/AdminDashboard';
 import ProductManagementPage from '../components/ProductManagementPage';
 import OrderManagementPage from '../components/OrderManagementPage';
 import AccountManagement from '../components/AccountManangement';
+import CategoryManagementPage from '../components/CategoryManagementPage';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -94,6 +95,10 @@ const AdminPage = () => {
         return (
           <div><AdminDashboard /></div>
         );
+      case 'cate':
+        return (
+          <div><CategoryManagementPage /></div>
+        );
       case 'products':
         return (
           <div><ProductManagementPage /></div>
@@ -170,6 +175,12 @@ const AdminPage = () => {
             <a href="#" data-menu="products" onClick={() => handleMenuItemClick('products')}>
               <i className='bx bxs-shopping-bag-alt'></i>
               <span className="text">Quản lý sản phẩm</span>
+            </a>
+          </li>
+          <li className={activeMenuItem === 'cate' ? 'active' : ''}>
+            <a href="#" data-menu="cate" onClick={() => handleMenuItemClick('cate')}>
+              <i className='bx bxs-shopping-bag-alt'></i>
+              <span className="text">Quản lý danh mục</span>
             </a>
           </li>
           <li className={activeMenuItem === 'accounts' ? 'active' : ''}>

@@ -162,7 +162,7 @@ function Checkout() {
     const orderDataJson = JSON.stringify(orderData);
     try {
       //console.log('Check ' + apiConfig.PLACE_ORDER);
-      const response = await axios.post(apiConfig.PLACE_ORDER, orderDataJson, { headers });
+      const response = await axios.get(apiConfig.PLACE_ORDER, { headers });
       // Handle successful order placement
       //console.log(response.data);
       const { payUrl } = response.data;

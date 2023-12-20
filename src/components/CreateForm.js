@@ -31,6 +31,8 @@ const CreateForm = ({ onClose }) => {
   };
 
   const handleSubmit = async (event) => {
+    const authTokenString = sessionStorage.getItem('admin');
+      const authToken = JSON.parse(authTokenString).token;
     event.preventDefault();
     setLoading(true);
     console.log(base64Image);
@@ -42,17 +44,18 @@ const CreateForm = ({ onClose }) => {
        
         productName: document.getElementById('product_name').value,
         productDetail: document.getElementById('product_detail').value,
-        productQuantity: parseInt(document.getElementById('quantity_on_hand').value),
-        productPrice: parseFloat(document.getElementById('vendor_price').value),
+        productQuantity: (document.getElementById('quantity_on_hand').value),
+        productPrice: (document.getElementById('vendor_price').value),
         imageData: base64Image,
       };
       const payload = JSON.stringify(formData);
       console.log(payload)
       // Log all form input values
         const config = {
-            headers: {
-              'Content-Type': 'application/json', // Set the content type to multipart/form-data
-            },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
           };
           const response = await axios.post(apiConfig.CREATE_PRODUCT, formData, config);
     

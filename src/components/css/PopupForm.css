@@ -20,7 +20,7 @@
   width: 100%;
 }
 
-.popup-form button {
+.close-button {
   position: absolute;
   top: 10px;
   right: 10px;

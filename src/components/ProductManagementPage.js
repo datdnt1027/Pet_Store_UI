@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import sampleData from '../data/sampleData';
 import '../components/css/ProductsManager.css'
 import CreateForm from '../components/CreateForm'
+import EditForm from '../components/EditForm'
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 
@@ -17,7 +18,8 @@ const ProductManagementPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProductForEdit, setSelectedProductForEdit] = useState(null);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
 
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
@@ -35,9 +37,9 @@ const ProductManagementPage = () => {
     }
   };
   const handleEdit = (productId) => {
-    const product = products.find((product) => product.pet_product_id === productId);
-    setSelectedProduct(product);
-    toggleForm();
+    const product = products.find((product) => product.productId === productId);
+    setSelectedProductForEdit(product);
+    setIsEditFormOpen(true);
   };
   const handleClearStatusFilter = () => {
     setFilterStatuses([]);
@@ -226,11 +228,17 @@ const ProductManagementPage = () => {
               <td>{product.updatedDateTime}</td>
               <td>
                 <div>
-                  <button onClick={() => handleEdit(product.productId)}>Edit</button>
-                </div>
                 <div>
-                  <button onClick={() => handleDelete(product.productId)}>Delete</button>
+  <button onClick={() => handleEdit(product.productId)}>Edit</button>
+  {isEditFormOpen && selectedProductForEdit && selectedProductForEdit.productId === product.productId && (
+    <EditForm product={selectedProductForEdit} onClose={() => setIsEditFormOpen(false)} />
+  )}
+</div>
+                  
                 </div>
+                {/* <div>
+                  <button onClick={() => handleDelete(product.productId)}>Delete</button>
+                </div> */}
               </td>
             </tr>
           ))}
