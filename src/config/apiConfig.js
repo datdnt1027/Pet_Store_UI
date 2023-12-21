@@ -23,5 +23,8 @@ export default {
     LOGIN_ADMIN : API_URL + '/admin/login',
     SEARCH_USER : API_URL + '/admin/find_customer',
     USER_ORDER : API_URL + '/customer/orders',
-    ADMIN_ORDER : API_URL + '/admin/orders'
+    ADMIN_ORDER : API_URL + '/admin/orders',
+    APPROVE_ORDER : API_URL + '/admin/order',
+    CREATE_SALE: API_URL + '/admin/user',
+    GET_STAFF: API_URL + '/admin/users'
   }

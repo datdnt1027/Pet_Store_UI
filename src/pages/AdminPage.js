@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AdminDashboard from '../components/AdminDashboard';
 import ProductManagementPage from '../components/ProductManagementPage';
 import OrderManagementPage from '../components/OrderManagementPage';
+import StaffManagementPage from './StaffManagementPage'
 import AccountManagement from '../components/AccountManangement';
 import CategoryManagementPage from '../components/CategoryManagementPage';
 import axios from 'axios';
@@ -115,6 +116,10 @@ const AdminPage = () => {
         return (
           <div><AdminProfilePage/></div>
         );
+      case 'staff':
+        return (
+          <div><StaffManagementPage/></div>
+        );
       default:
         return null;
     }
@@ -186,13 +191,19 @@ const AdminPage = () => {
           <li className={activeMenuItem === 'accounts' ? 'active' : ''}>
             <a href="#" data-menu="accounts" onClick={() => handleMenuItemClick('accounts')}>
               <i className='bx bxs-doughnut-chart'></i>
-              <span className="text">Quản lý Đơn Hàng</span>
+              <span className="text">Quản lý đơn Hàng</span>
             </a>
           </li>
           <li className={activeMenuItem === 'staffs' ? 'active' : ''}>
             <a href="#" data-menu="staffs" onClick={() => handleMenuItemClick('staffs')}>
               <i className='bx bxs-message-dots'></i>
-              <span className="text">Quản lý Account</span>
+              <span className="text">Quản lý khách hàng</span>
+            </a>
+          </li>
+          <li className={activeMenuItem === 'staff' ? 'active' : ''}>
+            <a href="#" data-menu="staff" onClick={() => handleMenuItemClick('staff')}>
+              <i className='bx bxs-message-dots'></i>
+              <span className="text">Quản lý nhân viên</span>
             </a>
           </li>
 
