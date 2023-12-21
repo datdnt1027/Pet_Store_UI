@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Heading, Image, Text, IconButton, Flex } from '@chakra-ui/react';
 import { CloseIcon, AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import '../components/css/CheckOut.css';
 import {
   useToast,
@@ -12,9 +13,11 @@ function Checkout() {
   const [products, setProducts] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const toast = useToast();
+  
   const [isLoading, setIsLoading] = useState(true);
   const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
   const authToken = JSON.parse(authTokenString).token;
+  let navigate = useNavigate();
   console.log(authToken); // Replace with your actual auth token
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -154,8 +157,13 @@ function Checkout() {
   
     }
   };
-
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const handlePaymentMethodSelect = (method) => {
+    setSelectedPaymentMethod(method);
+  };
   const handlePlaceOrder = async () => {
+   
+    if (selectedPaymentMethod === 'momo') {
     const orderData = {
       redirectUrl: 'http://localhost:3000/order/payment/momo/',
     };
@@ -170,6 +178,21 @@ function Checkout() {
     } catch (error) {
       // Handle error in placing the order
       console.error('Error placing order:', error);
+    }}
+    else
+    {
+      try {
+        //console.log('Check ' + apiConfig.PLACE_ORDER);
+        const response = await axios.get(apiConfig.PLACE_ORDER_COD, { headers });
+        // Handle successful order placement
+        //console.log(response.data);
+        navigate('/order/payment/cod');
+        //alert(response.data.paymentMessage);
+      } catch (error) {
+        // Handle error in placing the order
+        console.error('Error placing order:', error);
+      }
+
     }
   };
 
@@ -181,7 +204,26 @@ function Checkout() {
         </Heading>
         <CartItems products={products} handleQuantityChange={handleQuantityChange} handleDelete={handleDelete} />
       </Box>
-
+      <Flex direction="column" align="center">
+        <Heading as="h3" size="md" mb={4}>
+          Please select a payment method:
+        </Heading>
+        <Button
+          variant="outline"
+          colorScheme={selectedPaymentMethod === 'momo' ? 'green' : 'gray'}
+          onClick={() => handlePaymentMethodSelect('momo')}
+          mb={4}
+        >
+          MOMO payment
+        </Button>
+        <Button
+          variant="outline"
+          colorScheme={selectedPaymentMethod === 'cod' ? 'green' : 'gray'}
+          onClick={() => handlePaymentMethodSelect('cod')}
+        >
+          Cash on Delivery
+        </Button>
+      </Flex>
       <Box className="form">
         <CheckoutForm totalPrice={totalPrice} />
         <Button

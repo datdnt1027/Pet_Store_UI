@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import '../components/css/EditForm.css';
@@ -11,6 +11,7 @@ const EditForm = ({ onClose, product }) => {
   const [productQuantity, setProductQuantity] = useState((product.productQuantity).toString());
   const [productPrice, setProductPrice] = useState((product.productPrice).toString());
   const [image, setImage] = useState(product.imageData);
+  const [categories, setCategories] = useState([]);
   console.log(image);
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -26,7 +27,19 @@ const EditForm = ({ onClose, product }) => {
     setImage(imageData);
   };
 
-
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  console.log(categories);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(apiConfig.CATE);
+      console.log('Fetched');
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories', error);
+    }
+  };
   
   function removeBase64Prefix(base64Image) {
     // Split the base64 string at the comma
@@ -85,13 +98,14 @@ const EditForm = ({ onClose, product }) => {
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
           />
-          <label htmlFor="product-detail">Category Id:</label>
-          <input
-            type="text"
-            id="product-detail"
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-          />
+          <label htmlFor="category">Category:</label>
+          <select id="category" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+            {categories.map((category) => (
+              <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+              </option>
+            ))}
+          </select>
           <label htmlFor="product-detail">Product Detail:</label>
           <input
             type="text"

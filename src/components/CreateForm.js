@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../components/css/PopupForm.css';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
@@ -7,6 +7,8 @@ const CreateForm = ({ onClose }) => {
   const [base64Image, setBase64Image] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [categories, setCategories] = useState([]);
   function removeBase64Prefix(base64Image) {
     // Split the base64 string at the comma
     const parts = base64Image.split(',');
@@ -29,7 +31,19 @@ const CreateForm = ({ onClose }) => {
     }
 
   };
-
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  console.log(categories);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(apiConfig.CATE);
+      console.log('Fetched');
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories', error);
+    }
+  };
   const handleSubmit = async (event) => {
     const authTokenString = sessionStorage.getItem('admin');
       const authToken = JSON.parse(authTokenString).token;
@@ -76,10 +90,17 @@ const CreateForm = ({ onClose }) => {
         <button className="close-button" onClick={onClose}>X</button>
         {/* Form fields */}
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="pet_product_id">Cate ID:</label>
-            <input type="text" id="pet_product_id" name="categoryId" />
-          </div>
+        <div>
+  <label htmlFor="pet_product_id">Category:</label>
+  <select id="pet_product_id" name="categoryId" value={selectedCategoryId} onChange={(event) => setSelectedCategoryId(event.target.value)}>
+    <option value="">Select a category</option>
+    {categories.map((category) => (
+      <option key={category.categoryId} value={category.categoryId}>
+        {category.categoryName}
+      </option>
+    ))}
+  </select>
+</div>
 
           
 

@@ -8,6 +8,7 @@ import apiConfig from '../config/apiConfig';
 
 
 const ProductManagementPage = () => {
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -46,6 +47,7 @@ const ProductManagementPage = () => {
   };
   // Fetch products data (you can replace this with your own API call)
   useEffect(() => {
+    fetchCategories();
     fetchProducts();
   }, []);
   const fetchProducts = async () => {
@@ -59,7 +61,16 @@ const ProductManagementPage = () => {
       console.error('Error fetching products:', error);
     }
   };
-
+  console.log(categories);
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(apiConfig.CATE);
+      console.log('Fetched');
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories', error);
+    }
+  };
   const handleDelete = (productId) => {
     // Replace this with your own logic to delete the product
     // You can use the productId to identify the product to be deleted
@@ -78,6 +89,7 @@ const ProductManagementPage = () => {
     setFilterCategoryIds([]); // Clear the filterCategoryIds state to decheck all checkboxes
   };
   const handleFilter = (categoryId) => {
+    //console.log(categoryId)
     if (filterCategoryIds.includes(categoryId)) {
       setFilterCategoryIds(filterCategoryIds.filter((id) => id !== categoryId));
     } else {
@@ -94,10 +106,13 @@ const ProductManagementPage = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const filteredProducts = products.filter((product) => {
-    const values = Object.values(product).map((value) => value.toString().toLowerCase());
+    const values = Object.values(product).map((value) =>
+      value.toString().toLowerCase()
+    );
     return (
       values.some((value) => value.includes(searchTerm.toLowerCase())) &&
-      (filterCategoryIds.length === 0 || filterCategoryIds.includes(product.product_category_id)) &&
+      (filterCategoryIds.length === 0 ||
+        filterCategoryIds.includes(product.categoryId)) &&
       (filterStatuses.length === 0 || filterStatuses.includes(product.status))
     );
   });
@@ -124,7 +139,7 @@ const ProductManagementPage = () => {
     setItemsPerPage(parseInt(event.target.value));
   };
   // Get unique category IDs from the products
-  const categoryIds = [...new Set(products.map((product) => product.product_category_id))];
+  const categoryIds = [...new Set(products.map((product) => product.categoryId))];
 
   return (
     <div id="product-management-container">
@@ -152,7 +167,9 @@ const ProductManagementPage = () => {
               checked={filterCategoryIds.includes(categoryId)}
               onChange={() => handleFilter(categoryId)}
             />
-            <label htmlFor={`category-${categoryId}`}>{categoryId}</label>
+           <label htmlFor={`category-${categoryId}`}>
+  {categories.find(category => category.categoryId === categoryId)?.categoryName || '-'}
+</label>
           </div>
         ))}
         <button id="decheck-all-btn" className="filter-button" onClick={handleCheckAll}>Decheck All</button>
@@ -207,6 +224,7 @@ const ProductManagementPage = () => {
               Quantity
             </th>
             <th>Image</th>
+            <th>Category</th>
             <th>Created Date</th>
             <th>Updated Date</th>
             <th>Actions</th>
@@ -224,17 +242,20 @@ const ProductManagementPage = () => {
                   <img src={product.imageData} alt="Product" />
                 )}
               </td>
+              <td>
+                {categories.find(category => category.categoryId === product.categoryId)?.categoryName}
+              </td>
               <td>{product.createdDateTime}</td>
               <td>{product.updatedDateTime}</td>
               <td>
                 <div>
-                <div>
-  <button onClick={() => handleEdit(product.productId)}>Edit</button>
-  {isEditFormOpen && selectedProductForEdit && selectedProductForEdit.productId === product.productId && (
-    <EditForm product={selectedProductForEdit} onClose={() => setIsEditFormOpen(false)} />
-  )}
-</div>
-                  
+                  <div>
+                    <button onClick={() => handleEdit(product.productId)}>Edit</button>
+                    {isEditFormOpen && selectedProductForEdit && selectedProductForEdit.productId === product.productId && (
+                      <EditForm product={selectedProductForEdit} onClose={() => setIsEditFormOpen(false)} />
+                    )}
+                  </div>
+
                 </div>
                 {/* <div>
                   <button onClick={() => handleDelete(product.productId)}>Delete</button>

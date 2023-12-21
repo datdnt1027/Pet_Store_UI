@@ -3,6 +3,8 @@ import sampleOrder from '../data/sampleOrder';
 import { Box, Button, Checkbox,Flex, Input, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import '../components/css/ProductsManager.css'
 import PopupForm from '../components/PopupForm'
+import apiConfig from '../config/apiConfig';
+import axios from 'axios';
 const OrderManagementPage = () => {
     const [orders, setOrders] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -13,6 +15,13 @@ const OrderManagementPage = () => {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(5);
+    const authTokenString = sessionStorage.getItem('admin'); // Retrieve the token from localStorage
+  const authToken = JSON.parse(authTokenString).token;
+  console.log(authToken); // Replace with your actual auth token
+  const headers = {
+    Authorization: `Bearer ${authToken}`,
+    'Content-Type': 'application/json',
+  };
     const [selectedOrder, setSelectedOrder] = useState(null);
   
     const toggleForm = () => {
@@ -37,10 +46,15 @@ const OrderManagementPage = () => {
     }, []);
   
     const fetchOrders = async () => {
-      // Replace this with your own API endpoint to fetch the orders
-      // const response = await fetch('https://api.example.com/orders');
-      // const data = await response.json();
-      setOrders(sampleOrder);
+      try {
+        const response = await axios.get(apiConfig.ADMIN_ORDER, { headers });
+        const data = response.data;
+        console.log(data);
+        setOrders(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+
     };
   
     const handleDelete = (orderId) => {
@@ -135,18 +149,24 @@ const OrderManagementPage = () => {
               <Th onClick={() => handleSort('orderId')}>
                 Order ID {sortBy === 'orderId' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
               </Th>
-              <Th onClick={() => handleSort('create_date')}>
-                Create Date {sortBy === 'create_date' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
-              </Th>
-              <Th onClick={() => handleSort('update_date')}>
-                Update Date {sortBy === 'update_date' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
-              </Th>
-              <Th onClick={() => handleSort('customerID')}>
-                Customer ID {sortBy === 'customerID' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
-              </Th>
               <Th onClick={() => handleSort('orderStatus')}>
                 Order Status {sortBy === 'orderStatus' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
               </Th>
+              <Th onClick={() => handleSort('paymentStatus')}>
+                Payment Status {sortBy === 'paymentStatus' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
+              </Th>
+              <Th onClick={() => handleSort('customerEmail')}>
+              User Email {sortBy === 'customerEmail' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
+              </Th>
+              <Th onClick={() => handleSort('expectedDeliveryStartDate')}>
+                Create Date {sortBy === 'expectedDeliveryStartDate' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
+              </Th>
+              <Th onClick={() => handleSort('expectedDeliveryEndDate')}>
+                Update Date {sortBy === 'expectedDeliveryEndDate' && <Text as="span">{sortDirection === 'asc' ? '▲' : '▼'}</Text>}
+              </Th>
+              
+              
+              
               <Th>Action</Th>
             </Tr>
           </Thead>
@@ -154,16 +174,14 @@ const OrderManagementPage = () => {
             {currentItems.map((product) => (
               <Tr key={product.orderId}>
                 <Td>{product.orderId}</Td>
-                <Td>{product.create_date}</Td>
-                <Td>{product.update_date}</Td>
-                <Td>{product.customerID}</Td>
                 <Td>{product.orderStatus}</Td>
+                <Td>{product.paymentStatus}</Td>
+                <Td>{product.customerEmail}</Td>
+                <Td>{product.expectedDeliveryStartDate}</Td>
+                <Td>{product.expectedDeliveryEndDate}</Td>                
                 <Td>
                   <Box>
-                    <Button>Edit</Button>
-                  </Box>
-                  <Box mt={2}>
-                    <Button>Delete</Button>
+                    <Button>Duyệt</Button>
                   </Box>
                 </Td>
               </Tr>

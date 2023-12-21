@@ -28,8 +28,9 @@ const CategoryManagementPage = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [newCategory, setNewCategory] = useState({
     categoryName: '',
-    products:[]
+    products:[],
   });
+  const [sortOption, setSortOption] = useState('');
 
   useEffect(() => {
     axios
@@ -71,7 +72,7 @@ const CategoryManagementPage = () => {
     };
     console.log(JSON.stringify(newCategory));
     try {
-      const response = await axios.post(apiConfig.ADMIN_CATE, JSON.stringify(newCategory),config);
+      const response = await axios.post(apiConfig.ADMIN_CATE, JSON.stringify(newCategory), config);
       // Handle the response or perform any additional logic here
       console.log('New category created:', response.data);
       handleClose();
@@ -80,6 +81,15 @@ const CategoryManagementPage = () => {
     }
   };
 
+  const sortedCategories = [...categories].sort((a, b) => {
+    if (sortOption === 'productCount') {
+      return a.productCount - b.productCount;
+    } else if (sortOption === 'categoryId') {
+      return a.categoryId - b.categoryId;
+    }
+    return 0;
+  });
+
   return (
     <Box p={4}>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -87,6 +97,11 @@ const CategoryManagementPage = () => {
         <Button colorScheme="teal" size="sm" onClick={handleCreate}>
           Create Category
         </Button>
+        <select value={sortOption} onChange={e => setSortOption(e.target.value)}>
+          <option value="">Sort By</option>
+          <option value="productCount">Product Count</option>
+          <option value="categoryId">Category ID</option>
+        </select>
       </Box>
       <Table variant="simple" colorScheme="teal" mt={4}>
         <TableCaption>Manage your categories</TableCaption>
@@ -98,7 +113,7 @@ const CategoryManagementPage = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {categories.map(category => (
+          {sortedCategories.map(category => (
             <Tr key={category.categoryId}>
               <Td>{category.categoryId}</Td>
               <Td>{category.categoryName}</Td>

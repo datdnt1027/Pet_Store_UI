@@ -20,7 +20,7 @@ import FailedPaymentPage from './pages/FailedPaymentPage'
 import AdminProfilePage from './components/AdminProfile';
 import AdminLogin from './pages/AdminLoginPage';
 import AdminRoute from './components/AdminRoute'
-
+import CODPaymentPage from '..//src/pages/CODPaymentPage'
 const App = () => {
 
   return (
@@ -45,6 +45,7 @@ const App = () => {
           <Route path='/orders' element={<PrivateRoute><Orders/></PrivateRoute>} />
           <Route path='/admin/profile' element={<AdminRoute><AdminProfilePage/></AdminRoute>} />
           <Route path='/order/payment/momo-return' element={<PrivateRoute><FailedPaymentPage/></PrivateRoute>} />
+          <Route path='/order/payment/cod' element={<PrivateRoute><CODPaymentPage/></PrivateRoute>} />
         </Routes>
       </Layout>
       </CartProvider>
