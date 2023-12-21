@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Input, Select, Text, Image } from '@chakra-ui/react';
+import { Box, Button, Input, Select, Text, Image,useToast } from '@chakra-ui/react';
 import '../components/css/OrdersPage.css';
 import apiConfig from '../config/apiConfig';
 import axios from 'axios';
@@ -8,7 +8,7 @@ const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('');
-
+  const toast = useToast();
   const [visibleOrders, setVisibleOrders] = useState(3);
   const [showAllOrders, setShowAllOrders] = useState(false);
   const sampleOrders = [
@@ -65,7 +65,24 @@ const OrdersPage = () => {
       const transformedData = transformOrdersData(data); // Transform the response data
       setOrders(transformedData);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
 

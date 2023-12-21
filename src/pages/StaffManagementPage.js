@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import {useToast, Table, Thead, Tbody, Tr, Th, Td, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 
@@ -9,6 +9,7 @@ const StaffManagementPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const authTokenString = sessionStorage.getItem('admin');
     const authToken = JSON.parse(authTokenString).token;
+    const toast = useToast();
   console.log(authToken); // Replace with your actual auth token
   const headers = {
     Authorization: `Bearer ${authToken}`,
@@ -30,7 +31,24 @@ const StaffManagementPage = () => {
         setStaffData(response.data);
       })
       .catch(error => {
-        console.error('Error fetching staff data:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       });
   }, []);
   console.log(staffData)
@@ -59,10 +77,34 @@ const StaffManagementPage = () => {
           confirmPassword: '',
         });
         setIsCreatingStaff(false);
+        toast({
+            title: 'Thêm Nhân viên',
+            description: 'Thành công.',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
       })
       .catch(error => {
         // Handle error response
-        console.error('Error creating staff:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       });
   };
   const handleSearch = () => {
@@ -73,7 +115,24 @@ const StaffManagementPage = () => {
           setStaffData(response.data);
         })
         .catch(error => {
-          console.error('Error fetching staff data:', error);
+          let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         });
     } else {
       // Filter staffData based on the search query

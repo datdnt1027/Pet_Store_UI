@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import '../components/css/UserProfile.css';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 
 function Profile() {
-
+  const toast = useToast();
   const genderOptions = [
     {
       label: 'Male',
@@ -53,7 +54,24 @@ function Profile() {
       alert('Thành công');
       setEditMode(false);
     } catch (error) {
-      console.error('Error saving profile data:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
     
   };
@@ -112,7 +130,24 @@ function Profile() {
         alert('Thành công');
         setEditMode(false);
       } catch (error) {
-        console.error('Error saving profile data:', updatedProfile);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     };
   
@@ -136,7 +171,24 @@ function Profile() {
         setProfile(response.data);
         setAvatar(response.data.avatar);
       } catch (error) {
-        console.error('Error fetching profile data:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     };
 

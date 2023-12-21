@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ReceiptIcon from '@mui/icons-material/Receipt';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
@@ -14,6 +15,7 @@ const UserNavbar = ({ onLogout }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [profile, setProfile] = useState();
   const [avatar, setAvatar] = useState();
+  const toast = useToast();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -36,7 +38,24 @@ const UserNavbar = ({ onLogout }) => {
         setAvatar(response.data.avatar);
         console.log(response.data.avatar);
       } catch (error) {
-        console.error('Error fetching profile data:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     };
 

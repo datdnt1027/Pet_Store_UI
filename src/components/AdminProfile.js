@@ -76,16 +76,24 @@ const AdminProfilePage = () => {
 
       reader.readAsDataURL(selectedAvatar);
     } catch (error) {
-      console.error('Error uploading avatar:', error);
-      const errorMessage = error.response?.data?.message || 'An error occurred while uploading the avatar.';
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
 
@@ -108,13 +116,24 @@ const AdminProfilePage = () => {
         }
         setEditedAdminData(response.data);
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          console.error('Unauthorized. Logging out...');
-          localStorage.clear('user');
-          // Call the handleLogout function to log out the user
-        } else {
-          console.error('Error fetching profile data:', error);
-        }
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     };
 
@@ -153,16 +172,24 @@ const AdminProfilePage = () => {
         isClosable: true,
       });
     } catch (error) {
-      console.error('Error updating profile:', error);
-      const errorMessage = error.response?.data?.message || 'An error occurred while updating the profile.';
-  
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   

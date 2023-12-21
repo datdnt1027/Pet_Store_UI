@@ -35,19 +35,24 @@ function Checkout() {
         console.log("Sanr phaamr"+products);
         setIsLoading(false);
       } catch (error) {
-        let message = "Something went wrong. Please try again.";
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
-      if(error.response) {
-        message = `Error ${error.response.status}: ${error.response.data.message}`; 
-      }
-  
-      toast({
-        title: 'Load Failed',
-        description: message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         setIsLoading(false);
       }
     };
@@ -97,20 +102,24 @@ function Checkout() {
     } catch (error) {
   
       // Handle error
-      let message = "Something went wrong. Please try again.";
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
-      if(error.response) {
-        message = `Error ${error}`; 
-      }
-  
-      toast({
-        title: 'Update Error',
-        description: message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-  
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   useEffect(() => {
@@ -141,19 +150,24 @@ function Checkout() {
     } catch (error) {
   
       // Handle error
-      let message = "Something went wrong. Please try again.";
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
-      if(error.response) {
-        message = `Error ${error}`; 
-      }
-  
-      toast({
-        title: 'Update Error',
-        description: message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
   
     }
   };
@@ -177,7 +191,24 @@ function Checkout() {
       window.location.href = payUrl;
     } catch (error) {
       // Handle error in placing the order
-      console.error('Error placing order:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }}
     else
     {
@@ -190,7 +221,24 @@ function Checkout() {
         //alert(response.data.paymentMessage);
       } catch (error) {
         // Handle error in placing the order
-        console.error('Error placing order:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
 
     }

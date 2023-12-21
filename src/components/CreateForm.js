@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import '../components/css/PopupForm.css';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import { json } from 'react-router-dom';
 const CreateForm = ({ onClose }) => {
   const [base64Image, setBase64Image] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
   function removeBase64Prefix(base64Image) {
@@ -41,7 +43,24 @@ const CreateForm = ({ onClose }) => {
       console.log('Fetched');
       setCategories(response.data);
     } catch (error) {
-      console.error('Error fetching categories', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   const handleSubmit = async (event) => {
@@ -78,7 +97,24 @@ const CreateForm = ({ onClose }) => {
     
       } catch (error) {
         // Handle any network or other errors
-        console.error(error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     
     setLoading(false);

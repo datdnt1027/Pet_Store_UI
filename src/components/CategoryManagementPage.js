@@ -19,6 +19,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useToast
 } from '@chakra-ui/react';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
@@ -31,7 +32,7 @@ const CategoryManagementPage = () => {
     products:[],
   });
   const [sortOption, setSortOption] = useState('');
-
+  const toast = useToast();
   useEffect(() => {
     axios
       .get(apiConfig.CATE)
@@ -39,7 +40,24 @@ const CategoryManagementPage = () => {
         setCategories(response.data);
       })
       .catch(error => {
-        console.error('Error fetching categories:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       });
   }, []);
 
@@ -77,7 +95,24 @@ const CategoryManagementPage = () => {
       console.log('New category created:', response.data);
       handleClose();
     } catch (error) {
-      console.error('Error creating category:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
 

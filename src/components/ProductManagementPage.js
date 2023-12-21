@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import sampleData from '../data/sampleData';
 import '../components/css/ProductsManager.css'
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import CreateForm from '../components/CreateForm'
 import EditForm from '../components/EditForm'
 import axios from 'axios';
@@ -9,6 +10,7 @@ import apiConfig from '../config/apiConfig';
 
 const ProductManagementPage = () => {
   const [categories, setCategories] = useState([]);
+  const toast = useToast();
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -58,7 +60,24 @@ const ProductManagementPage = () => {
       console.log(data);
       setProducts(data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   console.log(categories);
@@ -68,7 +87,24 @@ const ProductManagementPage = () => {
       console.log('Fetched');
       setCategories(response.data);
     } catch (error) {
-      console.error('Error fetching categories', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   const handleDelete = (productId) => {

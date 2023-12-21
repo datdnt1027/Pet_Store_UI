@@ -6,6 +6,7 @@ import StaffManagementPage from './StaffManagementPage'
 import AccountManagement from '../components/AccountManangement';
 import CategoryManagementPage from '../components/CategoryManagementPage';
 import axios from 'axios';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import apiConfig from '../config/apiConfig';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../components/css/AdminPage.css'
@@ -15,6 +16,7 @@ const AdminPage = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [profile, setProfile] = useState();
   const navigate = useNavigate();
+  const toast = useToast();
   const [avatar, setAvatar] = useState();
   const handleLogout = () => {
     sessionStorage.removeItem('admin');
@@ -149,13 +151,25 @@ const AdminPage = () => {
         console.log(avatar);
         console.log(response.data);
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          console.error('Unauthorized. Logging out...');
-          localStorage.clear('user');
-          // Call the handleLogout function to log out the user
-        } else {
-          console.error('Error fetching profile data:', error);
-        }
+
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     };
 

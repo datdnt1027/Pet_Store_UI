@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import sampleOrder from '../data/sampleOrder';
 import { format } from 'date-fns';
-import { Box, Button, Checkbox, Flex, Input, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {useToast, Box, Button, Checkbox, Flex, Input, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import '../components/css/ProductsManager.css'
 import PopupForm from '../components/PopupForm'
 import apiConfig from '../config/apiConfig';
@@ -14,6 +14,7 @@ const OrderManagementPage = () => {
   const [filterStatuses, setFilterStatuses] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const toast = useToast();
   const [currentPage, setCurrentPage] = useState(1);
 
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -38,7 +39,24 @@ const OrderManagementPage = () => {
         fetchOrders();
       })
       .catch(error => {
-        console.error('Error updating order:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       });
   };
 
@@ -61,7 +79,24 @@ const OrderManagementPage = () => {
           fetchOrders();
         })
         .catch(error => {
-          console.error('Error updating order:', error);
+          let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         });
     }
 
@@ -106,7 +141,24 @@ const OrderManagementPage = () => {
       console.log(data);
       setOrders(data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
 
   };

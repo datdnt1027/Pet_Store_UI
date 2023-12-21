@@ -1,10 +1,12 @@
 import React, { useEffect,useState } from 'react';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import '../components/css/EditForm.css';
 
 const EditForm = ({ onClose, product }) => {
   const [productId, setProductId] = useState(product.productId);
+  const toast = useToast();
   const [categoryId, setCategoryId] = useState(product.categoryId);
   const [productName, setProductName] = useState(product.productName);
   const [productDetail, setProductDetail] = useState(product.productDetail);
@@ -37,7 +39,24 @@ const EditForm = ({ onClose, product }) => {
       console.log('Fetched');
       setCategories(response.data);
     } catch (error) {
-      console.error('Error fetching categories', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   
@@ -81,7 +100,24 @@ const EditForm = ({ onClose, product }) => {
       console.log(response.data); // Handle the response as needed
       onClose(); // Close the form after successful update
     } catch (error) {
-      console.error(error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       // Handle the error
     }
   };

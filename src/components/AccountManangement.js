@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import apiConfig from '../config/apiConfig';
 import axios from 'axios';
 
@@ -8,7 +8,7 @@ const AccountManagement = () => {
   const [customerInfo, setCustomerInfo] = useState([]);
   const [error, setError] = useState('');
   const [isLocked, setIsLocked] = useState(false); 
-
+  const toast = useToast();
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
@@ -41,7 +41,24 @@ const AccountManagement = () => {
         status: isLocked ? "False" : "True"
       }));
     } catch (error) {
-      console.error('Error locking/unlocking user', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
 
@@ -61,7 +78,21 @@ const AccountManagement = () => {
 
       setCustomerInfo(response.data);
     } catch (error) {
-      console.error('Error searching for user by email:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+            if(error.response.status === 403) {
+              message = `Xin lỗi tài khoản này không có quyền.`; 
+            }
+            if(error.response.status === 401) {
+              message = `Vui lòng đăng nhập lại.`; 
+            }
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
     }
   };
 
@@ -82,7 +113,21 @@ const AccountManagement = () => {
       setCustomerInfo(response.data);
     } catch (error) {
       setError('T');
-      console.error('Error searching for user by phone number:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+            if(error.response.status === 403) {
+              message = `Xin lỗi tài khoản này không có quyền.`; 
+            }
+            if(error.response.status === 401) {
+              message = `Vui lòng đăng nhập lại.`; 
+            }
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
     }
   };
 

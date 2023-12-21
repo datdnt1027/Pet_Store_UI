@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import CategoryChart from '../components/CategoryChart'
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
-
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 const AdminDashboard = () => {
   const [categories, setCategories] = useState([]);
-
+  const toast = useToast();
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -15,7 +15,21 @@ const AdminDashboard = () => {
       console.log('Fetched');
       setCategories(response.data);
     } catch (error) {
-      console.error('Error fetching categories', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+            if(error.response.status === 403) {
+              message = `Xin lỗi tài khoản này không có quyền.`; 
+            }
+            if(error.response.status === 401) {
+              message = `Vui lòng đăng nhập lại.`; 
+            }
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
     }
   };
   return (

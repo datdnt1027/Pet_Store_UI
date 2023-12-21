@@ -21,7 +21,6 @@ const Login = () => {
   const [lemail, setEmail] = useState('');
   const [lpassword, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     const payload = {
@@ -46,7 +45,24 @@ const Login = () => {
       }
 
     } catch (error) {
-      console.error(error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
   const handleSubmit = async (e) => {
@@ -78,19 +94,24 @@ const Login = () => {
       }
 
     } catch (error) {
-      let message = "Something went wrong. Please try again.";
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
-      if(error.response) {
-        message = `Error ${error.response.status}: ${error.response.data.message}`; 
-      }
-  
-      toast({
-        title: 'Login Failed',
-        description: message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
     if(rememberMe) {
       localStorage.setItem('emal', lemail);

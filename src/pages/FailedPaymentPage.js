@@ -1,11 +1,13 @@
 import '../components/css/FailedPaymentPage.css'; // Import the CSS file for the component
 import React, { useEffect, useState } from 'react';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 
 
 function FailedPaymentPage() {
   const [data,setData] = useState([]);
+  const toast = useToast();
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -18,7 +20,24 @@ function FailedPaymentPage() {
       const response = await axios.get(`https://localhost:7206/order/payment/momo-return?${queryString}`);
       setData(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
 
