@@ -80,10 +80,10 @@ function Profile() {
   };
   function removeBase64PrefixW(base64Image) {
     // Split the base64 string at the comma
-    const parts = base64Image.split(', ');
+    const parts = base64Image.split(',');
   
-    // Take the second part of the split result
-    const imageWithoutPrefix = parts[1];
+    // Take the second part of the split result and remove leading/trailing spaces
+    const imageWithoutPrefix = parts[1].trim();
   
     return imageWithoutPrefix;
   }
@@ -91,8 +91,8 @@ function Profile() {
     // Split the base64 string at the comma
     const parts = base64Image.split(',');
   
-    // Take the second part of the split result
-    const imageWithoutPrefix = parts[1];
+    // Take the second part of the split result and remove leading/trailing spaces
+    const imageWithoutPrefix = parts[1].trim();
   
     return imageWithoutPrefix;
   }

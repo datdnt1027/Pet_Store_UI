@@ -26,6 +26,7 @@ const ProductManagementPage = () => {
 
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
+    fetchProducts();
   };
 
   const sortProducts = (field, direction) => {
@@ -43,6 +44,7 @@ const ProductManagementPage = () => {
     const product = products.find((product) => product.productId === productId);
     setSelectedProductForEdit(product);
     setIsEditFormOpen(true);
+    fetchProducts();
   };
   const handleClearStatusFilter = () => {
     setFilterStatuses([]);
@@ -230,7 +232,7 @@ const ProductManagementPage = () => {
         <button id="clear-status-btn" className="filter-button" onClick={handleClearStatusFilter}>Clear</button>
       </div>
       <div>
-        <button id="add-btn" className="filter-button" onClick={toggleForm}>Create</button>
+        <button id="add-btn" className="filter-button" onClick={toggleForm} fetchProducts= {fetchProducts}>Create</button>
         {isFormOpen && <CreateForm onClose={toggleForm} />}
       </div>
       <div className="items-per-page">
@@ -288,7 +290,7 @@ const ProductManagementPage = () => {
                   <div>
                     <button onClick={() => handleEdit(product.productId)}>Edit</button>
                     {isEditFormOpen && selectedProductForEdit && selectedProductForEdit.productId === product.productId && (
-                      <EditForm product={selectedProductForEdit} onClose={() => setIsEditFormOpen(false)} />
+                      <EditForm product={selectedProductForEdit} fetchProducts= {fetchProducts} onClose={() => setIsEditFormOpen(false)} />
                     )}
                   </div>
 

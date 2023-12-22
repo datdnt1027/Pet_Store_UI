@@ -26,5 +26,7 @@ export default {
     ADMIN_ORDER : API_URL + '/admin/orders',
     APPROVE_ORDER : API_URL + '/admin/order',
     CREATE_SALE: API_URL + '/admin/user',
-    GET_STAFF: API_URL + '/admin/users'
+    GET_STAFF: API_URL + '/admin/users',
+    GET_ROLES: API_URL + '/admin/roles',
+    SEARCH: API_URL + '/collections/products_search?search='
   }

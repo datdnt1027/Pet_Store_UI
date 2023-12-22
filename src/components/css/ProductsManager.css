@@ -28,7 +28,16 @@
   width: 200px;
 }
 
+body.night-mode {
+  background: black;
+  color: white;
+}
 
+body.night-mode .card {
+  background: #333; 
+}
+
+/* update all colors */
 .button-group {
   display: flex;
   justify-content: flex-end;

@@ -44,7 +44,7 @@ function Checkout() {
             message = `Vui lòng đăng nhập lại.`; 
           }
           if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
+            message = `Thông tin không tồn tại.`; 
           }
           toast({
             title: 'Error',
@@ -111,7 +111,7 @@ function Checkout() {
             message = `Vui lòng đăng nhập lại.`; 
           }
           if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
+            message = `Thông tin không tồn tại.`; 
           }
           toast({
             title: 'Error',
@@ -230,7 +230,7 @@ function Checkout() {
             message = `Vui lòng đăng nhập lại.`; 
           }
           if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
+            message = `Thông tin không tồn tại.`; 
           }
           toast({
             title: 'Error',

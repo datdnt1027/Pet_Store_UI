@@ -4,7 +4,7 @@ import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import '../components/css/EditForm.css';
 
-const EditForm = ({ onClose, product }) => {
+const EditForm = ({ onClose, product,fetchProducts  }) => {
   const [productId, setProductId] = useState(product.productId);
   const toast = useToast();
   const [categoryId, setCategoryId] = useState(product.categoryId);
@@ -99,6 +99,7 @@ const EditForm = ({ onClose, product }) => {
       const response = await axios.patch(apiConfig.CREATE_PRODUCT, JSON.stringify(updatedProduct), config);
       console.log(response.data); // Handle the response as needed
       onClose(); // Close the form after successful update
+      fetchProducts();
     } catch (error) {
       let message = `Error ${error.response.status}: ${error.response.data.message}`;
 

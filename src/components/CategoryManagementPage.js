@@ -34,33 +34,35 @@ const CategoryManagementPage = () => {
   const [sortOption, setSortOption] = useState('');
   const toast = useToast();
   useEffect(() => {
-    axios
-      .get(apiConfig.CATE)
-      .then(response => {
-        setCategories(response.data);
-      })
-      .catch(error => {
-        let message = `Error ${error.response.status}: ${error.response.data.message}`;
-
-          if(error.response.status === 403) {
-            message = `Xin lỗi tài khoản này không có quyền.`; 
-          }
-          if(error.response.status === 401) {
-            message = `Vui lòng đăng nhập lại.`; 
-          }
-          if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
-          }
-          toast({
-            title: 'Error',
-            description: message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-      });
+    fetchCate();
   }, []);
+  const fetchCate = async () =>{
+    axios
+    .get(apiConfig.CATE)
+    .then(response => {
+      setCategories(response.data);
+    })
+    .catch(error => {
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
+        if(error.response.status === 403) {
+          message = `Xin lỗi tài khoản này không có quyền.`; 
+        }
+        if(error.response.status === 401) {
+          message = `Vui lòng đăng nhập lại.`; 
+        }
+        if(error.response.status === 409) {
+          message = `Thông tin bị trùng.`; 
+        }
+        toast({
+          title: 'Error',
+          description: message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+    });
+  };
   const handleCreate = () => {
     setIsCreating(true);
   };
@@ -94,6 +96,7 @@ const CategoryManagementPage = () => {
       // Handle the response or perform any additional logic here
       console.log('New category created:', response.data);
       handleClose();
+      fetchCate();
     } catch (error) {
       let message = `Error ${error.response.status}: ${error.response.data.message}`;
 

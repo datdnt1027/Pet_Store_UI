@@ -39,11 +39,14 @@ const CategoryList = () => {
   };
 
   return (
-    <div className="category-wrapper">
+    
+    <div className="category-page">
       <h1 className="category-title">Category</h1>
+      <div className="category-wrapper">
       {categories.map(category => (
         <CategoryItem key={category.categoryId} category={category} />
       ))}
+      </div>
     </div>
   );
 };

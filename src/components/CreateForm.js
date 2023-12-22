@@ -4,7 +4,7 @@ import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import { json } from 'react-router-dom';
-const CreateForm = ({ onClose }) => {
+const CreateForm = ({ onClose, fetchProducts  }) => {
   const [base64Image, setBase64Image] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -94,8 +94,10 @@ const CreateForm = ({ onClose }) => {
     
         // Handle the response
         console.log(response.data);
+        fetchProducts();
     
       } catch (error) {
+        if(error.response) {
         // Handle any network or other errors
         let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
@@ -115,6 +117,7 @@ const CreateForm = ({ onClose }) => {
             duration: 3000,
             isClosable: true,
           });
+        }
       }
     
     setLoading(false);

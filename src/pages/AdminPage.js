@@ -51,35 +51,9 @@ const AdminPage = () => {
       sidebar.classList.toggle('hide');
     });
 
-    const searchButton = document.querySelector('#content nav form .form-input button');
-    const searchButtonIcon = document.querySelector('#content nav form .form-input button .bx');
-    const searchForm = document.querySelector('#content nav form');
+    
 
-    searchButton.addEventListener('click', function (e) {
-      if (window.innerWidth < 576) {
-        e.preventDefault();
-        searchForm.classList.toggle('show');
-        if (searchForm.classList.contains('show')) {
-          searchButtonIcon.classList.replace('bx-search', 'bx-x');
-        } else {
-          searchButtonIcon.classList.replace('bx-x', 'bx-search');
-        }
-      }
-    });
 
-    if (window.innerWidth < 768) {
-      sidebar.classList.add('hide');
-    } else if (window.innerWidth > 576) {
-      searchButtonIcon.classList.replace('bx-x', 'bx-search');
-      searchForm.classList.remove('show');
-    }
-
-    window.addEventListener('resize', function () {
-      if (this.innerWidth > 576) {
-        searchButtonIcon.classList.replace('bx-x', 'bx-search');
-        searchForm.classList.remove('show');
-      }
-    });
 
     const switchMode = document.getElementById('switch-mode');
 
@@ -242,23 +216,15 @@ const AdminPage = () => {
       {/* Main content */}
       <section id="content">
         {/* Navigation */}
-        <nav>
+        <nav className='information'>
           {/* Navigation content */}
           <i className='bx bx-menu'></i>
           
-          <form action="#">
-            <div className="form-input">
-              <input type="search" placeholder="Search..." />
-              <button type="submit" className="search-btn">
-                <i className='bx bx-search'></i>
-              </button>
-            </div>
-          </form>
+          
           <input type="checkbox" id="switch-mode" hidden />
           <label htmlFor="switch-mode" className="switch-mode"></label>
           <a href="#" className="notification">
             <i className='bx bxs-bell'></i>
-            <span className="num">8</span>
           </a>
           <a href='/admin/profile' className="profile">
             <img src={avatar} alt="Profile" />

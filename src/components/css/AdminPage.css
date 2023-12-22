@@ -516,6 +516,11 @@ body {
 #content main .table-data .todo .todo-list li:last-child {
 	margin-bottom: 0;
 }
+.information{
+	float: right;
+	position: absolute;
+  right: 0;
+}
 /* MAIN */
 /* CONTENT */
 
