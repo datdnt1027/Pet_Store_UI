@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
 import '../components/css/RegistrationForm.css';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
@@ -12,7 +13,7 @@ const RegistrationForm = () => {
         password: '',
         confirmPassword: ''
     });
-
+    const toast = useToast();
     let navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -33,10 +34,11 @@ const RegistrationForm = () => {
         try {
             // Call the API using Axios
             const response = await axios.post(endpoints.REGISTER, customer);
-    
+            console.log("Thoong tin" + response);
           if(response.status === 200) {
             // registration successful
-            console.log('Registration successful');  
+            console.log('Registration successful');
+            alert("Đằng ký thành công.");
             navigate('/login');
 
           } else {
@@ -45,7 +47,24 @@ const RegistrationForm = () => {
           }
     
         } catch (error) {
-            console.error(error);
+            let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         }
     
       };

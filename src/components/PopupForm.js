@@ -10,7 +10,7 @@ const PopupForm = ({ onClose, product }) => {
         {/* Form fields */}
         <form>
   <div>
-    <label htmlFor="pet_product_id">Pet Product ID:</label>
+    <label htmlFor="pet_product_id">Cate ID:</label>
     <input type="text" id="pet_product_id" name="pet_product_id" />
   </div>
 

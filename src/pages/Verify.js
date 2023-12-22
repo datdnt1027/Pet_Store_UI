@@ -1,6 +1,7 @@
 import React from 'react';
 import '../components/css/VerifySuccessfulPage.css';
-import endpoints from '../config/apiConfig'
+import endpoints from '../config/apiConfig';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import axios from 'axios';
 
 import { useEffect } from 'react';
@@ -8,6 +9,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 const VerifySuccessfulPage = () => {
   const { token } = useParams();
   console.log(token);
+  const toast = useToast();
   let navigate = useNavigate();
   useEffect(() => {
     const postData = async () => {
@@ -32,7 +34,24 @@ const VerifySuccessfulPage = () => {
           console.log('POST request failed');
         }
       } catch (error) {
-        console.error('Error occurred during POST request:', error);
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
       }
     };
 

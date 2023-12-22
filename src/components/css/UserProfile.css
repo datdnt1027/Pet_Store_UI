@@ -1,0 +1,142 @@
+/* UserProfile.css */
+.page-container {
+  background-image: url('../../../public/profile.jpg'); /* Set the path to your image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin: 20px auto;
+  padding: 20px;
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.profile-container {
+  /* width: calc(100% - 40px); */
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: rgb(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  /* position: absolute; */
+  /* top: 50%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%);  */
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+}
+
+.profile-avatar-container {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upload-avatar-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+.profile-avatar-container:hover .upload-avatar-button {
+  display: inline-block;
+}
+
+.upload-avatar-icon {
+  font-size: 24px;
+}
+
+.upload-avatar-button:hover {
+  opacity: 1;
+}
+
+.profile-details {
+  margin-bottom: 30px;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-label {
+  font-weight: bold;
+  justify-content: start;
+  margin-right: 10px;
+  color: #333333;
+  width: 120px;
+}
+
+.profile-value {
+  font-weight: normal;
+  color: #777777;
+  justify-content: end;
+}
+
+.edit-button {
+  display: block;
+  margin: 0 auto;
+  background-color: #ffcc00;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #333333;
+}
+
+.profile-form {
+  margin-bottom: 30px;
+}
+
+.profile-form input[type='text'] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.profile-form button {
+  display: block;
+  margin: 0 auto;
+  background-color: #6ac7e8;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.profile-form button:hover {
+  background-color: #5db6d7;
+}

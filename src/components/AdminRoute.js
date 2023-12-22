@@ -3,24 +3,23 @@ import React, { useState, useEffect } from 'react';
 import endpoints from '../config/apiConfig'
 import axios from 'axios';
 
-const PrivateRoute = ({ children }) => {
-  const storedUser = localStorage.getItem('user');
+const AdminRoute = ({ children }) => {
+  const storedUser = sessionStorage.getItem('admin');
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
   const auth = user;
 
-  const storedAdmin = sessionStorage.getItem('admin');
-  const [admin, setAdmin] = useState(storedUser ? JSON.parse(storedUser) : null);
+  const stored = localStorage.getItem('user');
+  const [u, setU] = useState(storedUser ? JSON.parse(storedUser) : null);
   const auth2 = user;
-
 
   const navigate = useNavigate();
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
     if (!auth) {
-      navigate("/login");
+      navigate("/admin/login");
     } else {
-      sessionStorage.removeItem('admin');
+      localStorage.removeItem('user');
       setShouldRender(true);
     }
   }, [auth]);
@@ -29,7 +28,9 @@ const PrivateRoute = ({ children }) => {
     return null;
   }
 
+  if(user) {
   return children;
 }
+}
 
-export default PrivateRoute;
+export default AdminRoute;

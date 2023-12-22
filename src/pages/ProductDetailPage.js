@@ -1,150 +1,222 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import sampleData from '../data/sampleData';
 import ProductDetail from '../components/css/ProductDetails.css'
+import axios from 'axios';
+import apiConfig from '../config/apiConfig';
+import sampleDetail from '../data/sampleDetail';
 import ProductList from '../components/ProductList';
-
+import {
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Heading,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 const ProductDetailPage = () => {
   const { id } = useParams();
-  const product = sampleData.find((product) => product.pet_product_id === parseInt(id));
-  const [products, setProducts] = useState(sampleData);
+  const toast = useToast();
+  const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
   const [imgId, setImgId] = useState(1);
-  
+  const [cartItems, setCartItems] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const [authToken, setAuthToken] = useState(null);
+
+  const data = {
+    productId: id,
+    // Include other data you want to send for the product
+    // For example:
+    // productName: 'Product Name',
+    // productPrice: 9.99,
+  };
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
+  };
   useEffect(() => {
-    const slideImage = () => {
-      // update translateX based on imgId
-      const displayWidth = document.querySelector('.img-showcase img:first-child').clientWidth;
-      document.querySelector('.img-showcase').style.transform = `translateX(${- (imgId - 1) * displayWidth}px)`; 
+    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+
+    if (authTokenString) {
+      const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
+      setAuthToken(authToken);
+    } else {
+      setAuthToken(null);
+    }
+  }, []);
+  const addToCart = async () => {
+    const parsedQuantity = parseInt(quantity, 10); // Parse the quantity as an integer
+    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+    const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
+    console.log(authToken);
+    // Set the headers with the authentication token
+    const headers = {
+      Authorization: `Bearer ${authToken}`
     };
-  
-    const imgBtns = document.querySelectorAll('.img-item a');
-  
-    imgBtns.forEach((imgBtn, index) => {
-      imgBtn.dataset.id = index + 1; 
-  
-      imgBtn.addEventListener('click', () => {
-        setImgId(parseInt(imgBtn.dataset.id));
+    try {
+      // Call the API to update the cart on the server
+      await axios.post(apiConfig.ADD_TO_CART, {
+        productId: product.productId,
+        quantity: parsedQuantity
+      }, { headers });
+
+      toast({
+        title: 'Cart Item',
+        description: 'You have added.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
       });
-    });
-  
-    slideImage();
-  
-    window.addEventListener('resize', slideImage);
-  
-    return () => {
-      window.removeEventListener('resize', slideImage);
+    } catch (error) {
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+    }
+  };
+
+
+  useEffect(() => {
+    // Fetch product data from API based on the id
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.post(`${apiConfig.DETAIL}`, {
+          productId: id
+        });
+        console.log("Gett" + response.data);
+        ////
+        setProduct(response.data);
+        console.log("fetttt");
+      } catch (error) {
+        let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+      }
     };
-  }, [imgId]);
+
+    fetchProduct();
+  }, [id]);
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    const savedCartItems = localStorage.getItem('cartItems');
+    if (savedCartItems) {
+      setCartItems(JSON.parse(savedCartItems));
+    }
+  }, []);
 
   if (!product) {
     return <div>Product not found</div>;
   }
 
   return (
-    // <div>
-    //   <h1>Product Detail Page</h1>
-    //   <h3>{product.product_name}</h3>
-    //   <p>Price: ${product.retail_price}</p>
-    //   <p>Quantity: {product.quantity_on_hand}</p>
-    //   <p>Product Detail: {product.product_detail}</p>
-    // </div>
     <div className='all'>
-    <div className='product-container'>
-      <div className = "card-wrapper">
-      <div className = "card">
-        <div className = "product-imgs">
-          <div className = "img-display">
-            <div className = "img-showcase">
-              <img src = {product.image} alt = "toy image"/>
-              <img src = 'https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt = "toy image"/>
-              <img src = {product.image} alt = "toy image"/>
-              <img src = {product.image} alt = "toy image"/>
+      <div className='product-container'>
+        <div className="card-wrapper">
+          <div className="card">
+            <div className="product-imgs">
+              <div className="img-display">
+                <div className="img-showcase">
+                  {/* Render the product image dynamically */}
+                  <img src={product.imageData} alt="toy image" />
+                  <img src='https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt="toy image" />
+                  <img src={product.imageData} alt="toy image" />
+                  <img src={product.imageData} alt="toy image" />
+                </div>
+              </div>
+              <div className="img-select">
+                <div className="img-item">
+                  <a href="#" data-id="1">
+                    <img src={product.imageData} alt="toy image" />
+                  </a>
+                </div>
+                <div className="img-item">
+                  <a href="#" data-id="2">
+                    <img src='https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt="toy image" />
+                  </a>
+                </div>
+                <div className="img-item">
+                  <a href="#" data-id="3">
+                    <img src={product.imageData} alt="toy image" />
+                  </a>
+                </div>
+                <div className="img-item">
+                  <a href="#" data-id="4">
+                    <img src={product.imageData} alt="toy image" />
+                  </a>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className = "img-select">
-            <div className = "img-item">
-              <a href = "#" data-id = "1">
-                <img src = {product.image} alt ="toy image"/>
-              </a>
-            </div>
-            <div className = "img-item">
-              <a href = "#" data-id = "2">
-                <img src = 'https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt = "toy image"/>
-              </a>
-            </div>
-            <div className = "img-item">
-              <a href = "#" data-id = "3">
-                <img src = {product.image} alt = "toy image"/>
-              </a>
-            </div>
-            <div className = "img-item">
-              <a href = "#" data-id = "4">
-                <img src = {product.image} alt = "toy image"/>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className = "product-content">
-          <h2 className = "product-title">{product.product_name}</h2>
-          <div className = "product-rating">
-            <i className = "fas fa-star"></i>
-            <i className = "fas fa-star"></i>
-            <i className = "fas fa-star"></i>
-            <i className = "fas fa-star"></i>
-            <i className = "fas fa-star-half-alt"></i>
-            <span>4.7(21)</span>
-          </div>
+            <div className="product-content">
+              <h2 className="product-title">{product.productName}</h2>
+              <p className="product-price">${product.productPrice}</p>
+              <div className="product-detail">
+                <h2>Product Details</h2>
+                <p>{product.productDetail}</p>
+              </div>
+             
+              {
+                authToken ? (
+                  <div>
+                     <div className="product-quantity">
+                <label htmlFor="quantity">Quantity:</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  min="1"
+                  value={quantity} 
+                  onChange={handleQuantityChange}
+                />
+              </div>
+                  <button className="add-to-cart" onClick={addToCart}>
+                    Add to Cart
+                  </button>
+                  </div>
+                ) : null
+              }
 
-          <div className = "product-price">
-            <p className = "last-price">Old Price: <span>{product.retail_price}</span></p>
-            <p className = "new-price">New Price: <span>{product.vendor_price} (5%)</span></p>
-          </div>
-
-          <div className = "product-detail">
-            <h2>about this item: </h2>
-            <p>{product.product_detail}</p>
-            <ul>
-              <li>Color: <span>Black</span></li>
-              <li>Available: <span>{product.status}</span></li>
-              <li>Category: <span>{product.product_category_id}</span></li>
-              <li>Shipping Area: <span>All over the world</span></li>
-              <li>Shipping Fee: <span>Free</span></li>
-            </ul>
-          </div>
-
-          <div className = "purchase-info">
-            <input type = "number" min = "0" value = "1"/>
-            <button type = "button" className = "btn">
-              Add to Cart <i className = "fas fa-shopping-cart"></i>
-            </button>
-            <button type = "button" className = "btn">Compare</button>
-          </div>
-
-          <div className = "social-links">
-            <p>Share At: </p>
-            <a href = "#">
-              <i className = "fab fa-facebook-f"></i>
-            </a>
-            <a href = "#">
-              <i className = "fab fa-twitter"></i>
-            </a>
-            <a href = "#">
-              <i className = "fab fa-instagram"></i>
-            </a>
-            <a href = "#">
-              <i className = "fab fa-whatsapp"></i>
-            </a>
-            <a href = "#">
-              <i className = "fab fa-pinterest"></i>
-            </a>
+            </div>
           </div>
         </div>
       </div>
+      <div className='related-products-container'>
+        <h2>Related Products</h2>
+        {/* Pass the products data to the ProductList component */}
+      </div>
     </div>
-    </div>
-    <ProductList products={products} numberOfItemsToShow={5} />
-    </div>
-    
   );
 };
 

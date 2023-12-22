@@ -1,5 +1,5 @@
 .popup-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -16,9 +16,11 @@
   padding: 20px;
   margin: 20px; /* Add margin to create space around the form */
   position: relative;
+  max-width: 500px; /* Adjust the max-width as per your desired size */
+  width: 100%;
 }
 
-.popup-form button {
+.close-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -29,14 +31,7 @@
 }
 
 /* Rest of the CSS code remains the same */
-.popup-overlay {
-  max-width: 1500px; /* Increase the max-width value as per your desired size */
-  width: 900px;
-  margin: 0 auto;
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-grid-gap: 10px;
-}
+
 
 .popup-form label {
   display: flex;

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import { Box, Heading, Select, Input, Button, Grid, GridItem } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useTransition, animated } from 'react-spring';
 import './css/ProductList.css';
 
-const ProductList = ({ products }) => {
+const ProductByCate = ({ products, cateName }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [numberOfItemsToShow, setNumberOfItemsToShow] = useState(10);
   const [sortOrder, setSortOrder] = useState('asc');
   const [sortBy, setSortBy] = useState('name');
-  console.log(products);
+
   const handlePrevious = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -55,8 +56,8 @@ const ProductList = ({ products }) => {
   const sortProducts = (products) => {
     if (sortBy === 'name') {
       return products.sort((a, b) => {
-        const nameA = a.productName.toUpperCase();
-        const nameB = b.productName.toUpperCase();
+        const nameA = a.productName ? a.productName.toUpperCase() : '';
+        const nameB = b.productName ? b.productName.toUpperCase() : '';
         if (nameA < nameB) {
           return sortOrder === 'asc' ? -1 : 1;
         }
@@ -67,8 +68,8 @@ const ProductList = ({ products }) => {
       });
     } else if (sortBy === 'price') {
       return products.sort((a, b) => {
-        const priceA = parseFloat(a.productPrice);
-        const priceB = parseFloat(b.productPrice);
+        const priceA = a.productPrice ? parseFloat(a.productPrice) : 0;
+        const priceB = b.productPrice ? parseFloat(b.productPrice) : 0;
         if (priceA < priceB) {
           return sortOrder === 'asc' ? -1 : 1;
         }
@@ -84,12 +85,14 @@ const ProductList = ({ products }) => {
   const sortedProducts = sortProducts(products);
 
   return (
-    <div className="product-list-container">
-      <h1 className="product-list-title">Products</h1>
+    <Box className="product-list-container" p={4}>
+      <Heading as="h1" size="xl" mb={4}>
+        {cateName} Products
+      </Heading>
       
-      <div className="items-per-page">
+      <Box mb={4}>
         <label htmlFor="numberOfItems">Items per page: </label>
-        <input
+        <Input
           type="number"
           id="numberOfItems"
           min="1"
@@ -97,56 +100,72 @@ const ProductList = ({ products }) => {
           onChange={handleNumberOfItemsChange}
           className="items-per-page-input"
         />
-      </div>
+      </Box>
 
-      <div className="sort-options">
+      <Box mb={4}>
         <label htmlFor="sortBy">Sort by: </label>
-        <select id="sortBy" value={sortBy} onChange={handleSortByChange}>
+        <Select id="sortBy" value={sortBy} onChange={handleSortByChange}>
           <option value="name">Name</option>
           <option value="price">Price</option>
-        </select>
+        </Select>
         <label htmlFor="sortOrder">Sort order: </label>
-        <select id="sortOrder" value={sortOrder} onChange={handleSortOrderChange}>
+        <Select id="sortOrder" value={sortOrder} onChange={handleSortOrderChange}>
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
-        </select>
-      </div>
+        </Select>
+      </Box>
 
-      <ul className="product-grid">
+      <Grid templateColumns="repeat(3, 1fr)" gap={4}>
         {transitions((styles, product) => (
-          <Link to={`/detail/${product.productId}`} key={product.productId} className="product-item-link">
-            <animated.li style={styles} className="product-item">
-              <div className="product-image">
-                <img src={product.imageData} alt={product.productName} />
-              </div>
-              <div className="product-details">
-                <h3 className="product-name">{product.productName}</h3>
-                <p className="product-price">${product.productPrice}</p>
-              </div>
-            </animated.li>
-          </Link>
+          <GridItem key={product.productId}>
+            <Link to={`/detail/${product.productId}`} className="product-item-link">
+              <animated.div style={styles} className="product-item">
+                <Box className="product-image">
+                  <img src={product.imageData} alt={product.productName} />
+                </Box>
+                <Box className="product-details">
+                  <Heading as="h3" size="md" mb={2} className="product-name">
+                    {product.productName}
+                  </Heading>
+                  <p className="product-price">${product.productPrice}</p>
+                </Box>
+              </animated.div>
+            </Link>
+          </GridItem>
         ))}
-      </ul>
+      </Grid>
 
-      <div className="pagination">
-        <button className="pagination-button" onClick={handlePrevious} disabled={currentPage === 0}>
+      <Box className="pagination" mt={4}>
+        <Button
+          className="pagination-button"
+          onClick={handlePrevious}
+          disabled={currentPage === 0}
+          mr={2}
+        >
           Previous
-        </button>
+        </Button>
         {pageNumbers.map((pageNumber) => (
-          <button
-            className={`pagination-button ${pageNumber === currentPage + 1 ? 'active' : ''}`}
+          <Button
             key={pageNumber}
+            className={`pagination-button ${pageNumber === currentPage + 1 ? 'active' : ''}`}
             onClick={() => setCurrentPage(pageNumber - 1)}
+            variant="outline"
+            size="sm"
           >
             {pageNumber}
-          </button>
+          </Button>
         ))}
-        <button className="pagination-button" onClick={handleNext} disabled={currentPage === totalPages - 1}>
+        <Button
+          className="pagination-button"
+          onClick={handleNext}
+          disabled={currentPage === totalPages - 1}
+          ml={2}
+        >
           Next
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
-export default ProductList;
+export default ProductByCate;

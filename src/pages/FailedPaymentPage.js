@@ -1,18 +1,12 @@
+import '../components/css/FailedPaymentPage.css'; // Import the CSS file for the component
 import React, { useEffect, useState } from 'react';
-import ProductList from '../components/ProductList';
-import sampleData from '../data/sampleData';
-import sampleProduct from '../data/sampleProduct';
-import CateSwiper from '../components/CateSwiper';
-import axios from 'axios';
 import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
+import axios from 'axios';
 import apiConfig from '../config/apiConfig';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Layout from '../components/Layout';
-import CategoryList from '../components/CateList';
 
-const HomePage = () => {
-  const [products, setProducts] = useState(sampleProduct.products);
+
+function FailedPaymentPage() {
+  const [data,setData] = useState([]);
   const toast = useToast();
   useEffect(() => {
     fetchProducts();
@@ -20,10 +14,11 @@ const HomePage = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('https://localhost:7206/collections/products?page=1'); // Replace with your API endpoint
-      const data = await response.data;
-      //console.log(data);
-      setProducts(data); // Assuming the API response returns an array of product objects
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryString = urlParams.toString(); // Get the entire query string after the "?"
+      
+      const response = await axios.get(`https://localhost:7206/order/payment/momo-return?${queryString}`);
+      setData(response.data);
     } catch (error) {
       let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
@@ -46,18 +41,24 @@ const HomePage = () => {
     }
   };
 
-  
   return (
-    <div>
-      
-      {/* <CateSwiper/> */}
-      <br/>
-      <br/>
-      <br/>
-      <CategoryList/>
-      <ProductList products={products} numberOfItemsToShow={5} />
+    <div className="failed-payment-page"> {/* Add the CSS class to the div */}
+    {data.title && (
+      <div>
+        <h1>{data.title}</h1>
+        <p>We're sorry, but your payment was not successful.</p>
+      <p>Please try again or contact customer support for assistance.</p>
+      </div>
+      )}
+    {data.paymentMessage && (
+      <div>
+      <h1>{data.paymentMessage}</h1>
+      <p>Your payment was successful.</p>
+      <p>Thank you for your purchase.</p>
+      </div>
+    )}
     </div>
   );
-};
+}
 
-export default HomePage;
+export default FailedPaymentPage;

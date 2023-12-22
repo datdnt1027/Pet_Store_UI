@@ -1,8 +1,8 @@
-.html {
+.bbhtml {
   box-sizing: border-box;
 }
 
-.bbody {
+.bbbody {
   margin: 0;
   padding: 20% 0;
   overflow-x: hidden;
@@ -12,9 +12,6 @@
   justify-content: center;
   align-items: flex-start;
   background-color: #ff9800;
-}
-
-* {
   box-sizing: inherit;
 }
 
@@ -23,13 +20,26 @@ img {
   height: auto;
 }
 
-nav {
+.nav {
   background-color: #fff;
   padding: 0 3rem;
   border-radius: 0.625rem;
 }
+.cart-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background-color: white;
+  border: 1px solid gray;
+  padding: 10px;
+  display: none; /* Hide the cart dropdown by default */
+}
 
-ul {
+.cart-dropdown.show {
+  display: block; /* Show the cart dropdown when the 'show' class is added */
+}
+.ul {
   margin: 0;
   padding: 0;
   display: flex;
@@ -37,12 +47,13 @@ ul {
   gap: 3rem;
 }
 
-li {
+.li {
   list-style-type: none;
   position: relative;
+  align-items: center;
   padding: 0.625rem 0 0.5rem;
 }
-li ul {
+.li ul {
   flex-direction: column;
   position: absolute;
   background-color: white;
@@ -59,8 +70,8 @@ li ul {
   display: none;
 }
 
-ul li:hover > ul,
-ul li ul:hover {
+.ul li:hover > ul,
+.ul li ul:hover {
   visibility: visible;
   opacity: 1;
   display: flex;
@@ -79,9 +90,14 @@ ul li ul:hover {
 
 
 .profile {
-  height: 3rem;
-  width: auto;
+  height: 2.4rem;
+  width: 2.4rem;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  border-radius: 50%;
   cursor: pointer;
+  margin-right: 1rem;
 }
 
 .sub-item {
@@ -95,6 +111,7 @@ ul li ul:hover {
 
 .sub-item:hover {
   background-color: rgba(232, 232, 232, 0.4);
+  right: -3rem;
 }
 
 .sub-item:hover .material-icons-outlined {
@@ -114,4 +131,11 @@ ul li ul:hover {
   font-weight: 500;
   margin: 0.4rem 0;
   flex: 1;
+}
+.li:hover ul {
+  display: flex;
+  opacity: 1;
+  right: -4.5rem; /* Increase the distance to keep the drop menu open */
+  top: 3.5rem; /* Adjust the vertical position */
+  gap: 0; /* Remove unnecessary gap */
 }
