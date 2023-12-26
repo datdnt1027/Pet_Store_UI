@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;500;600;700&display=swap');
 
-* {
+.all {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	
 }
 
-a {
+.all a {
 	text-decoration: none;
 }
 
-li {
+.all li {
 	list-style: none;
 }
 
@@ -515,6 +515,11 @@ body {
 }
 #content main .table-data .todo .todo-list li:last-child {
 	margin-bottom: 0;
+}
+.information{
+	float: right;
+	position: absolute;
+  right: 0;
 }
 /* MAIN */
 /* CONTENT */

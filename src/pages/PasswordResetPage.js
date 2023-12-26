@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import endpoints from '../config/apiConfig';
 import axios from 'axios';
-import '../components/css/RegistrationForm.css';
-
+import '../components/css/PasswordReset.css';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 const PasswordResetForm = () => {
+  let navigate = useNavigate();
+  const toast = useToast();
   const [resetData, setResetData] = useState({
     token: '',
     password: '',
@@ -32,13 +35,32 @@ const PasswordResetForm = () => {
       if (response.status === 200) {
         // password reset successful
         console.log('Password reset successful');
+        alert("Đổi mật khẩu thành công");
+        navigate('/login');
       } else {
         // password reset failed
         throw new Error('Password reset failed');
       }
 
     } catch (error) {
-      console.error(error);
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
     }
   };
 

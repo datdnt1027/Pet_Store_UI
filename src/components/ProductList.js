@@ -2,63 +2,210 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTransition, animated } from 'react-spring';
 import './css/ProductList.css';
-import { Route, Router, Routes } from 'react-router-dom';
-import ProductDetailPage from '../pages/ProductDetailPage';
+import { Select } from 'antd';
+import ProductItem from './ProductItem';
 
-const ProductList = ({ products, numberOfItemsToShow }) => {
-  const [startIndex, setStartIndex] = useState(0);
+const ProductList = ({ products, cateName }) => {
+    const [currentPage, setCurrentPage] = useState(0);
+    const [numberOfItemsToShow, setNumberOfItemsToShow] = useState(8);
+    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortBy, setSortBy] = useState('name');
+    console.log(products);
+    const handlePrevious = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
-  const handlePrevious = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - numberOfItemsToShow);
-    }
-  };
+    const handleNext = () => {
+        const totalPages = Math.ceil(products.length / numberOfItemsToShow);
+        if (currentPage < totalPages - 1) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
-  const handleNext = () => {
-    if (startIndex + numberOfItemsToShow < products.length) {
-      setStartIndex(startIndex + numberOfItemsToShow);
-    }
-  };
+    const startIndex = currentPage * numberOfItemsToShow;
+    const endIndex = startIndex + numberOfItemsToShow;
+    const visibleProducts = products.slice(startIndex, endIndex);
 
-  const visibleProducts = products.slice(startIndex, startIndex + numberOfItemsToShow);
+    const transitions = useTransition(visibleProducts, {
+        from: { opacity: 0, transform: 'translateY(50px)' },
+        enter: { opacity: 1, transform: 'translateY(0px)' },
+        config: { tension: 300, friction: 20 },
+    });
 
-  const transitions = useTransition(visibleProducts, {
-    from: { opacity: 0, transform: 'translateX(100%)' },
-    enter: { opacity: 1, transform: 'translateX(0%)' },
-    
-  });
+    const totalPages = Math.ceil(products.length / numberOfItemsToShow);
 
-  return (
-    <div className="product-list-container">
-      <h1 className="product-list-title">Pet Products</h1>
-      <ul className="product-grid">
-        {transitions((styles, product) => (
-          <Link to={`/detail/${product.pet_product_id}`} key={product.pet_product_id} className="product-item-link">
-            <animated.li style={styles} className="product-item">
-              <div className="product-image">
-                <img src={product.image} alt={product.product_name} />
-              </div>
-              <div className="product-details">
-                <h3 className="product-name">{product.product_name}</h3>
-                <p className="product-description">{product.product_detail}</p>
-                <p className="product-price">Price: ${product.retail_price}</p>
-                <p className="product-quantity">Quantity: {product.quantity_on_hand}</p>
-              </div>
-            </animated.li>
-          </Link>
-        ))}
-      </ul>
-      <div className="pagination-buttons">
-        <button onClick={handlePrevious} disabled={startIndex === 0}>
-          Previous
-        </button>
-        <button onClick={handleNext} disabled={startIndex + numberOfItemsToShow >= products.length}>
-          Next
-        </button>
-      </div>
-      
-    </div>
-  );
+    const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+    const handleNumberOfItemsChange = (value) => {
+        setNumberOfItemsToShow(value);
+        setCurrentPage(0);
+    };
+
+    const handleSortByChange = (value) => {
+        setSortBy(value);
+    };
+
+    const handleSortOrderChange = (value) => {
+        setSortOrder(value);
+    };
+
+    const sortProducts = (products) => {
+        if (sortBy === 'name') {
+            return products.sort((a, b) => {
+                const nameA = a.productName.toUpperCase();
+                const nameB = b.productName.toUpperCase();
+                if (nameA < nameB) {
+                    return sortOrder === 'asc' ? -1 : 1;
+                }
+                if (nameA > nameB) {
+                    return sortOrder === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        } else if (sortBy === 'price') {
+            return products.sort((a, b) => {
+                const priceA = parseFloat(a.productPrice);
+                const priceB = parseFloat(b.productPrice);
+                if (priceA < priceB) {
+                    return sortOrder === 'asc' ? -1 : 1;
+                }
+                if (priceA > priceB) {
+                    return sortOrder === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return products;
+    };
+
+    const sortedProducts = sortProducts(products);
+
+    return (
+        <div className="product-list-container mt-[74px]">
+            <h1 className="product-list-title">
+                {cateName ? cateName : "Products"}
+            </h1>
+
+            <div className='flex items-center justify-between px-[10px] pt-[10px] pb-[20px]'>
+                <div className='flex items-center'>
+                    <label htmlFor="numberOfItems" className='text-[16px] text-[#333] font-[500] mr-[8px]'>
+                        Items per page:
+                    </label>
+
+                    <Select
+                        className='w-[120px]'
+                        defaultValue={numberOfItemsToShow}
+                        onChange={handleNumberOfItemsChange}
+                        options={[
+                            {
+                                value: 8,
+                                label: '8 products'
+                            },
+                            {
+                                value: 16,
+                                label: '16 products'
+                            },
+                            {
+                                value: 24,
+                                label: '24 products'
+                            }
+                        ]}
+                    />
+                </div>
+
+                <div className="sort-options">
+                    <label htmlFor="sortBy" className='text-[16px] text-[#333] font-[500] mr-[8px]'>
+                        Sort by:
+                    </label>
+                    <Select
+                        className='w-[100px]'
+                        defaultValue={sortBy}
+                        onChange={handleSortByChange}
+                        options={[
+                            {
+                                value: "name",
+                                label: 'Name'
+                            },
+                            {
+                                value: "price",
+                                label: 'Price'
+                            }
+                        ]}
+                    />
+                    <label htmlFor="sortOrder" className='ml-[20px] text-[16px] text-[#333] font-[500] mr-[8px]'>
+                        Sort order:
+                    </label>
+                    <Select
+                        className='w-[120px]'
+                        defaultValue={sortOrder}
+                        onChange={handleSortOrderChange}
+                        options={[
+                            {
+                                value: "asc",
+                                label: 'Ascending'
+                            },
+                            {
+                                value: "desc",
+                                label: 'Descending'
+                            }
+                        ]}
+                    />
+                </div>
+            </div>
+
+            <ul className="grid grid-cols-4 gap-[20px]">
+                {transitions((styles, product) => (
+                    <animated.li style={styles}>
+                        <ProductItem product={product} isNew={false} />
+                    </animated.li>
+                ))}
+            </ul>
+
+            <div className="flex items-center py-[20px] justify-center">
+                <button
+                    style={{
+                        backgroundColor: "#fff",
+                        border: "1px solid #fdd444",
+                        borderRadius: "6px",
+                        color: "#fdd444"
+                    }}
+                    className="pagination-button font-[500]"
+                    onClick={handlePrevious}
+                    disabled={currentPage === 0}>
+                    Previous
+                </button>
+                {pageNumbers.map((pageNumber) => (
+                    <button
+                        style={{
+                            backgroundColor: `${pageNumber === currentPage + 1 ? '#fdd444' : '#fff'}`,
+                            border: "1px solid #fdd444",
+                            borderRadius: "6px",
+                            color: `${pageNumber === currentPage + 1 ? '#fff' : '#fdd444'}`
+                        }}
+                        className={`pagination-button font-[500] ${pageNumber === currentPage + 1 ? 'active' : ''}`}
+                        key={pageNumber}
+                        onClick={() => setCurrentPage(pageNumber - 1)}
+                    >
+                        {pageNumber}
+                    </button>
+                ))}
+                <button
+                    style={{
+                        backgroundColor: "#fff",
+                        border: "1px solid #fdd444",
+                        borderRadius: "6px",
+                        color: "#fdd444"
+                    }}
+                    className="pagination-button font-[500]"
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages - 1}>
+                    Next
+                </button>
+            </div>
+        </div>
+    );
 };
 
 export default ProductList;

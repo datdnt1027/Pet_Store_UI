@@ -1,109 +1,188 @@
 import React, { useState } from 'react';
+import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
+import apiConfig from '../config/apiConfig';
+import axios from 'axios';
 
 const AccountManagement = () => {
   const [searchInput, setSearchInput] = useState('');
   const [customerInfo, setCustomerInfo] = useState([]);
-
+  const [error, setError] = useState('');
+  const [isLocked, setIsLocked] = useState(false); 
+  const toast = useToast();
   const handleSearchInputChange = (event) => {
     setSearchInput(event.target.value);
   };
 
-  const handleSearch = () => {
-    // Perform the search (e.g., make an API call to fetch customer information)
-    // Replace the following code with your actual implementation
-    // You can use any method to fetch customer information (e.g., Axios, fetch)
+  const handleLock = async () => {
+    setIsLocked(prev => !prev); // Toggle locked state
+    
+    const payload = {
+      customerId: customerInfo.customerId,
+      status: isLocked ? "0" : "1"
+    };
 
-    // Example customer information
-    const customerData = [
-      {
-        userId: '123',
-        email: 'example1@example.com',
-        create_date: '2021-01-01',
-        update_date: '2021-02-01',
-        birth: '1990-01-01',
-        contact: '1234567890',
-        address: '123 Street, City',
-        avatar: 'https://example.com/avatar1.png',
-        firstName: 'John',
-        lastName: 'Doe',
-      },
-      {
-        userId: '456',
-        email: 'example2@example.com',
-        create_date: '2021-03-01',
-        update_date: '2021-04-01',
-        birth: '1995-01-01',
-        contact: '9876543210',
-        address: '456 Street, City',
-        avatar: 'https://example.com/avatar2.png',
-        firstName: 'Jane',
-        lastName: 'Smith',
-      },
-      // Add more customer data as needed
-    ];
+    console.log(payload);
 
-    // Filter the customer data based on the search input
-    const filteredData = customerData.filter(
-      (customer) =>
-        customer.userId === searchInput ||
-        customer.email === searchInput ||
-        customer.contact === searchInput ||
-        customer.address === searchInput ||
-        customer.firstName === searchInput ||
-        customer.lastName === searchInput
-    );
+    try {
+      const authTokenString = sessionStorage.getItem('admin');
+      const authToken = JSON.parse(authTokenString).token;
 
-    // Update the customer information state
-    setCustomerInfo(filteredData);
+      const response = await axios.patch(apiConfig.LOCK_USER, payload, {
+        headers: {
+          Authorization: `Bearer ${authToken}`  
+        }
+      });
+
+      console.log('User locked/unlocked successfully');
+      
+      // Update the customer information state with the updated lock status
+      setCustomerInfo(prevCustomerInfo => ({
+        ...prevCustomerInfo,
+        status: isLocked ? "False" : "True"
+      }));
+    } catch (error) {
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+          if(error.response.status === 403) {
+            message = `Xin lỗi tài khoản này không có quyền.`; 
+          }
+          if(error.response.status === 401) {
+            message = `Vui lòng đăng nhập lại.`; 
+          }
+          if(error.response.status === 409) {
+            message = `Thông tin bị trùng.`; 
+          }
+          toast({
+            title: 'Error',
+            description: message,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+    }
+  };
+
+  const handleEmailSearch = async () => {
+    try {
+      const authTokenString = sessionStorage.getItem('admin');
+      const authToken = JSON.parse(authTokenString).token;
+
+      const response = await axios.post(apiConfig.SEARCH_USER, {
+        email: searchInput,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setCustomerInfo(response.data);
+    } catch (error) {
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+            if(error.response.status === 403) {
+              message = `Xin lỗi tài khoản này không có quyền.`; 
+            }
+            if(error.response.status === 401) {
+              message = `Vui lòng đăng nhập lại.`; 
+            }
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+    }
+  };
+
+  const handlePhoneSearch = async () => {
+    try {
+      const authTokenString = sessionStorage.getItem('admin');
+      const authToken = JSON.parse(authTokenString).token;
+
+      const response = await axios.post(apiConfig.SEARCH_USER, {
+        phoneNumber: searchInput,
+      }, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      setCustomerInfo(response.data);
+    } catch (error) {
+      setError('T');
+      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+            if(error.response.status === 403) {
+              message = `Xin lỗi tài khoản này không có quyền.`; 
+            }
+            if(error.response.status === 401) {
+              message = `Vui lòng đăng nhập lại.`; 
+            }
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+    }
   };
 
   return (
-    <div>
-      <input
+    <Box p={4}>
+      <Input
         type="text"
         value={searchInput}
         onChange={handleSearchInputChange}
-        placeholder="Enter user name, email, contact, address, first name, or last name"
+        placeholder="Enter email, contact."
+        mb={4}
       />
-      <button onClick={handleSearch}>Search</button>
-
-      {customerInfo.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>userId</th>
-              <th>email</th>
-              <th>create_date</th>
-              <th>update_date</th>
-              <th>birth</th>
-              <th>contact</th>
-              <th>address</th>
-              <th>avatar</th>
-              <th>firstName</th>
-              <th>lastName</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customerInfo.map((customer) => (
-              <tr key={customer.userId}>
-                <td>{customer.userId}</td>
-                <td>{customer.email}</td>
-                <td>{customer.create_date}</td>
-                <td>{customer.update_date}</td>
-                <td>{customer.birth}</td>
-                <td>{customer.contact}</td>
-                <td>{customer.address}</td>
-                <td>
-                  <img src={customer.avatar} alt="Avatar" />
-                </td>
-                <td>{customer.firstName}</td>
-                <td>{customer.lastName}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <HStack spacing={4} mb={4}>
+        <Button onClick={handleEmailSearch} colorScheme="blue">Search by Email</Button>
+        <Button onClick={handlePhoneSearch} colorScheme="blue">Search by Phone</Button>
+      </HStack>
+  
+      {customerInfo.length !== 0 && (
+        <Table variant="striped" colorScheme="gray">
+          <Thead>
+            <Tr>
+              <Th>Avatar</Th>
+              <Th>Address</Th>
+              <Th>Last Name</Th>
+              <Th>First Name</Th>
+              <Th>Phone Number</Th>
+              <Th>Sex</Th>
+              <Th>Status</Th>
+              <Th>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr key={customerInfo.email}>
+              <Td>
+                <Image src={customerInfo.avatar} boxSize={10} borderRadius="full" />
+             </Td>
+              <Td>{customerInfo.address}</Td>
+              <Td>{customerInfo.lastName}</Td>
+              <Td>{customerInfo.firstName}</Td>
+              <Td>{customerInfo.phoneNumber}</Td>
+              <Td>{customerInfo.sex}</Td>
+              <Td>{customerInfo.status}</Td>
+              <Td>
+                <Button
+                  onClick={handleLock}
+                  colorScheme={customerInfo.status === "False" ? 'green' : 'red'}
+                >
+                  {customerInfo.status === "False" ? "Unlock" : "Lock"}
+                </Button>
+              </Td>
+            </Tr>
+          </Tbody>
+        </Table>
       )}
-    </div>
+    </Box>
   );
 };
 
