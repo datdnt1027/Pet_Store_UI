@@ -112,41 +112,58 @@ const ProductList = ({ products }) => {
         </select>
       </div>
 
-      <ul className="product-grid">
-        {transitions((styles, product) => (
-          <Link to={`/detail/${product.productId}`} key={product.productId} className="product-item-link">
-            <animated.li style={styles} className="product-item">
-              <div className="product-image">
-                <img src={product.imageData} alt={product.productName} />
-              </div>
-              <div className="product-details">
-                <h3 className="product-name">{product.productName}</h3>
-                <p className="product-price">${product.productPrice}</p>
-              </div>
-            </animated.li>
-          </Link>
-        ))}
-      </ul>
-
-      <div className="pagination">
-        <button className="pagination-button" onClick={handlePrevious} disabled={currentPage === 0}>
-          Previous
-        </button>
-        {pageNumbers.map((pageNumber) => (
-          <button
-            className={`pagination-button ${pageNumber === currentPage + 1 ? 'active' : ''}`}
-            key={pageNumber}
-            onClick={() => setCurrentPage(pageNumber - 1)}
-          >
-            {pageNumber}
-          </button>
-        ))}
-        <button className="pagination-button" onClick={handleNext} disabled={currentPage === totalPages - 1}>
-          Next
-        </button>
-      </div>
-    </div>
-  );
+            <ul className="grid grid-cols-4 gap-[20px]">
+                {transitions((styles, product) => (
+                    <animated.li style={styles}>
+                        <ProductItem product={product} isNew={false} />
+                    </animated.li>
+                ))}
+            </ul>
+{ products.length > 0 ? (
+            <div className="flex items-center py-[20px] justify-center">
+                <button
+                    style={{
+                        backgroundColor: "#fff",
+                        border: "1px solid #fdd444",
+                        borderRadius: "6px",
+                        color: "#fdd444"
+                    }}
+                    className="pagination-button font-[500]"
+                    onClick={handlePrevious}
+                    disabled={currentPage === 0}>
+                    Previous
+                </button>
+                {pageNumbers.map((pageNumber) => (
+                    <button
+                        style={{
+                            backgroundColor: `${pageNumber === currentPage + 1 ? '#fdd444' : '#fff'}`,
+                            border: "1px solid #fdd444",
+                            borderRadius: "6px",
+                            color: `${pageNumber === currentPage + 1 ? '#fff' : '#fdd444'}`
+                        }}
+                        className={`pagination-button font-[500] ${pageNumber === currentPage + 1 ? 'active' : ''}`}
+                        key={pageNumber}
+                        onClick={() => setCurrentPage(pageNumber - 1)}
+                    >
+                        {pageNumber}
+                    </button>
+                ))}
+                <button
+                    style={{
+                        backgroundColor: "#fff",
+                        border: "1px solid #fdd444",
+                        borderRadius: "6px",
+                        color: "#fdd444"
+                    }}
+                    className="pagination-button font-[500]"
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages - 1}>
+                    Next
+                </button>
+            </div>) : null
+            }
+        </div>
+    );
 };
 
 export default ProductList;

@@ -10,6 +10,7 @@ import apiConfig from '../config/apiConfig';import {useToast,Center, Input, Butt
 import '../components/css/ProductList.css';
 
 const ItemListPage = () => {
+  const [cate, setCate] =  useState([]);
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { categoryId } = useParams();
@@ -27,6 +28,7 @@ const ItemListPage = () => {
       const data = response.data;
       //console.log(data);
       setItems(data.products);
+      setCate(data.categoryName)
       console.log(data); // Assuming the API response returns an array of product objects
     } catch (error) {
       let message = `Error ${error.response.status}: ${error.response.data.message}`;
@@ -52,7 +54,7 @@ const ItemListPage = () => {
 
   return (
     <div> {/* Add a container class */}
-      <ProductsByCate products={items} cateName={sampleProduct.categoryName} numberOfItemsToShow={5} />
+      <ProductList products={items} cateName={cate} />
     </div>
   );
 };

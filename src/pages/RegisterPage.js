@@ -38,7 +38,13 @@ const RegistrationForm = () => {
           if(response.status === 200) {
             // registration successful
             console.log('Registration successful');
-            alert("Đằng ký thành công.");
+            toast({
+                title: 'Success',
+                description: 'Đằng ký thành công xin hãy vào mail xác nhận tài khoản.',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+              });
             navigate('/login');
 
           } else {
@@ -127,7 +133,7 @@ const RegistrationForm = () => {
                 <div className="input-container">
                     
                     <input
-                        type="confirmPassword"
+                        type="password"
                         id="confirmPassword"
                         name="confirmPassword"
                         value={customer.confirmPassword}

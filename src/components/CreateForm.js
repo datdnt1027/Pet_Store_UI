@@ -94,8 +94,16 @@ const CreateForm = ({ onClose, fetchProducts  }) => {
     
         // Handle the response
         console.log(response.data);
+        toast({
+          title: 'Success',
+          description: 'Tạo sản phẩm thành công',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        onclose();
         fetchProducts();
-    
+        
       } catch (error) {
         if(error.response) {
         // Handle any network or other errors

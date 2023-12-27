@@ -24,7 +24,7 @@ const ProductManagementPage = () => {
   const [selectedProductForEdit, setSelectedProductForEdit] = useState(null);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
 
-  const toggleForm = () => {
+  const toggleForm  = () => {
     setIsFormOpen(!isFormOpen);
     fetchProducts();
   };
@@ -233,7 +233,7 @@ const ProductManagementPage = () => {
       </div>
       <div>
         <button id="add-btn" className="filter-button" onClick={toggleForm} fetchProducts= {fetchProducts}>Create</button>
-        {isFormOpen && <CreateForm onClose={toggleForm} />}
+        {isFormOpen && <CreateForm  onClose={toggleForm} />}
       </div>
       <div className="items-per-page">
         <span>Items Per Page:</span>

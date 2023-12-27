@@ -61,71 +61,85 @@ const ProductDetailPage = () => {
         quantity: parsedQuantity
       }, { headers });
 
-      toast({
-        title: 'Cart Item',
-        description: 'You have added.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+            toast({
+                title: 'Cart Item',
+                description: 'You have added.',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (error) {
+            if(error)
+            {
+            let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
-          if(error.response.status === 403) {
-            message = `Xin lỗi tài khoản này không có quyền.`; 
-          }
-          if(error.response.status === 401) {
-            message = `Vui lòng đăng nhập lại.`; 
-          }
-          if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
-          }
-          toast({
-            title: 'Error',
-            description: message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-    }
-  };
-
-
-  useEffect(() => {
-    // Fetch product data from API based on the id
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.post(`${apiConfig.DETAIL}`, {
-          productId: id
-        });
-        console.log("Gett" + response.data);
-        ////
-        setProduct(response.data);
-        console.log("fetttt");
-      } catch (error) {
-        let message = `Error ${error.response.status}: ${error.response.data.message}`;
-
-          if(error.response.status === 403) {
-            message = `Xin lỗi tài khoản này không có quyền.`; 
-          }
-          if(error.response.status === 401) {
-            message = `Vui lòng đăng nhập lại.`; 
-          }
-          if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
-          }
-          toast({
-            title: 'Error',
-            description: message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-      }
+            if (error.response.status === 403) {
+                message = `Xin lỗi tài khoản này không có quyền.`;
+            }
+            if (error.response.status === 401) {
+                message = `Vui lòng đăng nhập lại.`;
+            }
+            if (error.response.status === 409) {
+                message = `Thông tin bị trùng.`;
+            }
+            toast({
+                title: 'Error',
+                description: message,
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+        }
+        }
     };
 
-    fetchProduct();
-  }, [id]);
+
+    useEffect(() => {
+        // Fetch product data from API based on the id
+        const fetchProduct = async () => {
+            try {
+                const response = await axios.post(`${apiConfig.DETAIL}`, {
+                    productId: id
+                });
+                console.log("Gett" + response.data);
+                ////
+                setProduct(response.data);
+                console.log("fetttt");
+            } catch (error) {
+                if(error)
+                {
+                let message = `Error ${error.response.status}: ${error.response.data.message}`;
+
+                if (error.response.status === 403) {
+                    message = `Xin lỗi tài khoản này không có quyền.`;
+                }
+                if (error.response.status === 401) {
+                    message = `Vui lòng đăng nhập lại.`;
+                }
+                if (error.response.status === 409) {
+                    message = `Thông tin bị trùng.`;
+                }
+                toast({
+                    title: 'Error',
+                    description: message,
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
+            }
+        };
+
+        fetchProduct();
+    }, [id]);
+
+    React.useEffect(() => {
+
+        if (product) {
+
+            //fetchRelatedProduct()
+        }
+    }, [product])
 
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
@@ -208,16 +222,58 @@ const ProductDetailPage = () => {
                 ) : null
               }
 
+                        </div>
+                    </div>
+                </div>
+            </div> */}
+            <div className='p-[20px] shadow-lg rounded-[12px] flex items-center'>
+                <img className='object-contain w-[600px] h-[400px]' src={product.imageData} alt="product Image" />
+                <div className="ml-[40px]">
+                    <h2 className="product-title">{product.productName}</h2>
+                    <p className="product-price">{numeral(product.productPrice).format("0,0")} đ</p>
+                    <div className="product-detail">
+                        <h2>Product Details</h2>
+                        <p className="text-[24px] text-[#333] font-[500]">{product.productDetail}</p>
+                    </div>
+
+                    {
+                        authToken ? (
+                            <div className='purchase-info'>
+                                <div className="product-quantity">
+                                    <label htmlFor="quantity" className='mr-[10px]'>Quantity:</label>
+                                    <input
+                                        className="text-[600] text-[#333]"
+                                        type="number"
+                                        id="quantity"
+                                        min="1"
+                                        max={100}
+                                        value={quantity}
+                                        onChange={handleQuantityChange}
+                                    />
+                                </div>
+                                <button className="add-to-cart rounded-[12px]" onClick={addToCart}>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        ) : null
+                    }
+
+                </div>
             </div>
-          </div>
+            <div className='p-[20px] mt-[20px] rounded-[12px] shadow-lg'>
+                <h2 className='text-[24px] mb-[10px] text-[#342E37] font-bold'>Related Products</h2>
+                <div className='grid grid-cols-4 gap-[20px]'>
+                    {
+                        products.map((product) => (
+                            <div key={product.productId}>
+                                <ProductItem isNew={false} product={product} />
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
         </div>
-      </div>
-      <div className='related-products-container'>
-        <h2>Related Products</h2>
-        {/* Pass the products data to the ProductList component */}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ProductDetailPage;

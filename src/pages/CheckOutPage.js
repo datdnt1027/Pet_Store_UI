@@ -35,25 +35,32 @@ function Checkout() {
         console.log("Sanr phaamr"+products);
         setIsLoading(false);
       } catch (error) {
+        if(error)
+        {
         let message = `Error ${error.response.status}: ${error.response.data.message}`;
 
           if(error.response.status === 403) {
             message = `Xin lỗi tài khoản này không có quyền.`; 
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
           }
           if(error.response.status === 401) {
             message = `Vui lòng đăng nhập lại.`; 
+            toast({
+              title: 'Error',
+              description: message,
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
           }
-          if(error.response.status === 409) {
-            message = `Thông tin không tồn tại.`; 
-          }
-          toast({
-            title: 'Error',
-            description: message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
         setIsLoading(false);
+      }
       }
     };
 
