@@ -7,6 +7,7 @@ import axios from 'axios';
 import UserNavbar from '../components/UserNavBar'
 import { Input, Button, Box, Text, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import apiConfig from '../config/apiConfig';
+import { LoginOutlined } from '@ant-design/icons';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,7 +47,7 @@ function Header() {
             .then(response => {
 
                 const searchResults = response.data;
-                console.log(searchResults);
+
                 setSearchResults(searchResults);
                 setIsSearchPerformed(true);
             })
@@ -61,63 +62,63 @@ function Header() {
         setShouldRenderUserNavbar(false);
     };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    setShouldRenderUserNavbar(!!storedUser);
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        setShouldRenderUserNavbar(!!storedUser);
 
-    window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('storage', handleStorageChange);
 
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (boxRef.current && !boxRef.current.contains(event.target)) {
+                setIsSearchPerformed(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleResize = () => {
+        if (window.innerWidth < 420) {
+            setSiteBrandText('MAS');
+        } else {
+            setSiteBrandText('PETCAL');
+        }
     };
-  }, []);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (boxRef.current && !boxRef.current.contains(event.target)) {
-        setIsSearchPerformed(false);
-      }
-    }
+    useEffect(() => {
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    useEffect(() => {
+        window.addEventListener('scroll', () => {
 
-  const handleResize = () => {
-    if (window.innerWidth < 420) {
-      setSiteBrandText('MAS');
-    } else {
-      setSiteBrandText('PETCAL');
-    }
-  };
+            window.scrollY > 0 ? setIsFixed(true) : setIsFixed(false)
+        })
+    }, [])
 
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+    return (
+        <div className={`fixed border-b top-0 left-0 right-0 z-50 ${isFixed && "border-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"}`}>
 
-  return (
-    <div>
-      <div className="p-3 bg-dark text-white">
-        <div className="flexMain">
-          <div className="flex1"></div>
-          <div className="flex2 text-center">
-          </div>
-          <div className="flex1"></div>
-        </div>
-      </div>
-      <div id="menuHolder" className={isMenuOpen ? 'drawMenu' : ''}>
-        <div role="navigation" className="sticky-top border-bottom border-top" id="mainNavigation">
-          <div className="flexMain">
-            <div className="flex2">
-              <button className="whiteLink siteLink" style={{ borderRight: '1px solid #eaeaea' }} onClick={handleMenuToggle}>
-                <i className="fas fa-bars me-2"></i> MENU
-              </button>
-            </div>
+            <div id="menuHolder" className={isMenuOpen ? 'drawMenu' : ''}>
+                <div role="navigation" className="sticky-top border-bottom border-top" id="mainNavigation">
+                    <div className="flexMain">
+                        <div className="flex2">
+                            <button className="whiteLink siteLink" style={{ borderRight: '1px solid #eaeaea' }} onClick={handleMenuToggle}>
+                                <p className="font-[600]">MENU</p>
+                            </button>
+                        </div>
 
                         <div className="flex3 text-center" id="siteBrand">
                             <Link to='/'>
@@ -194,49 +195,62 @@ function Header() {
                         </div>
                         {shouldRenderUserNavbar ? (
 
-              <UserNavbar onLogout={handleLogout} />
-            ) : (
+                            <UserNavbar onLogout={handleLogout} />
+                        ) : (
 
-              <div className="flex2 text-end d-none d-md-block">
-                <a href="/signup"><button className="whiteLink siteLink">REGISTER</button></a>
-                <a href="/login"><button className="blackLink siteLink">Login</button></a>
-              </div>
-            )}
-          </div>
-        </div>
+                            <div className="flex-[2] h-full flex items-center">
+                                <Link to="/signup">
+                                    <button className="flex items-center">
+                                        <p className='font-[600] ml-[6px]'>
+                                            REGISTER
+                                        </p>
+                                    </button>
+                                </Link>
+                                <Link to="/login">
+                                    <button className="flex items-center ml-[10px] text-white bg-[#232323] h-[74px] px-[20px]">
+                                        <LoginOutlined className='font-[600]' />
+                                        <p className='font-[600] ml-[6px]'>
+                                            Login
+                                        </p>
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </div>
 
-        <div id="menuDrawer">
-          <div className="p-4 border-bottom">
-            <div className="row">
-              <div className="col">
-                <select className="noStyle">
-                  <option value="english">English</option>
-                  <option value="spanish">Spanish</option>
-                  <option value="french">French</option>
-                  <option value="italian">Italian</option>
-                  <option value="hebrew">Hebrew</option>
-                </select>
-              </div>
-              <div className="col text-end">
-                <i className="fas fa-times" role="btn" onClick={handleMenuToggle}></i>
-              </div>
+                <div id="menuDrawer">
+                    <div className="p-4 border-bottom">
+                        <div className="row">
+                            <div className="col">
+                                <select className="noStyle">
+                                    <option value="english">English</option>
+                                    <option value="spanish">Spanish</option>
+                                    <option value="french">French</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="hebrew">Hebrew</option>
+                                </select>
+                            </div>
+                            <div className="col text-end">
+                                <i className="fas fa-times" role="btn" onClick={handleMenuToggle}></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <Link to="/" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fas fa-home me-3"></i>Home</Link>
+                        <Link to="/products" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fab fa-product-hunt me-3"></i>Products</Link>
+                        <Link to="/" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fas fa-search me-3"></i>Explore</Link>
+                        <Link to="/" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fas fa-wrench me-3"></i>Services</Link>
+                        <Link to="/" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fas fa-dollar-sign me-3"></i>Pricing</Link>
+                        <Link to="/" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fas fa-file-alt me-3"></i>Blog</Link>
+                        <Link to="/" onClick={() => setIsMenuOpen(false)} className="nav-menu-item"><i className="fas fa-building me-3"></i>About Us</Link>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div>
-            <a href="/" className="nav-menu-item"><i className="fas fa-home me-3"></i>Home</a>
-            <a href="#" className="nav-menu-item"><i className="fab fa-product-hunt me-3"></i>Products</a>
-            <a href="#" className="nav-menu-item"><i className="fas fa-search me-3"></i>Explore</a>
-            <a href="#" className="nav-menu-item"><i className="fas fa-wrench me-3"></i>Services</a>
-            <a href="#" className="nav-menu-item"><i className="fas fa-dollar-sign me-3"></i>Pricing</a>
-            <a href="#" className="nav-menu-item"><i className="fas fa-file-alt me-3"></i>Blog</a>
-            <a href="#" className="nav-menu-item"><i className="fas fa-building me-3"></i>About Us</a>
-          </div>
+
         </div>
-      </div>
 
-    </div>
-
-  );
+    );
 }
 
 export default Header;

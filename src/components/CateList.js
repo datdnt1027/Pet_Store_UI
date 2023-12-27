@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import apiConfig from '../config/apiConfig';
 import { Link } from 'react-router-dom';
-import {useToast,Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
+import { useToast, Center, Input, Button, Table, Thead, Tbody, Tr, Th, Td, Image, Box, HStack } from "@chakra-ui/react";
 import '../components/css/CateList.css'
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -17,35 +17,35 @@ const CategoryList = () => {
       console.log('Fetched');
       setCategories(response.data);
     } catch (error) {
-      let message = `Error ${error.response.status}: ${error.response.data.message}`;
+      let message = `Error ${error?.response?.status}: ${error.response.data.message}`;
 
-          if(error.response.status === 403) {
-            message = `Xin lỗi tài khoản này không có quyền.`; 
-          }
-          if(error.response.status === 401) {
-            message = `Vui lòng đăng nhập lại.`; 
-          }
-          if(error.response.status === 409) {
-            message = `Thông tin bị trùng.`; 
-          }
-          toast({
-            title: 'Error',
-            description: message,
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
+      if (error.response.status === 403) {
+        message = `Xin lỗi tài khoản này không có quyền.`;
+      }
+      if (error.response.status === 401) {
+        message = `Vui lòng đăng nhập lại.`;
+      }
+      if (error.response.status === 409) {
+        message = `Thông tin bị trùng.`;
+      }
+      toast({
+        title: 'Error',
+        description: message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    
-    <div className="category-page">
+
+    <div className="category-page mt-[10px]">
       <h1 className="category-title">Category</h1>
       <div className="category-wrapper">
-      {categories.map(category => (
-        <CategoryItem key={category.categoryId} category={category} />
-      ))}
+        {categories.map(category => (
+          <CategoryItem key={category.categoryId} category={category} />
+        ))}
       </div>
     </div>
   );
@@ -56,7 +56,9 @@ function CategoryItem({ category }) {
 
   return (
     <Link to={`/category/${categoryId}`} className="category">
-      <h3>{categoryName}</h3>
+      <h3 className='font-[600] text-white'>
+        {categoryName}
+      </h3>
     </Link>
   );
 }

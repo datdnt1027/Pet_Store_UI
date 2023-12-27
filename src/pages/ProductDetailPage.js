@@ -6,60 +6,75 @@ import apiConfig from '../config/apiConfig';
 import sampleDetail from '../data/sampleDetail';
 import ProductList from '../components/ProductList';
 import {
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Heading,
-  Text,
-  useToast,
+    Box,
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    Heading,
+    Text,
+    useToast,
 } from '@chakra-ui/react';
+import { Empty } from 'antd';
+import numeral from 'numeral';
+import ProductItem from '../components/ProductItem';
+import sampleProduct from '../data/sampleProduct';
 const ProductDetailPage = () => {
-  const { id } = useParams();
-  const toast = useToast();
-  const [product, setProduct] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [imgId, setImgId] = useState(1);
-  const [cartItems, setCartItems] = useState([]);
-  const [quantity, setQuantity] = useState(1);
-  const [authToken, setAuthToken] = useState(null);
+    const { id } = useParams();
+    const toast = useToast();
+    const [product, setProduct] = useState(null);
+    const [imgId, setImgId] = useState(1);
+    const [cartItems, setCartItems] = useState([]);
+    const [quantity, setQuantity] = useState(1);
+    const [authToken, setAuthToken] = useState(null);
+    const [products, setProducts] = React.useState([])
 
-  const data = {
-    productId: id,
-    // Include other data you want to send for the product
-    // For example:
-    // productName: 'Product Name',
-    // productPrice: 9.99,
-  };
-  const handleQuantityChange = (event) => {
-    setQuantity(event.target.value);
-  };
-  useEffect(() => {
-    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
-
-    if (authTokenString) {
-      const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
-      setAuthToken(authToken);
-    } else {
-      setAuthToken(null);
-    }
-  }, []);
-  const addToCart = async () => {
-    const parsedQuantity = parseInt(quantity, 10); // Parse the quantity as an integer
-    const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
-    const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
-    console.log(authToken);
-    // Set the headers with the authentication token
-    const headers = {
-      Authorization: `Bearer ${authToken}`
+    const data = {
+        productId: id,
+        // Include other data you want to send for the product
+        // For example:
+        // productName: 'Product Name',
+        // productPrice: 9.99,
     };
-    try {
-      // Call the API to update the cart on the server
-      await axios.post(apiConfig.ADD_TO_CART, {
-        productId: product.productId,
-        quantity: parsedQuantity
-      }, { headers });
+
+    const fetchRelatedProduct = async () => {
+        const response = await axios.post(`${apiConfig.RELATED_PRODUCT}`, {
+            categoryId: product.categoryId
+        })
+
+        if (response.data) {
+            setProducts(response.data.products)
+        }
+    }
+
+    const handleQuantityChange = (event) => {
+        setQuantity(event.target.value);
+    };
+    useEffect(() => {
+        const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+
+        if (authTokenString) {
+            const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
+            setAuthToken(authToken);
+        } else {
+            setAuthToken(null);
+        }
+    }, []);
+    const addToCart = async () => {
+        const parsedQuantity = parseInt(quantity, 10); // Parse the quantity as an integer
+        const authTokenString = localStorage.getItem('user'); // Retrieve the token from localStorage
+        const authToken = JSON.parse(authTokenString).token; // Parse the JSON and access the 'token' property
+        console.log(authToken);
+        // Set the headers with the authentication token
+        const headers = {
+            Authorization: `Bearer ${authToken}`
+        };
+        try {
+            // Call the API to update the cart on the server
+            await axios.post(apiConfig.ADD_TO_CART, {
+                productId: product.productId,
+                quantity: parsedQuantity
+            }, { headers });
 
             toast({
                 title: 'Cart Item',
@@ -145,92 +160,97 @@ const ProductDetailPage = () => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  useEffect(() => {
-    const savedCartItems = localStorage.getItem('cartItems');
-    if (savedCartItems) {
-      setCartItems(JSON.parse(savedCartItems));
+    useEffect(() => {
+        const savedCartItems = localStorage.getItem('cartItems');
+        if (savedCartItems) {
+            setCartItems(JSON.parse(savedCartItems));
+        }
+    }, []);
+
+    if (!product) {
+        return <div className='h-[40vh] mt-[74px] px-[40px] py-[20px]'>
+            <Empty className='mt-[30px]' />
+            <p className='text-center font-[600] text-[#333]'>
+                Product not found
+            </p>
+        </div>;
     }
-  }, []);
 
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+    return (
+        <div className='mt-[74px] px-[40px] py-[20px]'>
+            {/* <div className='product-container'>
+                <div className="card-wrapper">
+                    <div className="card">
+                        <div className="product-imgs">
+                            <div className="img-display">
+                                <div className="img-showcase">
+                                    Render the product image dynamically
+                                    <img src={product.imageData} alt="toy image" />
+                                    <img src='https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt="toy image" />
+                                    <img src={product.imageData} alt="toy image" />
+                                    <img src={product.imageData} alt="toy image" />
+                                </div>
+                            </div>
+                            <div className="img-select">
+                                <div className="img-item">
+                                    <a href="#" data-id="1">
+                                        <img src={product.imageData} alt="toy image" />
+                                    </a>
+                                </div>
+                                <div className="img-item">
+                                    <a href="#" data-id="2">
+                                        <img src='https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt="toy image" />
+                                    </a>
+                                </div>
+                                <div className="img-item">
+                                    <a href="#" data-id="3">
+                                        <img src={product.imageData} alt="toy image" />
+                                    </a>
+                                </div>
+                                <div className="img-item">
+                                    <a href="#" data-id="4">
+                                        <img src={product.imageData} alt="toy image" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="product-content">
+                            <h2 className="product-title">{product.productName}</h2>
+                            <p className="product-price">${product.productPrice}</p>
+                            <div className="product-detail">
+                                <h2>Product Details</h2>
+                                <p>{product.productDetail}</p>
+                            </div>
 
-  return (
-    <div className='all'>
-      <div className='product-container'>
-        <div className="card-wrapper">
-          <div className="card">
-            <div className="product-imgs">
-              <div className="img-display">
-                <div className="img-showcase">
-                  {/* Render the product image dynamically */}
-                  <img src={product.imageData} alt="toy image" />
-                  <img src='https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt="toy image" />
-                  <img src={product.imageData} alt="toy image" />
-                  <img src={product.imageData} alt="toy image" />
-                </div>
-              </div>
-              <div className="img-select">
-                <div className="img-item">
-                  <a href="#" data-id="1">
-                    <img src={product.imageData} alt="toy image" />
-                  </a>
-                </div>
-                <div className="img-item">
-                  <a href="#" data-id="2">
-                    <img src='https://i5.walmartimages.com/asr/b2136392-ee08-4e60-88ff-83b4ac15f8bc.c7838a34676861321f4b6f0c66e790ef.jpeg' alt="toy image" />
-                  </a>
-                </div>
-                <div className="img-item">
-                  <a href="#" data-id="3">
-                    <img src={product.imageData} alt="toy image" />
-                  </a>
-                </div>
-                <div className="img-item">
-                  <a href="#" data-id="4">
-                    <img src={product.imageData} alt="toy image" />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="product-content">
-              <h2 className="product-title">{product.productName}</h2>
-              <p className="product-price">${product.productPrice}</p>
-              <div className="product-detail">
-                <h2>Product Details</h2>
-                <p>{product.productDetail}</p>
-              </div>
-             
-              {
-                authToken ? (
-                  <div>
-                     <div className="product-quantity">
-                <label htmlFor="quantity">Quantity:</label>
-                <input
-                  type="number"
-                  id="quantity"
-                  min="1"
-                  value={quantity} 
-                  onChange={handleQuantityChange}
-                />
-              </div>
-                  <button className="add-to-cart" onClick={addToCart}>
-                    Add to Cart
-                  </button>
-                  </div>
-                ) : null
-              }
+                            {
+                                authToken ? (
+                                    <div>
+                                        <div className="product-quantity">
+                                            <label htmlFor="quantity">Quantity:</label>
+                                            <input
+                                                type="number"
+                                                id="quantity"
+                                                min="1"
+                                                value={quantity}
+                                                onChange={handleQuantityChange}
+                                            />
+                                        </div>
+                                        <button className="add-to-cart" onClick={addToCart}>
+                                            Add to Cart
+                                        </button>
+                                    </div>
+                                ) : null
+                            }
 
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
             <div className='p-[20px] shadow-lg rounded-[12px] flex items-center'>
                 <img className='object-contain w-[600px] h-[400px]' src={product.imageData} alt="product Image" />
                 <div className="ml-[40px]">
                     <h2 className="product-title">{product.productName}</h2>
-                    <p className="product-price">{numeral(product.productPrice).format("0,0")} đ</p>
+                    <p className="product-price">${numeral(product.productPrice).format("0,0")} đ</p>
                     <div className="product-detail">
                         <h2>Product Details</h2>
                         <p className="text-[24px] text-[#333] font-[500]">{product.productDetail}</p>
