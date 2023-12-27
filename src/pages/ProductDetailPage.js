@@ -225,7 +225,7 @@ const ProductDetailPage = () => {
                         </div>
                     </div>
                 </div>
-            </div> */}
+            </div>
             <div className='p-[20px] shadow-lg rounded-[12px] flex items-center'>
                 <img className='object-contain w-[600px] h-[400px]' src={product.imageData} alt="product Image" />
                 <div className="ml-[40px]">
